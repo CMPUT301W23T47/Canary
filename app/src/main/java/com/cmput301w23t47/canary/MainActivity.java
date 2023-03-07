@@ -1,19 +1,13 @@
 package com.cmput301w23t47.canary;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
-import com.cmput301w23t47.canary.callback.UpdatePlayerCallback;
 import com.cmput301w23t47.canary.controller.NavbarController;
 import com.cmput301w23t47.canary.controller.QrCodeUtil;
 import com.cmput301w23t47.canary.databinding.ActivityMainBinding;
-import com.cmput301w23t47.canary.model.Leaderboard;
-import com.cmput301w23t47.canary.model.Player;
-import com.cmput301w23t47.canary.view.contract.QrCodeContract;
 import com.cmput301w23t47.canary.view.fragment.HomeFragment;
 import com.cmput301w23t47.canary.view.fragment.LeaderboardFragment;
 import com.cmput301w23t47.canary.view.fragment.SearchFragment;

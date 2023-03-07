@@ -116,4 +116,15 @@ public class PlayerRepository {
         player.setFirstName(firstName);
         player.setLastName(lastName);
     }
+
+    public Player getPlayer() {
+Player player = new Player(username, firstName, lastName);
+        player.setScore(score);
+        ArrayList<PlayerQrCode> playerQrCodes = new ArrayList<>();
+        for (PlayerQrCodeRepository qrRepo : qrCodes) {
+            playerQrCodes.add(qrRepo.getParsedPlayerQrCode());
+        }
+        player.setQrCodes(playerQrCodes);
+        return player;
+    }
 }
