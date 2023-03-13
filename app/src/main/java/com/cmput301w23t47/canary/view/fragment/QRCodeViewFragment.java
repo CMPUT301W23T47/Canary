@@ -80,6 +80,15 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         }
     }
 
+    /**
+     * Updates the qr image if available
+     */
+    private void updateQrImage() {
+        if (playerQrCode.retrieveQrImage() != null) {
+            binding.qrImage.setImageBitmap(playerQrCode.retrieveQrImage());
+        }
+    }
+
     public void updateFragmentData(){
         Log.d(TAG, "updateFragmentData: called");
         if (playerQrCode == null) {
@@ -93,7 +102,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         }
         updateLocation();
         updateSnapshot();
-
+        updateQrImage();
         hideLoadingBar();
     }
 

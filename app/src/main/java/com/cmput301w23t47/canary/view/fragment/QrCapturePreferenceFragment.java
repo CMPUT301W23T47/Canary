@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,10 +201,14 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
         playerLocation = null;
     }
 
+    /**
+     * Callback for when the image is loaded for the qr
+     * @param bitmap the bitmap image available
+     */
     @Override
     public void getImage(Bitmap bitmap) {
         imageCallbackReturned = true;
-        qrImage = bitmap;
+        qrCode.setQrImage(bitmap);
         hideLoadingBar();
     }
 }

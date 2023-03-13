@@ -1,5 +1,6 @@
 package com.cmput301w23t47.canary.model;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import com.cmput301w23t47.canary.controller.QrCodeController;
@@ -95,5 +96,13 @@ public class PlayerQrCode {
      */
     public void putLocation(Location newLocation) {
         qrCode.setLocation(newLocation);
+    }
+
+    /**
+     * Retrieves the qr image
+     * @return the qr image
+     */
+    public Bitmap retrieveQrImage() {
+        return qrCode.getQrImage();
     }
 }
