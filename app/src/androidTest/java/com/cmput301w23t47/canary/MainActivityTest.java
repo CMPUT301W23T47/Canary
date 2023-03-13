@@ -66,8 +66,7 @@ public class MainActivityTest {
      */
     @Test
     public void startActivity() throws Exception{
-        rule.getScenario().onActivity(activity -> {
-        });
+        assertTrue(solo.waitForActivity(MainActivity.class));
     }
 
     /**
@@ -79,9 +78,7 @@ public class MainActivityTest {
             // skip the tests
             return;
         }
-        solo.waitForActivity(HomeActivity.class, 3000);
-        solo.clickOnImage(3);
-        assertTrue(solo.waitForText("SCAN QR", 1, 3000));
+        solo.assertCurrentActivity("Wrong Activity", HomeActivity.class);
     }
 
     /**
@@ -93,9 +90,9 @@ public class MainActivityTest {
             // skip the tests
             return;
         }
-        solo.waitForActivity(HomeActivity.class, 3000);
-        solo.clickOnImage(3);
-        assertTrue(solo.waitForText("Enter Search Radius", 1, 3000));
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Search");
+        assertTrue(solo.waitForText("Enter Search Radius", 1, 2000));
     }
 
     /**
@@ -107,8 +104,8 @@ public class MainActivityTest {
             // skip the tests
             return;
         }
-        solo.waitForActivity(HomeActivity.class, 3000);
-        solo.clickOnImage(4);
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Rank");
         assertTrue(solo.waitForText("Leaderboard", 1, 3000));
     }
 
@@ -121,8 +118,8 @@ public class MainActivityTest {
             // skip the tests
             return;
         }
-        solo.waitForActivity(HomeActivity.class, 3000);
-        solo.clickOnImage(5);
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Players");
         assertTrue(solo.waitForText("All Players", 1, 3000));
     }
 
@@ -135,8 +132,8 @@ public class MainActivityTest {
             // skip the tests
             return;
         }
-        solo.waitForActivity(HomeActivity.class, 3000);
-        solo.clickOnImage(6);
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Profile");
         assertTrue(solo.waitForText("QRs Scanned", 1, 3000));
     }
 
