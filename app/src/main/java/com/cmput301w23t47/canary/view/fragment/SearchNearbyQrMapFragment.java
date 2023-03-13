@@ -2,7 +2,6 @@ package com.cmput301w23t47.canary.view.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -12,18 +11,33 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301w23t47.canary.R;
-import com.cmput301w23t47.canary.controller.LocationController;
+import com.cmput301w23t47.canary.callback.GetQrListCallback;
+import com.cmput301w23t47.canary.controller.FirestoreQrController;
+import com.cmput301w23t47.canary.controller.QrCodeController;
+import com.cmput301w23t47.canary.model.QrCode;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class SearchNearbyQrMapFragment extends LocationBaseFragment implements OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Fragment for displaying the nearby QrCodes
+ * @author Meharpreet Singh Nanda, Andrew
+ */
+public class SearchNearbyQrMapFragment extends LocationBaseFragment implements OnMapReadyCallback,
+        GetQrListCallback {
     private GoogleMap googleMap;
     private final String playerLocTitle = "My Location";
+    private ArrayList<QrCode> qrCodes;
+
+    private FirestoreQrController firestoreQrController;
 
     @Nullable
     @Override
@@ -49,6 +63,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      */
     private void init() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        firestoreQrController = new FirestoreQrController();
+        firestoreQrController.getAllQrs(this);
         askPermissions();
     }
 
@@ -102,6 +118,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         LatLng point = getLatLng(playerLocation);
         addMarker(point, playerLocTitle);
         centerMapCamera(point);
+        setCameraView();
     }
 
     /**
@@ -127,5 +144,62 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      */
     private LatLng getLatLng(Location loc) {
         return new LatLng(loc.getLatitude(), loc.getLongitude());
+    }
+
+    @Override
+    public void getQrList(ArrayList<QrCode> qrCodes) {
+        this.qrCodes = qrCodes;
+        setTheQrPinsOnMap();
+    }
+
+    /**
+     * this is a way to bind the camera on the map
+     * this is used to make sure that the camera when first opens
+     * is centered on the user not elsewhere
+     */
+    private void setCameraView(){
+        double bottomBoundary = playerLocation.getLatitude() - .1;
+        double leftBoundary = playerLocation.getLongitude() - .1;
+        double topBoundary = playerLocation.getLatitude() + .1;
+        double rightBoundary = playerLocation.getLongitude() + .1;
+
+        LatLngBounds mapBoundary = new LatLngBounds(
+                new LatLng(bottomBoundary, leftBoundary),
+                new LatLng(topBoundary, rightBoundary)
+        );
+
+        googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
+    }
+
+    /**
+     * Sets the Qr pins on the map
+     */
+    private void setTheQrPinsOnMap() {
+        Log.d("TAG", "setTheQrPinsOnMap: " + qrCodes.size());
+        if (qrCodes == null || qrCodes.size() == 0) {
+            return;
+        }
+        for (QrCode qrCode : qrCodes) {
+            if (!qrCode.hasLocation()) {
+                continue;
+            }
+            googleMap.addMarker(new MarkerOptions()
+                    .position(retrieveLatLngForQr(qrCode))
+                    .title(QrCodeController.getTitleForMapPin(qrCode))
+            );
+        }
+    }
+
+    /**
+     * Gets the LatLng for the qr code
+     * @param qrCode the qr code to find the location of
+     * @return the LatLng position of the qrcode
+     */
+    public LatLng retrieveLatLngForQr(QrCode qrCode) {
+        Location location = qrCode.getLocation();
+        if (location == null) {
+            return null;
+        }
+        return new LatLng(location.getLatitude(), location.getLongitude());
     }
 }
