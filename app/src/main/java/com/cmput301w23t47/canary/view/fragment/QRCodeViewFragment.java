@@ -1,6 +1,9 @@
 package com.cmput301w23t47.canary.view.fragment;
 
 import android.content.DialogInterface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,6 +24,8 @@ import com.cmput301w23t47.canary.controller.LocationController;
 import com.cmput301w23t47.canary.databinding.FragmentQrCodeViewBinding;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -58,8 +63,9 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     private void updateLocation() {
         // set location
+        Log.d(TAG, "updateLocation: " + playerQrCode.isLocationShared());
         if (playerQrCode.isLocationShared()) {
-            String cityName = LocationController.retrieveCityName(playerQrCode.getLocation());
+            String cityName = LocationController.retrieveCityName(playerQrCode.getLocation(), getContext());
             if (cityName.equals("")) {
                 // no city name given
                 binding.qrScanLocation.setText("_ _ _");
@@ -83,8 +89,14 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     }
 
     /**
-     * Updates all the data in the fragment
+     * Updates the qr image if available
      */
+    private void updateQrImage() {
+        if (playerQrCode.retrieveQrImage() != null) {
+            binding.qrImage.setImageBitmap(playerQrCode.retrieveQrImage());
+        }
+    }
+
     public void updateFragmentData(){
         Log.d(TAG, "updateFragmentData: called");
         if (playerQrCode == null) {
@@ -98,7 +110,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         }
         updateLocation();
         updateSnapshot();
-
+        updateQrImage();
         hideLoadingBar();
     }
 
@@ -241,4 +253,24 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     protected void returnToHome() {
         Navigation.findNavController(getView()).navigate(R.id.action_goToHomeFromQRCodeView);
     }
+
+
+//    /**
+//     * Retrieves the city name
+//     * @param location the location to parse
+//     * @return the city name if applicable, empty string "" otherwise
+//     */
+//    public String retrieveCityName(Location location) {
+//        try {
+//            Geocoder geocoder = new Geocoder(getContext());
+//            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+//            if (addresses.isEmpty()) {
+//                return "";
+//            }
+//            return addresses.get(0).getLocality();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
 }

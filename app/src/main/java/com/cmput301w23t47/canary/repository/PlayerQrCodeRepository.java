@@ -10,7 +10,7 @@ import com.google.firebase.firestore.Exclude;
 import java.util.Date;
 
 /**
- * The type Player qr code repository.
+ * Models the storage for QR Scanned by QR
  */
 public class PlayerQrCodeRepository {
     // TODO: Add support for snapshot
@@ -22,6 +22,8 @@ public class PlayerQrCodeRepository {
     private Timestamp scanDate;
     // store the score of qr; required to speed up qr deletion
     private long qrScore;
+    // whether the user shared location of qr
+    private boolean locationShared = false;
 
     @Exclude
     // stores the parsed playerQrCode
@@ -37,11 +39,13 @@ public class PlayerQrCodeRepository {
     /**
      * Another constructor which initializes the PLayerQrCodeRepo
      */
-    public PlayerQrCodeRepository(DocumentReference qrCode, DocumentReference snapshot, Timestamp scanDate, long qrScore) {
+    public PlayerQrCodeRepository(DocumentReference qrCode, DocumentReference snapshot, Timestamp scanDate, long qrScore,
+                                  boolean locationShared) {
         this.qrCode = qrCode;
         this.snapshot = snapshot;
         this.scanDate = scanDate;
         this.qrScore = qrScore;
+        this.locationShared = locationShared;
     }
 
     /**
@@ -128,14 +132,23 @@ public class PlayerQrCodeRepository {
         this.qrScore = qrScore;
     }
 
+    public boolean isLocationShared() {
+        return locationShared;
+    }
+
+    public void setLocationShared(boolean locationShared) {
+        this.locationShared = locationShared;
+    }
+
     /**
      * Retrieves the player qr code
      * @param qrCodeRepository the QrCodeRepo
      * @param snapRepo the snapshot repo
      * @return the PlayerQrCode object
      */
-    public static PlayerQrCode retrievePlayerQrCode(QrCodeRepository qrCodeRepository, SnapshotRepository snapRepo, Timestamp date) {
-        PlayerQrCode playerQrCode = new PlayerQrCode(qrCodeRepository.retrieveParsedQrCode(), null);
+    public static PlayerQrCode retrievePlayerQrCode(QrCodeRepository qrCodeRepository, SnapshotRepository snapRepo, Timestamp date,
+                                                    boolean locationShared) {
+        PlayerQrCode playerQrCode = new PlayerQrCode(qrCodeRepository.retrieveParsedQrCode(), null, locationShared);
         if (date != null) {
             playerQrCode.setScanDate(date.toDate());
         }

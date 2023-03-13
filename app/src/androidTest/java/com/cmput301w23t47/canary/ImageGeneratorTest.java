@@ -4,16 +4,12 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 import android.app.Instrumentation;
-import android.util.Log;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.cmput301w23t47.canary.controller.FirestoreController;
-import com.cmput301w23t47.canary.model.Player;
-import com.cmput301w23t47.canary.util.FirestorePlayerTestUtil;
-import com.cmput301w23t47.canary.view.activity.HomeActivity;
 import com.cmput301w23t47.canary.view.activity.ScanQRCodeActivity;
 import com.robotium.solo.Solo;
 
@@ -23,18 +19,14 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * Intent tests for MainActivity
+ * Intent tests for ImageGenerator
  */
-public class MainActivityTest {
-    private static final String TAG = "MainActivityTest";
+public class ImageGeneratorTest {
     private Solo solo;
-    private Player testPlayer = null;
-
     static {
-        FirestoreController.switchToTestMode();
+        FirestoreController.testMode=true;
     }
 
-    FirestorePlayerTestUtil firestorePlayerTestUtil;
 
     @Rule
     public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
@@ -45,11 +37,6 @@ public class MainActivityTest {
      */
     @Before
     public void setUp() throws Exception{
-        firestorePlayerTestUtil = new FirestorePlayerTestUtil();
-        Player player = firestorePlayerTestUtil.getTestPlayer();
-        if (player != null) {
-            testPlayer = player;
-        }
         Intents.init();
         rule.getScenario().onActivity(activity -> {
             solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
@@ -72,19 +59,15 @@ public class MainActivityTest {
      * @throws Exception Failure
      */
     @Test
-    public void launchQRCodeScanner() throws Exception{
-        if (testPlayer == null) {
-            // skip the tests
-            return;
-        }
-        solo.waitForActivity(HomeActivity.class, 6000);
-//        solo.assertCurrentActivity("Err Wrong Activity", MainActivity.class);
-//
-//        // set up the stubbing when scanQrCode page launched
-//        Instrumentation.ActivityResult resIntent = IntentTestUtil.getMockResultForScanQrCodeActivity();
-//        intending(hasComponent(ScanQRCodeActivity.class.getName()))
-//                .respondWith(resIntent);
-//        solo.clickOnView(solo.getView(R.id.scan_qr));
+    public void checkImageGenerator() throws Exception{
+        solo.assertCurrentActivity("Err Wrong Activity", MainActivity.class);
+
+        // set up the stubbing when scanQrCode page launched
+        //solo.getImage()
+        Instrumentation.ActivityResult resIntent = IntentTestUtil.getMockResultForScanQrCodeActivity();
+        intending(hasComponent(ScanQRCodeActivity.class.getName()))
+                .respondWith(resIntent);
+        solo.clickOnView(solo.getView(R.id.scan_qr));
     }
 
     /**

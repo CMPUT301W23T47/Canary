@@ -127,7 +127,6 @@ public class PlayerQrCode {
 
     /**
      * Gets the score for the qr
-     *
      * @return the score of the qr
      */
     public long retrieveScore() {
@@ -136,7 +135,6 @@ public class PlayerQrCode {
 
     /**
      * Gets the formatted scan date
-     *
      * @return the formatted string for scan date
      */
     public String retrieveDateString() {
@@ -146,7 +144,6 @@ public class PlayerQrCode {
 
     /**
      * Retrieves the hash of the qr
-     *
      * @return the hash of the qr
      */
     public String retrieveHash() {
@@ -155,11 +152,17 @@ public class PlayerQrCode {
 
     /**
      * Setter for the location in the qr code
-     *
      * @param newLocation the new location to set
      */
     public void putLocation(Location newLocation) {
         qrCode.setLocation(newLocation);
     }
 
+    /**
+     * Retrieves the qr image
+     * @return the qr image
+     */
+    public Bitmap retrieveQrImage() {
+        return qrCode.getQrImage();
+    }
 }

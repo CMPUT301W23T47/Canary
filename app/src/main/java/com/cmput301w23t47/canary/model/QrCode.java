@@ -1,5 +1,6 @@
 package com.cmput301w23t47.canary.model;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Parcelable;
 
@@ -17,9 +18,8 @@ public class QrCode {
     private Location location;
     // name of the QR
     private String name;
-    /**
-     * The Comments.
-     */
+    // image of qr
+    private Bitmap qrImage;
     ArrayList<Comment> comments = new ArrayList<>();
 
     /**
@@ -30,11 +30,12 @@ public class QrCode {
      * @param location the location
      * @param name     the name
      */
-    public QrCode(String hash, long score, Location location, String name) {
+    public QrCode(String hash, long score, Location location, String name, Bitmap qrImage) {
         this.hash = hash;
         this.score = score;
         this.location = location;
         this.name = name;
+        this.qrImage = qrImage;
     }
 
     /**
@@ -112,6 +113,14 @@ public class QrCode {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Bitmap getQrImage() {
+        return qrImage;
+    }
+
+    public void setQrImage(Bitmap qrImage) {
+        this.qrImage = qrImage;
     }
 
     /**

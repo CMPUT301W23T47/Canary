@@ -95,6 +95,10 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         firestoreQrController.getAllQrs(this);
         showLoadingBar();
         askPermissions();
+
+        binding.enterSearchRadiusText.setOnClickListener(view -> {
+            navigateToSearchRadiusPage();
+        });
     }
 
     /**
@@ -296,5 +300,12 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         SearchNearbyQrMapFragmentDirections.ActionSearchNearbyQrsToQrPage action =
                 SearchNearbyQrMapFragmentDirections.actionSearchNearbyQrsToQrPage(qrCode.getHash());
         Navigation.findNavController(getView()).navigate(action);
+    }
+
+    /**
+     * Navigates to the search radius page
+     */
+    private void navigateToSearchRadiusPage() {
+        Navigation.findNavController(getView()).navigate(R.id.action_searchNearbyQrMapToDistList);
     }
 }

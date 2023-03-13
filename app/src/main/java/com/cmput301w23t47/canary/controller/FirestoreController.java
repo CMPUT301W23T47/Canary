@@ -41,14 +41,16 @@ import java.util.concurrent.ExecutionException;
  */
 public class FirestoreController {
     public static boolean testMode = false;
-    private static String testPlayer = "fzDzmMoLTOCxpMD8fGjVms";
+    private static String collectionPrefix = "Test";
+
+    private static String testPlayer = "dsvj1o1gQOe8mYWFe1U5To";
     public static boolean firstTimeTester = false;
     private static String firstTimeTestPlayer = "testPlayerFirst";
     protected static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    protected static final CollectionReference players = db.collection("Player");
-    protected final CollectionReference qrCodes = db.collection("QRCode");
-    protected final CollectionReference leaderboard = db.collection("Leaderboard");
-    protected final CollectionReference snapshot = db.collection("Snapshot");
+    protected static final CollectionReference players = db.collection(collectionPrefix + "Player");
+    protected final CollectionReference qrCodes = db.collection(collectionPrefix + "QRCode");
+    protected final CollectionReference leaderboard = db.collection(collectionPrefix + "Leaderboard");
+    protected final CollectionReference snapshot = db.collection(collectionPrefix + "Snapshot");
     protected final String globalLeaderboardDocument = "Global";
 
     private static final String TAG = "Firestore Controller";
@@ -65,6 +67,14 @@ public class FirestoreController {
             instance = new FirestoreController();
         }
         return instance;
+    }
+
+    /**
+     * Switches to test mode
+     */
+    public static void switchToTestMode() {
+        testMode = true;
+        collectionPrefix = "Test";
     }
 
     /**
