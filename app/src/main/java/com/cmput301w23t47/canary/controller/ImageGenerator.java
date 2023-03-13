@@ -13,6 +13,7 @@ import java.io.IOException;
  * Image generator controller; Makes a get request
  */
 public class ImageGenerator{
+    public static String imageUrl = "https://picsum.photos/200";
 
     /**
      * Gets the image as an async operation
