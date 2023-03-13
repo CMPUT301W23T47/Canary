@@ -3,6 +3,8 @@ package com.cmput301w23t47.canary;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Instrumentation;
 import android.util.Log;
 
@@ -15,8 +17,10 @@ import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.util.FirestorePlayerTestUtil;
 import com.cmput301w23t47.canary.view.activity.HomeActivity;
 import com.cmput301w23t47.canary.view.activity.ScanQRCodeActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.robotium.solo.Solo;
 
+import org.checkerframework.common.subtyping.qual.Bottom;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -67,25 +71,75 @@ public class MainActivityTest {
     }
 
     /**
-     * Launches the QR Code scanner activity and confirms whether
-     * QR Code is returned
-     * @throws Exception Failure
+     * Navigates to the player home page
      */
     @Test
-    public void launchQRCodeScanner() throws Exception{
+    public void test_navigateToPlayerHome() throws Exception{
         if (testPlayer == null) {
             // skip the tests
             return;
         }
-        solo.waitForActivity(HomeActivity.class, 6000);
-//        solo.assertCurrentActivity("Err Wrong Activity", MainActivity.class);
-//
-//        // set up the stubbing when scanQrCode page launched
-//        Instrumentation.ActivityResult resIntent = IntentTestUtil.getMockResultForScanQrCodeActivity();
-//        intending(hasComponent(ScanQRCodeActivity.class.getName()))
-//                .respondWith(resIntent);
-//        solo.clickOnView(solo.getView(R.id.scan_qr));
+        solo.waitForActivity(HomeActivity.class, 3000);
+        solo.clickOnImage(3);
+        assertTrue(solo.waitForText("SCAN QR", 1, 3000));
     }
+
+    /**
+     * Navigates to the player home page
+     */
+    @Test
+    public void test_navigateToMapView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForActivity(HomeActivity.class, 3000);
+        solo.clickOnImage(3);
+        assertTrue(solo.waitForText("Enter Search Radius", 1, 3000));
+    }
+
+    /**
+     * Navigates to the player home page
+     */
+    @Test
+    public void test_navigateToLeaderboardView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForActivity(HomeActivity.class, 3000);
+        solo.clickOnImage(4);
+        assertTrue(solo.waitForText("Leaderboard", 1, 3000));
+    }
+
+    /**
+     * Navigates to the player home page
+     */
+    @Test
+    public void test_navigateToPlayerSearchView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForActivity(HomeActivity.class, 3000);
+        solo.clickOnImage(5);
+        assertTrue(solo.waitForText("All Players", 1, 3000));
+    }
+
+    /**
+     * Navigates to the player home page
+     */
+    @Test
+    public void test_navigateToPlayerProfileView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForActivity(HomeActivity.class, 3000);
+        solo.clickOnImage(6);
+        assertTrue(solo.waitForText("QRs Scanned", 1, 3000));
+    }
+
 
     /**
      * Closes the activity after each test
