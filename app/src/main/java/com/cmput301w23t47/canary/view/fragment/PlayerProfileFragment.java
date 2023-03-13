@@ -31,6 +31,7 @@ public class PlayerProfileFragment extends Fragment implements
     private FragmentPlayerProfileBinding binding;
     private FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
     private Player player;
+    boolean currentPlayer;
     private QRCodeListAdapter qrCodeListAdapter;
     private static final String progressBarTitle = "Loading Player Profile";
     private static final String progressBarMessage = "Should take only a moment...";
@@ -60,7 +61,7 @@ public class PlayerProfileFragment extends Fragment implements
      * Makes the request to firestore to get the player
      */
     private void makeFirestoreReqForPlayer() {
-        boolean currentPlayer = PlayerProfileFragmentArgs.fromBundle(getArguments()).getCurrentPlayer();
+        currentPlayer = PlayerProfileFragmentArgs.fromBundle(getArguments()).getCurrentPlayer();
         if (currentPlayer) {
             firestorePlayerController.getCompleteCurrentPlayer(this);
         } else {
@@ -152,8 +153,12 @@ public class PlayerProfileFragment extends Fragment implements
      * @param playerQrCode the selected qr code
      */
     private void navigateToSelectedQr(PlayerQrCode playerQrCode) {
-        PlayerProfileFragmentDirections.ActionQrCodeViewFromPlayerProfile action =
-                PlayerProfileFragmentDirections.actionQrCodeViewFromPlayerProfile(playerQrCode.retrieveHash());
-        Navigation.findNavController(getView()).navigate(action);
+        if (currentPlayer) {
+            PlayerProfileFragmentDirections.ActionQrCodeViewFromPlayerProfile action =
+                    PlayerProfileFragmentDirections.actionQrCodeViewFromPlayerProfile(playerQrCode.retrieveHash());
+            Navigation.findNavController(getView()).navigate(action);
+        } else {
+//            PlayerProfileFragmentDirections.
+        }
     }
 }

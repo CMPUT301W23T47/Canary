@@ -67,4 +67,16 @@ public class QrCodeController {
         }
         return String.format(Locale.CANADA, "%s: %d", name, qrCode.getScore());
     }
+
+    /**
+     * Gets the display name for the qr (Truncates it if it is too long)
+     * @param qrName the full name of the qr
+     * @return the formatted name
+     */
+    public static String getDisplayName(String qrName) {
+        if (qrName.length() <= 16) {
+            return qrName;
+        }
+        return String.format(Locale.CANADA, "%s...", qrName.substring(0, 13));
+    }
 }

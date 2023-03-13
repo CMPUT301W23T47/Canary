@@ -2,6 +2,9 @@ package com.cmput301w23t47.canary.view.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -11,14 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.GetIndexCallback;
 import com.cmput301w23t47.canary.callback.GetQrListCallback;
 import com.cmput301w23t47.canary.controller.FirestoreQrController;
 import com.cmput301w23t47.canary.controller.QrCodeController;
+import com.cmput301w23t47.canary.databinding.FragmentSearchNearbyQrMapBinding;
 import com.cmput301w23t47.canary.model.QrCode;
+import com.cmput301w23t47.canary.view.adapter.QRCodeListAdapter;
+import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,27 +32,28 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment for displaying the nearby QrCodes
  * @author Meharpreet Singh Nanda, Andrew
  */
 public class SearchNearbyQrMapFragment extends LocationBaseFragment implements OnMapReadyCallback,
-        GetQrListCallback {
+        GetQrListCallback, GetIndexCallback {
     private GoogleMap googleMap;
-//    private MapView mapView;
     private final String playerLocTitle = "My Location";
-    private ArrayList<QrCode> qrCodes;
+    private ArrayList<QrCode> qrCodes = new ArrayList<>();
 
     private FirestoreQrController firestoreQrController;
+    private FragmentSearchNearbyQrMapBinding binding;
+    private SearchNearbyQrListAdapter qrCodeListAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search_nearby_qr_map, container, false);
+        binding = FragmentSearchNearbyQrMapBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -66,18 +73,38 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     private void init() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         firestoreQrController = new FirestoreQrController();
+        qrCodeRecyclerViewInit();
         firestoreQrController.getAllQrs(this);
+        showLoadingBar();
         askPermissions();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden){
+        if(!hidden && qrCodes.size() == 0){
+            showLoadingBar();
+            askPermissions();
+        }
+    }
+
+
+    /**
+     * Initializes the qrCode recycler view
+     */
+    private void qrCodeRecyclerViewInit() {
+        // qr code list adapter init
+        qrCodeListAdapter = new SearchNearbyQrListAdapter(qrCodes, this);
+        binding.qrItemsList.setAdapter(qrCodeListAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrItemsList.getContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
+        binding.qrItemsList.addItemDecoration(dividerItemDecoration);
+        binding.qrItemsList.setHasFixedSize(true);
     }
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera.
-     * In this case, we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to
-     * install it inside the SupportMapFragment. This method will only be triggered once the
-     * user has installed Google Play services and returned to the app.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -110,8 +137,9 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(point));
     }
 
-
-
+    /**
+     * Updates the current location of the player
+     */
     @Override
     protected void updateLocation() {
         if (googleMap == null) {
@@ -136,7 +164,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      */
     @Override
     protected void locationPermissionNotGranted() {
-
+        // TODO: Handle this case
     }
 
     /**
@@ -151,6 +179,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     @Override
     public void getQrList(ArrayList<QrCode> qrCodes) {
         this.qrCodes = qrCodes;
+        hideLoadingBar();
         setTheQrPinsOnMap();
     }
 
@@ -177,19 +206,21 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * Sets the Qr pins on the map
      */
     private void setTheQrPinsOnMap() {
-        Log.d("TAG", "setTheQrPinsOnMap: " + qrCodes.size());
         if (qrCodes == null || qrCodes.size() == 0) {
             return;
         }
+        ArrayList<QrCode> qrsOnMap = new ArrayList<>();
         for (QrCode qrCode : qrCodes) {
             if (!qrCode.hasLocation()) {
                 continue;
             }
+            qrsOnMap.add(qrCode);
             googleMap.addMarker(new MarkerOptions()
                     .position(retrieveLatLngForQr(qrCode))
                     .title(QrCodeController.getTitleForMapPin(qrCode))
             );
         }
+        qrCodeListAdapter.updateList(qrsOnMap);
     }
 
     /**
@@ -203,5 +234,41 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
             return null;
         }
         return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    /**
+     * Shows the loading bar
+     */
+    private void showLoadingBar() {
+        binding.progressBarBox.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Hides the loading bar
+     */
+    private void hideLoadingBar() {
+        binding.progressBarBox.setVisibility(View.GONE);
+    }
+
+    /**
+     * Called when item is selected in the list
+     * @param ind the requested index
+     */
+    @Override
+    public void getIndex(int ind) {
+        QrCode qrCode = qrCodeListAdapter.getItemAt(ind);
+        if (qrCode != null) {
+            navigateToSelectedQr(qrCode);
+        }
+    }
+
+    /**
+     * Navigates to the selected qr
+     * @param qrCode the qr code selected
+     */
+    private void navigateToSelectedQr(QrCode qrCode) {
+        SearchNearbyQrMapFragmentDirections.ActionSearchNearbyQrsToQrPage action =
+                SearchNearbyQrMapFragmentDirections.actionSearchNearbyQrsToQrPage(qrCode.getHash());
+        Navigation.findNavController(getView()).navigate(action);
     }
 }

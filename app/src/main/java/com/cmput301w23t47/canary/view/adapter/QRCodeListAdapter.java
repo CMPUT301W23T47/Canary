@@ -38,28 +38,20 @@ public class QRCodeListAdapter extends ArrayAdapter<PlayerQrCode> {
         this.playerQrCodesList.addAll(playerQrCodes);
     }
 
-    private String getDisplayName(String qrName) {
-        if (qrName.length() <= 16) {
-            return qrName;
-        }
-        return String.format(Locale.CANADA, "%s...", qrName.substring(0, 13));
-    }
-
-
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view;
         if (convertView == null) {
-            view = LayoutInflater.from(super.getContext()).inflate(R.layout.content_player_qr_code_list_item,parent,false);
+            view = LayoutInflater.from(super.getContext()).inflate(R.layout.content_qr_code_list_item,parent,false);
         }else{
             view = convertView;
         }
         PlayerQrCode qr = getItem(position);
         ImageView qrCodeImage = view.findViewById(R.id.listQrCodeImage);
         // qrCodeImage.setImageBitmap(qr.getSnapshot()); TODO: fix this later
-        TextView qrUsername = view.findViewById(R.id.listQrUsername);
-        qrUsername.setText(getDisplayName(qr.getName()));
+        TextView qrUsername = view.findViewById(R.id.listQrName);
+        qrUsername.setText(QrCodeController.getDisplayName(qr.getName()));
         TextView qrCodeScore = view.findViewById(R.id.listQrCodeScore);
         qrCodeScore.setText(String.format(Locale.CANADA, "%d", qr.retrieveScore()));
         TextView qrCodeScanDateTime = view.findViewById(R.id.listQrCodeScanDateTime);

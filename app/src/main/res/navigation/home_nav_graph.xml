@@ -57,19 +57,6 @@
             android:defaultValue="NA" />
     </fragment>
     <fragment
-        android:id="@+id/anotherPlayerProfileFragment"
-        android:name="com.cmput301w23t47.canary.view.fragment.PlayerProfileFragment"
-        android:label="Player Profile"
-        tools:layout="@layout/fragment_player_profile">
-        <argument
-            android:name="username"
-            app:argType="string" />
-        <argument
-            android:name="currentPlayer"
-            app:argType="boolean"
-            android:defaultValue="false" />
-    </fragment>
-    <fragment
         android:id="@+id/splashFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.SplashFragment"
         android:label="fragment_splash"
@@ -94,14 +81,17 @@
         android:name="com.cmput301w23t47.canary.view.fragment.PlayerSearchFragment"
         android:label="Search Player"
         tools:layout="@layout/fragment_player_search" >
-
         <action
             android:id="@+id/action_allPlayersToPlayerProfile"
-            app:destination="@id/anotherPlayerProfileFragment" />
+            app:destination="@id/playerProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchNearbyQrMapFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.SearchNearbyQrMapFragment"
         android:label="fragment_search_nearby_qr_map"
-        tools:layout="@layout/fragment_search_nearby_qr_map" />
+        tools:layout="@layout/fragment_search_nearby_qr_map" >
+        <action
+            android:id="@+id/action_searchNearbyQrsToQrPage"
+            app:destination="@id/QRCodeView" />
+    </fragment>
 </navigation>
