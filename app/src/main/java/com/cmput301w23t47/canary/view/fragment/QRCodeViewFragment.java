@@ -30,6 +30,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     private static final String TAG = "QRCodeViewFragment";
 
     private PlayerQrCode playerQrCode;
+    private boolean owner = false;
 
     private FragmentQrCodeViewBinding binding;
     AlertDialog.Builder builder;
@@ -82,7 +83,9 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         // set qr info
         binding.qrTitle.setText(getNameString());
         binding.qrScoreVal.setText(String.format(Locale.CANADA, "Score: %d Pts", playerQrCode.getQrCode().getScore()));
-        binding.qrScanDate.setText(playerQrCode.getScanDate().toString());
+        if (playerQrCode.getScanDate() != null) {
+            binding.qrScanDate.setText(playerQrCode.getScanDate().toString());
+        }
         updateLocation();
         updateSnapshot();
 
@@ -121,6 +124,10 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     private void init() {
         showLoadingBar();
         String qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
+        owner = QRCodeViewFragmentArgs.fromBundle(getArguments()).getOwner();
+        if (!owner) {
+            binding.qrDeleteIcon.setVisibility(View.GONE);
+        }
         firestorePlayerController.getPlayerQr(qrHash, this);
     }
 
@@ -141,9 +148,11 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         binding.qrDeleteIcon.setOnClickListener(view -> {
             builder.setMessage("Are you sure you want to delete this QR. This will update your score")
                     .setTitle("Delete QR")
-                    .setCancelable(false)
+                    .setCancelable(true)
                     .setPositiveButton("Yes", (DialogInterface dialog, int id) -> {
                         deleteQr();
+                    }).setNegativeButton("Cancel", (DialogInterface dialog, int id) -> {
+                        dialog.dismiss();
                     }).create().show();
         });
     }

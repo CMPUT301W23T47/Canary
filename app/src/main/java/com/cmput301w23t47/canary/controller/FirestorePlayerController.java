@@ -122,10 +122,14 @@ public class FirestorePlayerController extends FirestoreController{
             DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
             GetIndexArg indexArg = new GetIndexArg();
             SnapshotRepository snapRepo = retrieveQrSnapshotFromPlayer(playerRepo, qrRef, indexArg);
-            Integer a = new Integer(1);
             handler.post(() -> {
                 // return the playerQr Model
-                Timestamp scanDate = playerRepo.getQrCodes().get(indexArg.i).getScanDate();
+                Timestamp scanDate = null;
+                if (indexArg.i > 0) {
+                    scanDate = playerRepo.getQrCodes().get(indexArg.i).getScanDate();
+                } else {
+                    scanDate = qrRepo.getCreatedOn();
+                }
                 callback.getPlayerQr(PlayerQrCodeRepository.retrievePlayerQrCode(qrRepo, snapRepo, scanDate));
             });
         }).start();
@@ -149,6 +153,7 @@ public class FirestorePlayerController extends FirestoreController{
             }
         }
         if (snapRef == null) {
+            indexArg.i = -1;
             return null;
         }
         Task<DocumentSnapshot> snapTask = snapRef.get();

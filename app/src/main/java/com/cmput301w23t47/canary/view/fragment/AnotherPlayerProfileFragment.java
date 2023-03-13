@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -13,34 +11,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
-import com.cmput301w23t47.canary.databinding.FragmentPlayerProfileBinding;
+import com.cmput301w23t47.canary.databinding.FragmentAnotherPlayerProfileBinding;
 import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.view.adapter.QRCodeListAdapter;
 
 import java.util.ArrayList;
 
-
-public class PlayerProfileFragment extends Fragment implements
+/**
+ * Another player Fragment
+ */
+public class AnotherPlayerProfileFragment extends Fragment implements
         GetPlayerCallback {
-
     public static final String TAG = "PlayerProfileFragment";
 
-    private FragmentPlayerProfileBinding binding;
+    private FragmentAnotherPlayerProfileBinding binding;
     private FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
     private Player player;
     private QRCodeListAdapter qrCodeListAdapter;
-    private static final String progressBarTitle = "Loading Player Profile";
-    private static final String progressBarMessage = "Should take only a moment...";
 
-    public PlayerProfileFragment() {}
-
-    public static PlayerProfileFragment newInstance() {
-        PlayerProfileFragment fragment = new PlayerProfileFragment();
-        return fragment;
-    }
+    public AnotherPlayerProfileFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +44,7 @@ public class PlayerProfileFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentPlayerProfileBinding.inflate(inflater, container, false);
+        binding = FragmentAnotherPlayerProfileBinding.inflate(inflater, container, false);
         init();
         return binding.getRoot();
     }
@@ -60,7 +53,9 @@ public class PlayerProfileFragment extends Fragment implements
      * Makes the request to firestore to get the player
      */
     private void makeFirestoreReqForPlayer() {
-        firestorePlayerController.getCompleteCurrentPlayer(this);
+        // foreign player
+        String playerDocId = AnotherPlayerProfileFragmentArgs.fromBundle(getArguments()).getPlayerId();
+        firestorePlayerController.getCompleteForeignPlayer(playerDocId, this);
     }
 
     /**
@@ -145,10 +140,8 @@ public class PlayerProfileFragment extends Fragment implements
      * @param playerQrCode the selected qr code
      */
     private void navigateToSelectedQr(PlayerQrCode playerQrCode) {
-        PlayerProfileFragmentDirections.ActionQrCodeViewFromPlayerProfile action =
-                PlayerProfileFragmentDirections.actionQrCodeViewFromPlayerProfile(playerQrCode.retrieveHash());
-        action.setOwner(true);
-//        action.setOwner(true);
+        AnotherPlayerProfileFragmentDirections.ActionAnotherPlayerToQrPage action =
+                AnotherPlayerProfileFragmentDirections.actionAnotherPlayerToQrPage(playerQrCode.retrieveHash());
         Navigation.findNavController(getView()).navigate(action);
     }
 }

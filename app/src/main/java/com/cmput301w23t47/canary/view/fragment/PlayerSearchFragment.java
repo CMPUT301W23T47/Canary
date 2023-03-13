@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
@@ -120,8 +121,8 @@ public class PlayerSearchFragment extends Fragment implements GetPlayerListCallb
      * Navigates to the selected player
      */
     private void navigateToSelectedPlayer(Player player) {
-        PlayerSearchFragmentDirections.ActionAllPlayersToPlayerProfile action =
-                PlayerSearchFragmentDirections.actionAllPlayersToPlayerProfile(player.getUniquePlayerId());
+        PlayerSearchFragmentDirections.ActionAllPlayersToOtherPlayerProfile action =
+                PlayerSearchFragmentDirections.actionAllPlayersToOtherPlayerProfile(player.getUniquePlayerId());
         Navigation.findNavController(getView()).navigate(action);
     }
 

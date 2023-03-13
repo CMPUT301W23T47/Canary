@@ -5,6 +5,7 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.model.QrCode;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -19,6 +20,8 @@ public class QrCodeRepository {
     private GeoPoint location;
     // name of the QR
     private String name;
+    // date when qr was created
+    private Timestamp createdOn;
 
     public QrCodeRepository() {}
 
@@ -76,6 +79,14 @@ public class QrCodeRepository {
 
     public void setLocation(GeoPoint location) {
         this.location = location;
+    }
+
+    public Timestamp getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Timestamp createdOn) {
+        this.createdOn = createdOn;
     }
 
     @NonNull
