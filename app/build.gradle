@@ -72,6 +72,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.android.material:material'
     api 'com.google.android.material:material:1.9.0-alpha02'
 
     //custom dependencies (for generating random image beside qr name and score)
