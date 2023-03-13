@@ -25,13 +25,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        init(savedInstanceState);
+        init();
     }
 
     /**
      * Initialization for activity
      */
-    private void init(Bundle savedInstanceState) {
+    private void init() {
         initNavbar();
     }
 
@@ -39,9 +39,8 @@ public class MainActivity extends AppCompatActivity {
      * Initializes the navbar (bottom and top)
      */
     private void initNavbar() {
-        // Bottom navigation
-        NavController navController = Navigation.findNavController(this, R.id.fragment_container_view_main);
         // top navigation
+        NavController navController = Navigation.findNavController(this, R.id.fragment_container_view_main);
         setSupportActionBar(binding.toolbar);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
