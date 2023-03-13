@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +29,7 @@ import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
 import com.cmput301w23t47.canary.view.contract.AddNewQrContract;
 import com.cmput301w23t47.canary.view.contract.SnapshotContract;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
 import java.util.Locale;
@@ -35,7 +37,7 @@ import java.util.Locale;
 /**
  * Continues without saving location if permission denied
  */
-public class QrCapturePreferenceFragment extends Fragment implements 
+public class QrCapturePreferenceFragment extends LocationBaseFragment implements
         DoesResourceExistCallback, OperationStatusCallback {
     public static final String TAG = "QrCapturePreferenceFragment";
 
@@ -74,6 +76,7 @@ public class QrCapturePreferenceFragment extends Fragment implements
     }
 
     void init() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         binding.saveLocationCheckbox.setOnClickListener(view -> {
             saveLocation = binding.saveLocationCheckbox.isChecked();
         });
@@ -88,6 +91,7 @@ public class QrCapturePreferenceFragment extends Fragment implements
 
         builder = new AlertDialog.Builder(getContext());
         showLoadingBar();
+        askPermissions();
     }
 
     /**
@@ -150,8 +154,12 @@ public class QrCapturePreferenceFragment extends Fragment implements
      * @param snapshot The snapshot of qr
      */
     private void persistQr(Bitmap snapshot) {
-        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode, new Date());
-        // TODO: Get location
+        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode, new Date(), false);
+        if (saveLocation && playerLocation != null) {
+            // only if location is available and the user shared the location
+            playerQrCode.setLocationShared(true);
+            playerQrCode.putLocation(playerLocation);
+        }
         if (snapshot != null) {
             playerQrCode.setSnapshot(new Snapshot(snapshot));
         }
@@ -166,5 +174,19 @@ public class QrCapturePreferenceFragment extends Fragment implements
     public void operationStatus(boolean status) {
         // QR Persisted, go back
         returnToQrCodePage();
+    }
+
+    @Override
+    protected void updateLocation() {
+    }
+
+    @Override
+    protected void locationPermissionGranted() {
+        getLocationRequest();
+    }
+
+    @Override
+    protected void locationPermissionNotGranted() {
+        playerLocation = null;
     }
 }

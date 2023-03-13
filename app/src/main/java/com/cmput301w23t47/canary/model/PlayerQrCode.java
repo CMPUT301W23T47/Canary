@@ -22,9 +22,10 @@ public class PlayerQrCode {
 
     public PlayerQrCode() {}
 
-    public PlayerQrCode(QrCode qrCode, Date date) {
+    public PlayerQrCode(QrCode qrCode, Date date, boolean locationShared) {
         this.qrCode = qrCode;
         this.scanDate = date;
+        this.locationShared = locationShared;
     }
 
     public QrCode getQrCode() {
@@ -86,5 +87,13 @@ public class PlayerQrCode {
      */
     public String retrieveHash() {
         return qrCode.getHash();
+    }
+
+    /**
+     * Setter for the location in the qr code
+     * @param newLocation the new location to set
+     */
+    public void putLocation(Location newLocation) {
+        qrCode.setLocation(newLocation);
     }
 }

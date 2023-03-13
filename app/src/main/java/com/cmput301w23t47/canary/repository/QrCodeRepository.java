@@ -41,7 +41,11 @@ public class QrCodeRepository {
     }
 
     public static QrCodeRepository retrieveQrCodeRepo(QrCode qrCode) {
-        return new QrCodeRepository(qrCode.getHash(), qrCode.getScore(), new GeoPoint(0, 0), qrCode.getName());
+        GeoPoint point = null;
+        if (qrCode.hasLocation()) {
+            point = new GeoPoint(qrCode.getLocation().getLatitude(), qrCode.getLocation().getLongitude());
+        }
+        return new QrCodeRepository(qrCode.getHash(), qrCode.getScore(), point, qrCode.getName());
     }
 
     public String getHash() {
