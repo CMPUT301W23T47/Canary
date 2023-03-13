@@ -22,9 +22,10 @@ public class PlayerQrCode {
 
     public PlayerQrCode() {}
 
-    public PlayerQrCode(QrCode qrCode, Date date) {
+    public PlayerQrCode(QrCode qrCode, Date date, boolean locationShared) {
         this.qrCode = qrCode;
         this.scanDate = date;
+        this.locationShared = locationShared;
     }
 
     public QrCode getQrCode() {

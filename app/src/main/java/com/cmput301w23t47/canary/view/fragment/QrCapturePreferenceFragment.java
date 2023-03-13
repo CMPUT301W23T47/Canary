@@ -154,8 +154,10 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
      * @param snapshot The snapshot of qr
      */
     private void persistQr(Bitmap snapshot) {
-        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode, new Date());
+        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode, new Date(), false);
         if (saveLocation && playerLocation != null) {
+            // only if location is available and the user shared the location
+            playerQrCode.setLocationShared(true);
             playerQrCode.putLocation(playerLocation);
         }
         if (snapshot != null) {
