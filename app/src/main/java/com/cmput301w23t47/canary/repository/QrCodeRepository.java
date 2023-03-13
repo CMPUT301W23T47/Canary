@@ -19,6 +19,7 @@ public class QrCodeRepository {
     private GeoPoint location;
     // name of the QR
     private String name;
+    // TODO: Store the date the qr was created
 
     public QrCodeRepository() {}
 

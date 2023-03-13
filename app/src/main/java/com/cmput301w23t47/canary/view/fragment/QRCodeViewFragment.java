@@ -83,7 +83,9 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         // set qr info
         binding.qrTitle.setText(getNameString());
         binding.qrScoreVal.setText(String.format(Locale.CANADA, "Score: %d Pts", playerQrCode.getQrCode().getScore()));
-        binding.qrScanDate.setText(playerQrCode.getScanDate().toString());
+        if (playerQrCode.getScanDate() != null) {
+            binding.qrScanDate.setText(playerQrCode.getScanDate().toString());
+        }
         updateLocation();
         updateSnapshot();
 
