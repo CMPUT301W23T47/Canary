@@ -24,7 +24,7 @@ public abstract class LocationBaseFragment extends Fragment {
     protected String[] LOC_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
 
-    //
+    // provider for the location
     FusedLocationProviderClient fusedLocationClient;
     // the location of the current player
     protected Location playerLocation;
@@ -94,6 +94,10 @@ public abstract class LocationBaseFragment extends Fragment {
         }
     }
 
+    /**
+     * Update the location on the view
+     * The player location is already set to valid value
+     */
     abstract protected void updateLocation();
 
     /**
