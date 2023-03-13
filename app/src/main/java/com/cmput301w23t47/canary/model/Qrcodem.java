@@ -211,5 +211,8 @@ public class Qrcodem  implements Parcelable {
         }
     };
     
+    public QrCode toQrCode(){
+        return new QrCode(qrHash, score,location,name);
+    }
 
 }

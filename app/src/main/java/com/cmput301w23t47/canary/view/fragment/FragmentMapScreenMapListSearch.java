@@ -36,6 +36,7 @@ import android.location.Location;
 
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.RecyclerViewInterface;
+import com.cmput301w23t47.canary.controller.MapSearchRange;
 import com.cmput301w23t47.canary.model.Qrcodem;
 import com.cmput301w23t47.canary.model.WorldQRLIST;
 import com.cmput301w23t47.canary.view.adapter.Map_Adapter_RecyclerViews;
@@ -86,7 +87,7 @@ public class FragmentMapScreenMapListSearch extends Fragment implements OnMapRea
     private ArrayList<Qrcodem> mglobalQRList = new WorldQRLIST().getQrList();
     //this is the list that holds the qr codes that are displayed
     private ArrayList<Qrcodem> mSearchResults = new ArrayList<>();
-    private final ArrayList<Qrcodem> mSearchResultsCopy = new ArrayList<>();
+    private ArrayList<Qrcodem> mSearchResultsCopy = new ArrayList<>();
 
     
     // recylerviews and lists
@@ -513,7 +514,11 @@ public class FragmentMapScreenMapListSearch extends Fragment implements OnMapRea
             return;
         }
         map.setMyLocationEnabled(true);
+    
+
         initMapSearchRangeCheck();
+        mMapAdapterRecyclerViews.addQRList( mSearchResultsCopy );
+        
         //this is where to set the list of the users location
         //run through all of the markers
         for (int i = 0; i < mSearchResultsCopy.size(); i++) {
@@ -550,61 +555,17 @@ public class FragmentMapScreenMapListSearch extends Fragment implements OnMapRea
      * This method is used to initialize the drop down menu items
      */
     public void initMapSearchRangeCheck(){
-        //get the device position so that we can set up the search
+        //get the map range
         if(mdevicePosition == null){
             getLastLocation();
         }
-        
-        
-        mglobalQRList = new WorldQRLIST().getQrList();
         mSearchBarRange = (AutoCompleteTextView) getActivity().findViewById(R.id.map_search_range_dropdown_menu);
         mSearchSpecifiedRange = mSearchBarRange.getText().toString();
-        mSearchResultsCopy.clear();
-        
-        switch(mSearchSpecifiedRange){
-            case "200m":
-                mSearchRangeDouble = 200;
-                break;
-            case "500m":
-                mSearchRangeDouble = 500;
-                break;
-            case "1km":
-                mSearchRangeDouble = 1000;
-                break;
-            case "2km":
-                mSearchRangeDouble = 2000;
-                break;
-            case "5km":
-                mSearchRangeDouble = 5000;
-                break;
-            case "NO LIMIT":
-                mSearchRangeDouble = 10000;
-                break;
-            default:
-                mSearchRangeDouble = 100;
-                break;
-        }
-        
-        
-        for(int i = 0; i < mglobalQRList.size(); i++){
-            
-            LatituteQrCodeLocation = mglobalQRList.get(i).getLocation().getLatitude();
-            LongitudeQrCodeLocation = mglobalQRList.get(i).getLocation().getLongitude();
-            QRCodeLocation.setLatitude(LatituteQrCodeLocation);
-            QRCodeLocation.setLongitude(LongitudeQrCodeLocation);
-            
-            distance = mdevicePosition.distanceTo(QRCodeLocation);
-            if(distance <= mSearchRangeDouble || mSearchRangeDouble == 10000){
-                
-                mSearchResultsCopy.add(mglobalQRList.get(i));
-                //one of these isn't needed I dont know which one
-                mMapAdapterRecyclerViews.addQRCode(mglobalQRList.get(i));
-                // though I assume that it is this one
-                //mSearchResults.add(mglobalQRList.get(i));
-            }
-            
-        }
-        
+        mglobalQRList = new WorldQRLIST().getQrList();
+    
+        // this is a class that will search the list of QR codes and return a list of QR codes that are within the range
+        MapSearchRange specificationSearch = new MapSearchRange( mdevicePosition,mglobalQRList, mSearchSpecifiedRange);
+        mSearchResultsCopy = specificationSearch.getFinalList();
     }
     /**
      * Initialize the recycler view that will display the list of qr codes

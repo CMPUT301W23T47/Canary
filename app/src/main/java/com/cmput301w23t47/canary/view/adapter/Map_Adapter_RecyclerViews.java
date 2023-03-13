@@ -140,6 +140,10 @@ public class Map_Adapter_RecyclerViews extends RecyclerView.Adapter<Map_Adapter_
         mqrCodes.add(qrCode);
         notifyDataSetChanged();
     }
+    public void addQRList(ArrayList<Qrcodem> qrCode) {
+        mqrCodes.addAll(qrCode);
+        notifyDataSetChanged();
+    }
 
 }
 /*
