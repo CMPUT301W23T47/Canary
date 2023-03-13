@@ -122,7 +122,6 @@ public class FirestorePlayerController extends FirestoreController{
             DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
             GetIndexArg indexArg = new GetIndexArg();
             SnapshotRepository snapRepo = retrieveQrSnapshotFromPlayer(playerRepo, qrRef, indexArg);
-            Integer a = new Integer(1);
             handler.post(() -> {
                 // return the playerQr Model
                 Timestamp scanDate = playerRepo.getQrCodes().get(indexArg.i).getScanDate();

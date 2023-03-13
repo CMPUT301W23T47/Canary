@@ -33,6 +33,10 @@
         <action
             android:id="@+id/action_goToHomeFromQRCodeView"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="owner"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -47,14 +51,6 @@
         <action
             android:id="@+id/action_qrCodeViewFromPlayerProfile"
             app:destination="@id/QRCodeView" />
-        <argument
-            android:name="currentPlayer"
-            app:argType="boolean"
-            android:defaultValue="true" />
-        <argument
-            android:name="username"
-            app:argType="string"
-            android:defaultValue="NA" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -77,21 +73,33 @@
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/playerSearchFragment"
-        android:name="com.cmput301w23t47.canary.view.fragment.PlayerSearchFragment"
-        android:label="Search Player"
-        tools:layout="@layout/fragment_player_search" >
-        <action
-            android:id="@+id/action_allPlayersToPlayerProfile"
-            app:destination="@id/playerProfileFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/searchNearbyQrMapFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.SearchNearbyQrMapFragment"
         android:label="fragment_search_nearby_qr_map"
         tools:layout="@layout/fragment_search_nearby_qr_map" >
         <action
             android:id="@+id/action_searchNearbyQrsToQrPage"
+            app:destination="@id/QRCodeView" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerSearchFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.PlayerSearchFragment"
+        android:label="fragment_player_search"
+        tools:layout="@layout/fragment_player_search" >
+        <action
+            android:id="@+id/action_allPlayersToOtherPlayerProfile"
+            app:destination="@id/anotherPlayerProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/anotherPlayerProfileFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.AnotherPlayerProfileFragment"
+        android:label="Player Profile"
+        tools:layout="@layout/fragment_another_player_profile" >
+        <argument
+            android:name="playerId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_anotherPlayerToQrPage"
             app:destination="@id/QRCodeView" />
     </fragment>
 </navigation>
