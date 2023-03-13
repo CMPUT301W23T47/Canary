@@ -88,7 +88,7 @@ public class CreateProfileFragment extends Fragment implements OperationStatusCa
      * Navigate to home fragment
      */
     private void navigateToHome() {
-//        Navigation.findNavController(getView()).navigate(R.id.action_createProfileToHome);
+        Navigation.findNavController(binding.getRoot()).navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToHomeActivity());
     }
 
     @Override
