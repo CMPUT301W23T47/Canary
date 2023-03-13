@@ -53,14 +53,6 @@
             app:destination="@id/QRCodeView" />
     </fragment>
     <fragment
-        android:id="@+id/createProfileFragment"
-        android:name="com.cmput301w23t47.canary.view.fragment.CreateProfileFragment"
-        android:label="Create Profile" >
-        <action
-            android:id="@+id/action_createProfileToHome"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/searchNearbyQrMapFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.SearchNearbyQrMapFragment"
         android:label="Nearby QRs"

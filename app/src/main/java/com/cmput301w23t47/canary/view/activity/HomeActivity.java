@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void initNavbar() {
         // Bottom navigation
-        NavController navController = Navigation.findNavController(this, R.id.fragment_container_view_main);
+        NavController navController = Navigation.findNavController(this, R.id.fragment_container_view_home);
         NavigationUI.setupWithNavController(binding.bottomNavigationLayout.bottomNavigation, navController);
 
         // top navigation
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.fragment_container_view_main);
+        NavController navController = Navigation.findNavController(this, R.id.fragment_container_view_home);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }

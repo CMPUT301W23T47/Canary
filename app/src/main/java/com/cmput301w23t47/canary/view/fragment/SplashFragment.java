@@ -26,6 +26,7 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
     public SplashFragment() {}
 
     FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
+    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_splash, container, false);
+        view = inflater.inflate(R.layout.fragment_splash, container, false);
+        return view;
     }
 
 
@@ -50,14 +52,14 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
      * Navigates to the home screen; The player exists
      */
     private void navigateToHome() {
-        Navigation.findNavController(getView()).navigate(SplashFragmentDirections.actionSplashToHome());
+        Navigation.findNavController(view).navigate(SplashFragmentDirections.actionSplashFragmentToHomeActivity());
     }
 
     /**
      * Navigates to the create profile page; The player does not exist
      */
     private void navigateToCreateProfile() {
-        Navigation.findNavController(getView()).navigate(SplashFragmentDirections.actionSplashToCreateProfile());
+        Navigation.findNavController(view).navigate(SplashFragmentDirections.actionCreateProfile());
     }
 
     /**
