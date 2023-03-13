@@ -18,6 +18,7 @@ import com.cmput301w23t47.canary.model.QrCode;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -34,6 +35,7 @@ import java.util.List;
 public class SearchNearbyQrMapFragment extends LocationBaseFragment implements OnMapReadyCallback,
         GetQrListCallback {
     private GoogleMap googleMap;
+//    private MapView mapView;
     private final String playerLocTitle = "My Location";
     private ArrayList<QrCode> qrCodes;
 
