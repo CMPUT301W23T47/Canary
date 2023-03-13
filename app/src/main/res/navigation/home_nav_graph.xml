@@ -75,7 +75,7 @@
     <fragment
         android:id="@+id/searchNearbyQrMapFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.SearchNearbyQrMapFragment"
-        android:label="fragment_search_nearby_qr_map"
+        android:label="Nearby QRs"
         tools:layout="@layout/fragment_search_nearby_qr_map" >
         <action
             android:id="@+id/action_searchNearbyQrsToQrPage"
