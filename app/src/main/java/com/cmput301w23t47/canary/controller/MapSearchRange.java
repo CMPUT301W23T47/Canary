@@ -44,10 +44,19 @@ public class MapSearchRange {
 		qrWithinRange( loca, SearchList, rangeint );
 		
 	}
+	public MapSearchRange(Location loca,ArrayList<Qrcodem> list, int range) {
+		SearchList = list;
+		// this should set the final list to the list of qr codes within the range
+		qrWithinRange( loca, SearchList, range );
+		
+	}
 	
 
 	
 	public void qrWithinRange(Location userLocation, ArrayList<Qrcodem> givenList, int SearchRange){
+		if(finalList.size() != 0){
+			finalList.clear();
+		}
 		Location qrLocation = new Location("");
 		
 		for(int i =0; i<givenList.size(); i++){
