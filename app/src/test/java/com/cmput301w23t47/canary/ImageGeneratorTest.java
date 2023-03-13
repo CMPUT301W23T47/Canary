@@ -1,6 +1,7 @@
 package com.cmput301w23t47.canary;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -12,38 +13,14 @@ import com.cmput301w23t47.canary.controller.ImageGenerator;
 import org.junit.Test;
 
 public class ImageGeneratorTest {
+    ImageGenerator image = new ImageGenerator();
+
     @Test
-    public void image_isGenerated() {
-        ImageGenerator image = new ImageGenerator();
+    public void image_isDifferent() {
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
+        ImageGenerator image1 = new ImageGenerator();
+        ImageGenerator image2 = new ImageGenerator();
 
-        String url =  "https://picsum.photos/200";
-        Bitmap bitmap = BitmapFactory.decodeFile(url, options);
-        if (options.outWidth != -1 && options.outHeight != -1) {
-            // This is an image file.
-        }
-        else {
-            // This is not an image file.
-        }
-    }
-
-    private final String[] okFileExtensions = new String[] {
-            "jpg",
-            "png",
-            "gif",
-            "jpeg"
-    };
-
-
-    public boolean accept(ImageGenerator image) {
-        for (String extension: okFileExtensions) {
-            //if (image.getName().toLowerCase().endsWith(extension))
-            {
-                return true;
-            }
-        }
-        return false;
+        assertNotEquals(image1, image2);
     }
 }
