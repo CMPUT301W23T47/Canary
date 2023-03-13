@@ -53,8 +53,10 @@ public class QrCodeRepository {
     @Exclude
     public QrCode retrieveParsedQrCode() {
         Location loc = new Location("");
-        loc.setLatitude(location.getLatitude());
-        loc.setLongitude(location.getLongitude());
+        if (location != null) {
+            loc.setLatitude(location.getLatitude());
+            loc.setLongitude(location.getLongitude());
+        }
         Bitmap bitmap = null;
         if (qrImage != "") {
             bitmap = SnapshotController.getImage(qrImage);
