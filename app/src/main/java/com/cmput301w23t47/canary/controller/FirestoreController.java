@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,6 +40,10 @@ import java.util.concurrent.ExecutionException;
  * Objects are singleton
  */
 public class FirestoreController {
+    public static boolean testMode = false;
+    private static String testPlayer = "fzDzmMoLTOCxpMD8fGjVms";
+    public static boolean firstTimeTester = false;
+    private static String firstTimeTestPlayer = "testPlayerFirst";
     protected static final FirebaseFirestore db = FirebaseFirestore.getInstance();
     protected static final CollectionReference players = db.collection("Player");
     protected final CollectionReference qrCodes = db.collection("QRCode");
@@ -201,22 +206,25 @@ public class FirestoreController {
      * Gets the unique id for the player
      */
     public static void identifyPlayer(OnSuccessListener<String> successListener, OnFailureListener failureListener) {
-        FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
-        firebaseInstallations.getId().addOnSuccessListener(installationId -> {
-            players.document(installationId).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String playerId = document.getId();
-                        successListener.onSuccess(playerId);
+        if(testMode) successListener.onSuccess(testPlayer);
+        else {
+            FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
+            firebaseInstallations.getId().addOnSuccessListener(installationId -> {
+                players.document(installationId).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String playerId = document.getId();
+                            successListener.onSuccess(playerId);
+                        } else {
+                            failureListener.onFailure(new Exception("Player ID not found"));
+                        }
                     } else {
-                        failureListener.onFailure(new Exception("Player ID not found"));
+                        failureListener.onFailure(task.getException());
                     }
-                } else {
-                    failureListener.onFailure(task.getException());
-                }
-            });
-        }).addOnFailureListener(failureListener);
+                });
+            }).addOnFailureListener(failureListener);
+        }
     }
 
     /**
@@ -224,6 +232,8 @@ public class FirestoreController {
      * @return the doc if for player
      */
     protected String identifyPlayer() {
+        if(firstTimeTester) return firstTimeTestPlayer;
+        if(testMode) return testPlayer;
         FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
         Task<String> idTask = firebaseInstallations.getId();
         waitForGeneralTask(idTask);
@@ -398,6 +408,7 @@ public class FirestoreController {
     }
 
     protected DocumentReference persistQrCode(QrCodeRepository qrCodeRepository) {
+        qrCodeRepository.setCreatedOn(Timestamp.now());
         Task<DocumentReference> referenceTask = qrCodes.add(qrCodeRepository);
         waitForReference(referenceTask);
         return referenceTask.getResult();

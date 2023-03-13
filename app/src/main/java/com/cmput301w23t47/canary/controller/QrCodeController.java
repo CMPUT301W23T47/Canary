@@ -2,6 +2,8 @@ package com.cmput301w23t47.canary.controller;
 
 import android.util.Log;
 
+import com.cmput301w23t47.canary.model.QrCode;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,5 +51,32 @@ public class QrCodeController {
      */
     public static String getFormattedDate(Date date) {
         return simpleDateFormat.format(date);
+    }
+
+    /**
+     * Gets the title for the label on the map
+     * @param qrCode the qrCode to parse
+     * @return the string to display on map for QR
+     */
+    public static String getTitleForMapPin(QrCode qrCode) {
+        String name;
+        if (qrCode.getName().length() > 14) {
+            name = String.format(Locale.CANADA, "%s...", qrCode.getName().substring(0, 13));
+        } else {
+            name = qrCode.getName();
+        }
+        return String.format(Locale.CANADA, "%s: %d", name, qrCode.getScore());
+    }
+
+    /**
+     * Gets the display name for the qr (Truncates it if it is too long)
+     * @param qrName the full name of the qr
+     * @return the formatted name
+     */
+    public static String getDisplayName(String qrName) {
+        if (qrName.length() <= 16) {
+            return qrName;
+        }
+        return String.format(Locale.CANADA, "%s...", qrName.substring(0, 13));
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
+import com.cmput301w23t47.canary.callback.GetPlayerListCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
 import com.cmput301w23t47.canary.model.Player;
@@ -20,6 +21,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 /**
  * Firestore controller for interacting with Player model
@@ -119,10 +122,14 @@ public class FirestorePlayerController extends FirestoreController{
             DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
             GetIndexArg indexArg = new GetIndexArg();
             SnapshotRepository snapRepo = retrieveQrSnapshotFromPlayer(playerRepo, qrRef, indexArg);
-            Integer a = new Integer(1);
             handler.post(() -> {
                 // return the playerQr Model
-                Timestamp scanDate = playerRepo.getQrCodes().get(indexArg.i).getScanDate();
+                Timestamp scanDate = null;
+                if (indexArg.i > 0) {
+                    scanDate = playerRepo.getQrCodes().get(indexArg.i).getScanDate();
+                } else {
+                    scanDate = qrRepo.getCreatedOn();
+                }
                 callback.getPlayerQr(PlayerQrCodeRepository.retrievePlayerQrCode(qrRepo, snapRepo, scanDate));
             });
         }).start();
@@ -146,6 +153,7 @@ public class FirestorePlayerController extends FirestoreController{
             }
         }
         if (snapRef == null) {
+            indexArg.i = -1;
             return null;
         }
         Task<DocumentSnapshot> snapTask = snapRef.get();
@@ -211,6 +219,21 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Gets the complete model for the foreign player
+     * @param callback the callback to return the response to
+     */
+    public void getCompleteForeignPlayer(String playerDocId, GetPlayerCallback callback) {
+        Handler handler = new Handler();
+        new Thread(() -> {
+            Player player = retrieveCompletePlayer(playerDocId);
+            // return result
+            handler.post(() -> {
+                callback.getPlayer(player);
+            });
+        }).start();
+    }
+
     protected Player retrieveCompletePlayer(String playerDocId) {
         Task<DocumentSnapshot> playerTask = players.document(playerDocId).get();
         PlayerRepository playerRepository = waitForTask(playerTask, PlayerRepository.class);
@@ -242,6 +265,27 @@ public class FirestorePlayerController extends FirestoreController{
             waitForUpdateTask(saveTask);
             handler.post(() -> {
                 callback.operationStatus(true);
+            });
+        }).start();
+    }
+
+    /**
+     * Gets the list of players
+     * @param callback the callback to call when list available
+     */
+    public void getListOfPlayers(GetPlayerListCallback callback) {
+        Handler handler = new Handler();
+        new Thread(() -> {
+            Task<QuerySnapshot> playersTask = players.get();
+            waitForQuery(playersTask);
+            ArrayList<Player> playerList = new ArrayList<>();
+            // map all players to object
+            for (DocumentSnapshot playerDoc : playersTask.getResult().getDocuments()) {
+                playerList.add(playerDoc.toObject(PlayerRepository.class)
+                        .retrieveParsedPlayer());
+            }
+            handler.post(() -> {
+               callback.getPlayerList(playerList);
             });
         }).start();
     }

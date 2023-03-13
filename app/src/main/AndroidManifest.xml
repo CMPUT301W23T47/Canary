@@ -26,6 +26,10 @@ This allows access to the precise device location
         android:supportsRtl="true"
         android:theme="@style/Theme.Canary"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".view.activity.AddQrActivity"
             android:exported="false"
@@ -35,20 +39,6 @@ This allows access to the precise device location
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" /> <!-- This is for the map -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <activity
-            android:name=".view.fragment.FragmentMapScreenMapListSearch"
-            android:exported="false" /> <!-- api key for google maps -->
         <activity
             android:name=".view.activity.ScanQRCodeActivity"
             android:exported="false">

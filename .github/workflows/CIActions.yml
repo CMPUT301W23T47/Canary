@@ -15,6 +15,10 @@ jobs:
         env:
           FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
         run: echo $FIREBASE_KEY > ./app/google-services.json
+      - name: Add maps secret
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+        run: echo $MAPS_API_KEY > ./local.properties
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
