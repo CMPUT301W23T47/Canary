@@ -32,6 +32,9 @@ import java.util.ArrayList;
  */
 public class PlayerSearchFragment extends Fragment implements GetPlayerListCallback,
         GetIndexCallback {
+    /**
+     * Required empty public constructor.
+     */
     public PlayerSearchFragment() {
     }
 
@@ -42,12 +45,28 @@ public class PlayerSearchFragment extends Fragment implements GetPlayerListCallb
     ArrayList<Player> players = new ArrayList<>();
     ArrayList<Player> filteredPlayers = new ArrayList<>();
 
-
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -126,7 +145,11 @@ public class PlayerSearchFragment extends Fragment implements GetPlayerListCallb
         Navigation.findNavController(getView()).navigate(action);
     }
 
-        @Override
+    /**
+     * Gets the player from firestore to show and also shows the loading bar
+     * @param hidden True if the fragment is now hidden, false otherwise.
+     */
+    @Override
     public void onHiddenChanged(boolean hidden){
         if(!hidden && players == null){
             firestorePlayerController.getListOfPlayers(this);
@@ -171,6 +194,10 @@ public class PlayerSearchFragment extends Fragment implements GetPlayerListCallb
         binding.progressBarBox.setVisibility(View.GONE);
     }
 
+    /**
+     * Takes to the selected player at the given index number
+     * @param ind the requested index
+     */
     @Override
     public void getIndex(int ind) {
         Player selPlayer = searchAdapter.getItemAt(ind);

@@ -38,6 +38,11 @@ public class FirestoreLeaderboardController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Updates the player with the maximum number of qrcodes
+     * @param leaderboard The leaderboard to update
+     * @return boolean True if updated, False if not
+     */
     protected boolean updatePlayerWithMaxQr(Leaderboard leaderboard) {
         Task<QuerySnapshot> queryTask = players.orderBy("qrCodesSize", Query.Direction.DESCENDING).limit(1).get();
         waitForQuery(queryTask);
@@ -51,6 +56,11 @@ public class FirestoreLeaderboardController extends FirestoreController{
         return false;
     }
 
+    /**
+     * Updates the player with the maximum qr code score
+     * @param leaderboard The leaderboard to update
+     * @return boolean True if updated, False if not
+     */
     protected boolean updatePlayerWithMaxScore(Leaderboard leaderboard) {
         Task<QuerySnapshot> queryTask = players.orderBy("score", Query.Direction.DESCENDING).limit(1).get();
         waitForQuery(queryTask);
@@ -64,6 +74,10 @@ public class FirestoreLeaderboardController extends FirestoreController{
         return false;
     }
 
+    /**
+     * Gets the global leaderboard document
+     * @return global leaderboard document
+     */
     protected DocumentReference getGlobalLeaderboardDoc() {
         return leaderboard.document(globalLeaderboardDocument);
     }

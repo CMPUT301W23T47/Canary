@@ -65,6 +65,12 @@ public class LeaderboardController {
         return players;
     }
 
+    /**
+     * Gets the overall rank of the player among all the players in the leaderboard
+     * @param username The username of the player to get
+     * @param sortedPlayers The list of players sorted with highest qr code
+     * @return The rank of the player
+     */
     public static int getRankForPlayer(String username, ArrayList<LeaderboardPlayer> sortedPlayers) {
         for (int i = 0; i < sortedPlayers.size(); i++) {
             if (sortedPlayers.get(i).getUsername().equals(username))

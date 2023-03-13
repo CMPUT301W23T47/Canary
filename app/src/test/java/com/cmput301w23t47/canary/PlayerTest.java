@@ -20,13 +20,13 @@ public class PlayerTest {
         return player;
     }
     private PlayerQrCode mockQr(){
-        QrCode qrCode = new QrCode("111-111-212", 619, new Location("GPS"), "testQrCode");
-        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode,new Date());
+        QrCode qrCode = new QrCode("111-111-212", 619, new Location("GPS"), "testQrCode", null);
+        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode,new Date(), false);
         return playerQrCode;
     }
     private PlayerQrCode mockQrLow(){
-        QrCode qrCode = new QrCode("211-111-212", 19, new Location("0"), "testQrCode2");
-        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode,new Date());
+        QrCode qrCode = new QrCode("211-111-212", 19, new Location("0"), "testQrCode2", null);
+        PlayerQrCode playerQrCode = new PlayerQrCode(qrCode,new Date(), false);
         return playerQrCode;
     }
 

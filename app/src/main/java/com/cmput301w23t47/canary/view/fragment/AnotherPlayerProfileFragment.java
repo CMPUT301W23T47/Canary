@@ -32,14 +32,33 @@ public class AnotherPlayerProfileFragment extends Fragment implements
     private FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
     private Player player;
     private QRCodeListAdapter qrCodeListAdapter;
-
+    /**
+     * Required empty public constructor.
+     */
     public AnotherPlayerProfileFragment() {}
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,7 +78,7 @@ public class AnotherPlayerProfileFragment extends Fragment implements
     }
 
     /**
-     * Initializes the ui for the page
+     * Initializes the UI for the page
      */
     private void init(){
         showLoadingBar();
@@ -72,6 +91,10 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         });
     }
 
+    /**
+     * Gets the player from firestore to show and also shows the loading bar
+     * @param hidden True if the fragment is now hidden, false otherwise.
+     */
     @Override
     public void onHiddenChanged(boolean hidden){
         if(!hidden && player == null){
@@ -80,6 +103,9 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         }
     }
 
+    /**
+     * Destroys a created view.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -87,6 +113,10 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         binding = null;
     }
 
+    /**
+     * Updates the image of a player given
+     * @param player Player whose image is to be updated
+     */
     private void updatePlayerImage(Player player) {
         Bitmap playerImage = player.getPlayerImage();
         if (playerImage != null) binding.playerImage.setImageBitmap(playerImage);
@@ -99,6 +129,10 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         }
     }
 
+    /**
+     * updates all the details of the player from the firestore and
+     * displays on the screen
+     */
     private void updateView() {
         if (player == null) {
             return;
@@ -114,7 +148,10 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         hideLoadingBar();
     }
 
-
+    /**
+     * Assigns a player and updates the screen
+     * @param player
+     */
     @Override
     public void getPlayer(Player player) {
         this.player = player;

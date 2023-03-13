@@ -15,7 +15,7 @@ public class QrCodeTest {
 
 
     private QrCode mockQr() {
-        QrCode qrCode = new QrCode("111-111-212", 619, new Location("GPS"), "testQrCode");
+        QrCode qrCode = new QrCode("111-111-212", 619, new Location("GPS"), "testQrCode", null);
         return qrCode;
     }
 

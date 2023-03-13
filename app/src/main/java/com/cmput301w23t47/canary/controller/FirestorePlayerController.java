@@ -95,6 +95,10 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Updates the player and sets the details
+     * @param playerRepo Player to be updated
+     */
     protected void updatePlayer(PlayerRepository playerRepo) {
         Task<Void> updatePlayerTask = players.document(playerRepo.getDocId()).set(playerRepo);
         waitForUpdateTask(updatePlayerTask);
@@ -251,6 +255,11 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Retrieves the completed player
+     * @param playerDocId id of the player that is completed
+     * @return The completed Player
+     */
     protected Player retrieveCompletePlayer(String playerDocId) {
         Task<DocumentSnapshot> playerTask = players.document(playerDocId).get();
         PlayerRepository playerRepository = waitForTask(playerTask, PlayerRepository.class);

@@ -41,10 +41,18 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     AlertDialog.Builder builder;
 
     private final FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
-    // Default constructor
+
+    /**
+     * Required empty public constructor.
+     */
     public QRCodeViewFragment() {
     }
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +141,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     }
 
     /**
-     * Initializes the view
+     * Initializes the view for this page
      */
     private void init() {
         showLoadingBar();
@@ -145,6 +153,18 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         firestorePlayerController.getPlayerQr(qrHash, this);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -171,6 +191,9 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         });
     }
 
+    /**
+     * Deletes a Qr from a player's profile by calling the firestore controller.
+     */
     private void deleteQr() {
         if (playerQrCode == null) {
             return;
@@ -179,18 +202,29 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         firestorePlayerController.deleteQrFromPlayer(playerQrCode, this);
     }
 
+    /**
+     * Defines what to do on resuming the activity
+     */
     @Override
     public void onResume() {
         super.onResume();
         init();
     }
 
+    /**
+     * Sets the playerqrcode to the given code
+     * @param playerQrCode To be set
+     */
     @Override
     public void getPlayerQr(PlayerQrCode playerQrCode) {
         this.playerQrCode = playerQrCode;
         updateFragmentData();
     }
 
+    /**
+     * Depending upon status, determines whether the player has been created or not.
+     * @param status boolean value giving if a state is valid or not
+     */
     @Override
     public void operationStatus(boolean status) {
         hideLoadingBar();

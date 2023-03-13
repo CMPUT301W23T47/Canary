@@ -43,15 +43,26 @@ import org.junit.runner.RunWith;
 
 import java.util.Date;
 
+/**
+ * The type Player profile fragment test.
+ */
 @RunWith(AndroidJUnit4.class)
 public class PlayerProfileFragmentTest {
     private Solo solo;
 
     static {FirestoreController.testMode=true;}
 
+    /**
+     * The Rule.
+     */
     @Rule
     public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
+    /**
+     * Sets up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception{
         Intents.init();
@@ -60,21 +71,33 @@ public class PlayerProfileFragmentTest {
         });
     }
 
+    /**
+     * Start activity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void startActivity() throws Exception{
         rule.getScenario().onActivity(activity -> {
         });
     }
 
+    /**
+     * Check test mode.
+     */
     @Test
     public void checkTestMode(){
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         boolean textAppeared = solo.waitForText("officalTester", 1, 2000);
         assertTrue("Text not found!", textAppeared);
     }
-    
-    
 
+
+    /**
+     * Check past qr exists.
+     *
+     * @throws InterruptedException the interrupted exception
+     */
     @Test
     public void checkPastQrExists() throws InterruptedException {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
@@ -88,6 +111,11 @@ public class PlayerProfileFragmentTest {
 
     }
 
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
     @After
     public void tearDown() throws Exception{
         Intents.release();

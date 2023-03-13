@@ -16,10 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter for Player Search
+ */
 public class PlayerSearchAdapter extends RecyclerView.Adapter<PlayerSearchAdapter.ViewHolder>{
     private ArrayList<Player> players;
     private GetIndexCallback callback;
-    //constructor
+
+    /**
+     * Required public constructor.
+     */
     public PlayerSearchAdapter(ArrayList<Player> players, GetIndexCallback callback) {
         this.players = players;
         this.callback = callback;
@@ -34,6 +40,14 @@ public class PlayerSearchAdapter extends RecyclerView.Adapter<PlayerSearchAdapte
         notifyDataSetChanged();
     }
 
+    /**
+     * Gets a view for searching an item
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return ViewHolder A new object with details about a player
+     */
     @NonNull
     @Override
     public PlayerSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +55,13 @@ public class PlayerSearchAdapter extends RecyclerView.Adapter<PlayerSearchAdapte
         return new ViewHolder(view, callback);
     }
 
+    /**
+     * Sets the text for the qr name and qr point total
+     * this acts like an update function
+     * as well as a listen for if an item was clicked
+     * @param holder the view holder for the recycler view this is an item
+     * @param position the position of the item that was clicked
+     */
     @Override
     public void onBindViewHolder(@NonNull PlayerSearchAdapter.ViewHolder holder, int position) {
         Player player = players.get(position);
@@ -48,11 +69,19 @@ public class PlayerSearchAdapter extends RecyclerView.Adapter<PlayerSearchAdapte
         holder.playerScore.setText(String.format(Locale.CANADA, "%d", player.getScore()));
     }
 
+    /**
+     * Gives the number of players in the list
+     * @return int Size of the list of players
+     */
     @Override
     public int getItemCount() {
         return players.size();
     }
 
+    /**
+     * Adds the details to the list
+     * @param filteredModelList the list in which players are added
+     */
     public void setFilterList(List<Player> filteredModelList) {
         players = new ArrayList<>();
         players.addAll(filteredModelList);
@@ -82,10 +111,18 @@ public class PlayerSearchAdapter extends RecyclerView.Adapter<PlayerSearchAdapte
     }
 
 
+    /**
+     * A class with a constructor which gives the view
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView playerName;
         private final TextView playerScore;
 
+        /**
+         * Initializes a view and sets the score of the player
+         * @param itemView
+         * @param getIndexCallback
+         */
         public ViewHolder(@NonNull View itemView, GetIndexCallback getIndexCallback) {
             super(itemView);
             playerName=itemView.findViewById(R.id.player_list_username);
