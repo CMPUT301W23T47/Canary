@@ -14,6 +14,10 @@ public class LeaderboardPlayer {
 
     /**
      * Constructor for LeaderboardPlayer
+     *
+     * @param username   the username
+     * @param score      the score
+     * @param maxScoreQr the max score qr
      */
     public LeaderboardPlayer(String username, long score, long maxScoreQr) {
         this.username = username;
@@ -21,14 +25,29 @@ public class LeaderboardPlayer {
         this.maxScoreQr = maxScoreQr;
     }
 
+    /**
+     * Gets username.
+     *
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Gets score.
+     *
+     * @return the score
+     */
     public long getScore() {
         return score;
     }
 
+    /**
+     * Gets max score qr.
+     *
+     * @return the max score qr
+     */
     public long getMaxScoreQr() {
         return maxScoreQr;
     }

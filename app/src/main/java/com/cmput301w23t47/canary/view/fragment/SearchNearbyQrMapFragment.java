@@ -47,6 +47,18 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     private FragmentSearchNearbyQrMapBinding binding;
     private SearchNearbyQrListAdapter qrCodeListAdapter;
 
+    /**
+     * Handles the layout of the activity, and called on activity creation.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,6 +68,12 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         return binding.getRoot();
     }
 
+    /**
+     * Sets the view of the page and calls the function to show the UI of the page.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -79,6 +97,10 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         askPermissions();
     }
 
+    /**
+     * Gets the player from firestore to show and also shows the loading bar
+     * @param hidden True if the fragment is now hidden, false otherwise.
+     */
     @Override
     public void onHiddenChanged(boolean hidden){
         if(!hidden && qrCodes.size() == 0){
@@ -176,6 +198,10 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
 
+    /**
+     * Sets the list of Qrcodes
+     * @param qrCodes
+     */
     @Override
     public void getQrList(ArrayList<QrCode> qrCodes) {
         this.qrCodes = qrCodes;

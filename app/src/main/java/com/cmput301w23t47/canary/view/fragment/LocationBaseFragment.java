@@ -94,6 +94,9 @@ public abstract class LocationBaseFragment extends Fragment {
         }
     }
 
+    /**
+     * Handles the case to update the location
+     */
     abstract protected void updateLocation();
 
     /**

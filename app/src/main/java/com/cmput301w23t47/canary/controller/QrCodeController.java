@@ -35,6 +35,7 @@ public class QrCodeController {
         }
     }
 
+
     public static String getHashStrForQr(String qrVal) {
         byte[] qrHash = QrCodeController.getHashForQr(qrVal);
         StringBuilder str = new StringBuilder();

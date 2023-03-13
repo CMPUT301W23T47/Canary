@@ -7,7 +7,13 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The type Gen words test.
+ */
 public class GenWordsTest {
+    /**
+     * Test gen words.
+     */
     @Test
     public void testGenWords()
     {

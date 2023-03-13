@@ -20,15 +20,26 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+/**
+ * The type Create profile test.
+ */
 @RunWith(AndroidJUnit4.class)
 public class CreateProfileTest {
     private Solo solo;
 
     static {FirestoreController.firstTimeTester=true;}
 
+    /**
+     * The Rule.
+     */
     @Rule
     public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
+    /**
+     * Sets up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception{
         Intents.init();
@@ -36,6 +47,12 @@ public class CreateProfileTest {
             solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
         });
     }
+
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
     @After
     public void tearDown() throws Exception{
         Intents.release();
@@ -43,6 +60,9 @@ public class CreateProfileTest {
     }
 
 
+    /**
+     * Check if create profile prompted for new user.
+     */
     @Test
     public void checkIfCreateProfilePromptedForNewUser(){
         boolean textAppeared = solo.waitForText("Create Profile", 1, 2000);

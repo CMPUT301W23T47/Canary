@@ -19,14 +19,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.view.contract.SnapshotContract;
 
-/** CaptureSnapshot
- * @author Dhruvraj Singh
+/**
+ * Activity to capture the snapshot for a QR
  */
-
 public class CaptureSnapshotActivity extends CameraBaseActivity {
     public static final String TAG = "CaptureSnapshotActivity";
     ActivityResultLauncher<Intent> activityResultLauncher;
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,9 @@ public class CaptureSnapshotActivity extends CameraBaseActivity {
         init();
     }
 
+    /**
+     * Launches an activity and gets the bitmap image from the camera
+     */
     protected void init() {
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -50,6 +57,9 @@ public class CaptureSnapshotActivity extends CameraBaseActivity {
         checkPermissions();
     }
 
+    /**
+     * Opens the camera app
+     */
     @Override
     protected void openCamera() {
         Log.d(TAG, "openCamera: ");

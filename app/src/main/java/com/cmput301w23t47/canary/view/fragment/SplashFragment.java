@@ -24,11 +24,28 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
 
     FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,6 +53,9 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 
+    /**
+     * Defines what to do on resuming the activity
+     */
     @Override
     public void onResume() {
         super.onResume();

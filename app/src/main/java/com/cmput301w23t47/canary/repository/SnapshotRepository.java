@@ -18,32 +18,68 @@ public class SnapshotRepository {
     // Default Constructor
     public SnapshotRepository() {}
 
-    // Param constructor
+    /**
+     * Instantiates a new Snapshot repository.
+     *
+     * @param data  the data
+     * @param owner the owner
+     */
+// Param constructor
     public SnapshotRepository(String data, DocumentReference owner) {
         this.data = data;
         this.owner = owner;
     }
 
+    /**
+     * Gets doc id.
+     *
+     * @return the doc id
+     */
     public String getDocId() {
         return docId;
     }
 
+    /**
+     * Sets doc id.
+     *
+     * @param docId the doc id
+     */
     public void setDocId(String docId) {
         this.docId = docId;
     }
 
+    /**
+     * Gets data.
+     *
+     * @return the data
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Sets data.
+     *
+     * @param data the data
+     */
     public void setData(String data) {
         this.data = data;
     }
 
+    /**
+     * Gets owner.
+     *
+     * @return the owner
+     */
     public DocumentReference getOwner() {
         return owner;
     }
 
+    /**
+     * Sets owner.
+     *
+     * @param owner the owner
+     */
     public void setOwner(DocumentReference owner) {
         this.owner = owner;
     }

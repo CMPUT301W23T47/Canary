@@ -53,6 +53,11 @@ public class ScanQRCodeActivity extends CameraBaseActivity {
     protected BarcodeScanner qrScanner;
     protected ExecutorService cameraExecutor;
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,9 @@ public class ScanQRCodeActivity extends CameraBaseActivity {
         init();
     }
 
+    /**
+     * Initializes the UI and starts the scanning of the qr
+     */
     @Override
     protected void init() {
         checkPermissions();

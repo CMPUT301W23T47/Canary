@@ -22,7 +22,9 @@ import com.cmput301w23t47.canary.view.adapter.QRCodeListAdapter;
 
 import java.util.ArrayList;
 
-
+/**
+ * The fragment for the profile page of the player
+ */
 public class PlayerProfileFragment extends Fragment implements
         GetPlayerCallback {
 
@@ -35,18 +37,42 @@ public class PlayerProfileFragment extends Fragment implements
     private static final String progressBarTitle = "Loading Player Profile";
     private static final String progressBarMessage = "Should take only a moment...";
 
+    /**
+     * Required empty public constructor.
+     */
     public PlayerProfileFragment() {}
 
+    /**
+     * Creates a new PlayerProfileFragment and returns it
+     * @return fragment (PlayerProfileFragment): a new fragment created to work on
+     */
     public static PlayerProfileFragment newInstance() {
         PlayerProfileFragment fragment = new PlayerProfileFragment();
         return fragment;
     }
 
+    /**
+     * Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +103,10 @@ public class PlayerProfileFragment extends Fragment implements
         });
     }
 
+    /**
+     * Gets the player from firestore to show and also shows the loading bar
+     * @param hidden True if the fragment is now hidden, false otherwise.
+     */
     @Override
     public void onHiddenChanged(boolean hidden){
         if(!hidden && player == null){
@@ -85,6 +115,9 @@ public class PlayerProfileFragment extends Fragment implements
         }
     }
 
+    /**
+     * Destroys a created view.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -92,6 +125,10 @@ public class PlayerProfileFragment extends Fragment implements
         binding = null;
     }
 
+    /**
+     * Updates the image of a player given
+     * @param player Player whose image is to be updated
+     */
     private void updatePlayerImage(Player player) {
         Bitmap playerImage = player.getPlayerImage();
         if (playerImage != null) binding.playerImage.setImageBitmap(playerImage);
@@ -104,6 +141,10 @@ public class PlayerProfileFragment extends Fragment implements
         }
     }
 
+    /**
+     * updates all the details of the player from the firestore and
+     * displays on the screen
+     */
     private void updateView() {
         if (player == null) {
             return;
@@ -119,7 +160,10 @@ public class PlayerProfileFragment extends Fragment implements
         hideLoadingBar();
     }
 
-
+    /**
+     * Assigns a player and updates the screen
+     * @param player
+     */
     @Override
     public void getPlayer(Player player) {
         this.player = player;

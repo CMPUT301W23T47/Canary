@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
+ * A fragment for the setting the preference of capturing the Qr.
  * Continues without saving location if permission denied
  */
 public class QrCapturePreferenceFragment extends Fragment implements 
@@ -49,13 +50,33 @@ public class QrCapturePreferenceFragment extends Fragment implements
     private boolean saveLocation = true;
     private final QrCode qrCode = new QrCode();
 
+    /**
+     * Required empty public constructor.
+     */
     public QrCapturePreferenceFragment() {}
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +86,12 @@ public class QrCapturePreferenceFragment extends Fragment implements
         return binding.getRoot();
     }
 
+    /**
+     * Sets the view of the page and calls the function to show the UI of the page.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -73,6 +100,9 @@ public class QrCapturePreferenceFragment extends Fragment implements
         binding.saveLocationCheckbox.setChecked(saveLocation);
     }
 
+    /**
+     * Initializes the UI for this page.
+     */
     void init() {
         binding.saveLocationCheckbox.setOnClickListener(view -> {
             saveLocation = binding.saveLocationCheckbox.isChecked();
@@ -104,6 +134,11 @@ public class QrCapturePreferenceFragment extends Fragment implements
         binding.progressBarBox.setVisibility(View.GONE);
     }
 
+    /**
+     * Checks whther the qr with given hash exists or not
+     * assigns the name and scores and updates the UI if does not exist
+     * @param exists
+     */
     @Override
     public void doesResourceExists(boolean exists) {
         hideLoadingBar();
@@ -124,6 +159,9 @@ public class QrCapturePreferenceFragment extends Fragment implements
         }
     }
 
+    /**
+     * Returns the screen to the Qr Code page
+     */
     public void returnToQrCodePage() {
         Intent intent = new Intent();
         intent.putExtra(AddNewQrContract.RESPONSE_TAG, qrCode.getHash());
@@ -140,6 +178,10 @@ public class QrCapturePreferenceFragment extends Fragment implements
         binding.qrScore.setText(String.format(Locale.CANADA, "%d", qrCode.getScore()));
     }
 
+    /**
+     * Receives the snapshot as a bitmap image.
+     * @param image the bitmap image which has to be persisted
+     */
     private void receiveSnapshot(Bitmap image) {
         showLoadingBar();
         persistQr(image);
@@ -158,10 +200,17 @@ public class QrCapturePreferenceFragment extends Fragment implements
         firestorePlayerController.addQrToCurrentPlayer(playerQrCode, this);
     }
 
+    /**
+     * Calls the activity which captures a snapshot
+     */
     private void captureSnapshot() {
         snapshotActivityLauncher.launch(null);
     }
 
+    /**
+     * Depending upon status, determines whether the player has been created or not.
+     * @param status boolean value giving if a state is valid or not
+     */
     @Override
     public void operationStatus(boolean status) {
         // QR Persisted, go back

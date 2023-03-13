@@ -67,6 +67,13 @@ public class FirestoreController {
         return instance;
     }
 
+    /**
+     * Waits for a particular task to be poerformed
+     * @param snapshotTask the document snapshot object
+     * @param classType
+     * @return an object of a classtype
+     * @param <TResult>
+     */
     protected  <TResult> TResult waitForTask(Task<DocumentSnapshot> snapshotTask, @NonNull Class<TResult> classType) {
         try {
             DocumentSnapshot doc = Tasks.await(snapshotTask);
@@ -138,6 +145,10 @@ public class FirestoreController {
         }
     }
 
+    /**
+     * Sets the data of the player in the firestore
+     * @param player
+     */
     public void setPlayer(Player player){
         FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
         firebaseInstallations.getId().addOnSuccessListener(new OnSuccessListener<String>() {
@@ -181,6 +192,11 @@ public class FirestoreController {
 
     }
 
+    /**
+     * Gives the active player's username
+     * @param successListener OnSuccessListener object which performs some task
+     * @param failureListener OnfailureListener object which performs some task
+     */
     public void getActivePlayerUserName(OnSuccessListener<String> successListener, OnFailureListener failureListener){
         FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
         firebaseInstallations.getId().addOnSuccessListener(installationId -> {
@@ -305,6 +321,11 @@ public class FirestoreController {
     }
 
 
+    /**
+     * Gives the list of players who scanned a given qr code
+     * @param qrHash Hash of the given qrcode
+     * @return usernameList A list with usernames of all the players who scanned the code
+     */
     protected ArrayList<String> getUsernamesOfPlayersWhoScanned(String qrHash){
         String qrDocID = findQrDocId(qrHash);
         ArrayList<String> usernameList = new ArrayList<>();
@@ -327,6 +348,11 @@ public class FirestoreController {
         return usernameList;
     }
 
+    /**
+     * Gives the document id of the qrcode
+     * @param qrHash Hash of the given qrcode
+     * @return DocumentId of the qrcode
+     */
     protected String findQrDocId(String qrHash){
         Task<QuerySnapshot> qrCodeQuery = qrCodes.whereEqualTo("hash", qrHash).get();
         try {
@@ -407,6 +433,11 @@ public class FirestoreController {
         return persistQrCode(qrCodeRepository);
     }
 
+    /**
+     * Gives the persisted qr code
+     * @param qrCodeRepository repo that contains qrcodes
+     * @return Qrcode which was requested
+     */
     protected DocumentReference persistQrCode(QrCodeRepository qrCodeRepository) {
         qrCodeRepository.setCreatedOn(Timestamp.now());
         Task<DocumentReference> referenceTask = qrCodes.add(qrCodeRepository);

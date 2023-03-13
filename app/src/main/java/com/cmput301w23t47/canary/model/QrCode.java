@@ -17,8 +17,19 @@ public class QrCode {
     private Location location;
     // name of the QR
     private String name;
+    /**
+     * The Comments.
+     */
     ArrayList<Comment> comments = new ArrayList<>();
 
+    /**
+     * Instantiates a new Qr code.
+     *
+     * @param hash     the hash
+     * @param score    the score
+     * @param location the location
+     * @param name     the name
+     */
     public QrCode(String hash, long score, Location location, String name) {
         this.hash = hash;
         this.score = score;
@@ -26,42 +37,86 @@ public class QrCode {
         this.name = name;
     }
 
+    /**
+     * Instantiates a new Qr code.
+     */
     public QrCode() {}
 
+    /**
+     * Gets hash.
+     *
+     * @return the hash
+     */
     public String getHash() {
         return hash;
     }
 
+    /**
+     * Sets hash.
+     *
+     * @param hash the hash
+     */
     public void setHash(String hash) {
         this.hash = hash;
     }
 
+    /**
+     * Gets score.
+     *
+     * @return the score
+     */
     public long getScore() {
         return score;
     }
 
+    /**
+     * Sets score.
+     *
+     * @param score the score
+     */
     public void setScore(long score) {
         this.score = score;
     }
 
+    /**
+     * Gets location.
+     *
+     * @return the location
+     */
     public Location getLocation() {
         return location;
     }
 
+    /**
+     * Sets location.
+     *
+     * @param location the location
+     */
     public void setLocation(Location location) {
         this.location = location;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
      * Determines whether location for the qr is available
+     *
      * @return true if location is available
      */
     public boolean hasLocation() {

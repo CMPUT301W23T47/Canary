@@ -14,7 +14,9 @@ import com.cmput301w23t47.canary.controller.QrCodeController;
 import com.cmput301w23t47.canary.databinding.FragmentAddNewQrBinding;
 import com.cmput301w23t47.canary.view.contract.ScanQrContract;
 
-
+/**
+ * Represents a fragment for scanning a new QR code
+ */
 public class AddNewQrFragment extends Fragment {
     public static final String TAG = "AddNewQrFragment";
 
@@ -24,6 +26,18 @@ public class AddNewQrFragment extends Fragment {
 
     String qrHash = null;
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -35,17 +49,29 @@ public class AddNewQrFragment extends Fragment {
 
     }
 
+    /**
+     * Sets the view of the page and calls the function to show the UI of the page.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
     }
 
+    /**
+     * Destroys a created view.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    /**
+     * Initializes the UI for this page.
+     */
     void init() {
         // register contract for QR Activity
         qrActivityLauncher = registerForActivityResult(new ScanQrContract(),
