@@ -18,9 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301w23t47.canary.MainActivity;
+import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
+import com.cmput301w23t47.canary.callback.GetImageCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
+import com.cmput301w23t47.canary.controller.ImageGenerator;
 import com.cmput301w23t47.canary.controller.RandomNameGenerator;
 import com.cmput301w23t47.canary.controller.ScoreCalculator;
 import com.cmput301w23t47.canary.databinding.FragmentQrCapturePreferenceBinding;
@@ -38,7 +41,7 @@ import java.util.Locale;
  * Continues without saving location if permission denied
  */
 public class QrCapturePreferenceFragment extends LocationBaseFragment implements
-        DoesResourceExistCallback, OperationStatusCallback {
+        DoesResourceExistCallback, OperationStatusCallback, GetImageCallback {
     public static final String TAG = "QrCapturePreferenceFragment";
 
     private FragmentQrCapturePreferenceBinding binding;
@@ -50,6 +53,9 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
 
     private boolean saveLocation = true;
     private final QrCode qrCode = new QrCode();
+    private Bitmap qrImage = null;
+    private boolean imageCallbackReturned = false;
+    private boolean qrCheckReturned = false;
 
     public QrCapturePreferenceFragment() {}
 
@@ -72,6 +78,7 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
         super.onViewCreated(view, savedInstanceState);
         qrCode.setHash(QrCapturePreferenceFragmentArgs.fromBundle(getArguments()).getQrHash());
         firestorePlayerController.doesCurrentPlayerHaveQr(qrCode.getHash(), this);
+        ImageGenerator.getImage(getString(R.string.random_image_generator), this);
         binding.saveLocationCheckbox.setChecked(saveLocation);
     }
 
@@ -105,11 +112,14 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
      * Hides the loading bar
      */
     private void hideLoadingBar() {
-        binding.progressBarBox.setVisibility(View.GONE);
+        if (qrCheckReturned && imageCallbackReturned) {
+            binding.progressBarBox.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void doesResourceExists(boolean exists) {
+        qrCheckReturned = true;
         hideLoadingBar();
         if (exists) {
             // if qr with the given hash exist, show an alert
@@ -188,5 +198,12 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
     @Override
     protected void locationPermissionNotGranted() {
         playerLocation = null;
+    }
+
+    @Override
+    public void getImage(Bitmap bitmap) {
+        imageCallbackReturned = true;
+        qrImage = bitmap;
+        hideLoadingBar();
     }
 }
