@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.view.LayoutInflater;
@@ -118,7 +119,10 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
 
     @Override
     public void getIndex(int ind) {
-
+        QrCode qrCode = qrCodeListAdapter.getItemAt(ind);
+        if (qrCode != null) {
+            navigateToSelectedQr(qrCode);
+        }
     }
 
     /**
@@ -170,5 +174,15 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
     private void showAllQrs() {
         qrCodeListAdapter.updateList(qrCodes);
         binding.searchResultHeading.setText("All QRs");
+    }
+
+    /**
+     * Navigates to the selected qr
+     * @param qrCode the qr code selected
+     */
+    private void navigateToSelectedQr(QrCode qrCode) {
+        NearbyQrCodeListFragmentDirections.ActionNearbyQrListToQrCodePage action =
+                NearbyQrCodeListFragmentDirections.actionNearbyQrListToQrCodePage(qrCode.getHash());
+        Navigation.findNavController(getView()).navigate(action);
     }
 }
