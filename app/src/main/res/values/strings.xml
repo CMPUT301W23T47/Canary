@@ -4,6 +4,7 @@
     <string name="leaderboard">Leaderboard</string>
     <string name="by_score">By Score</string>
     <string name="by_qr_scanned">By QR Scanned</string>
+    <string name="random_image_generator">https://picsum.photos/200</string>
     <string name="by_highest_scoring_qr">By Highest Scoring QR</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
