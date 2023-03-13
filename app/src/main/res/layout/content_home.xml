@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="?android:attr/actionBarSize"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <fragment
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:id="@+id/fragment_container_view_main"
+        android:id="@+id/fragment_container_view_home"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
@@ -15,6 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/main_nav_graph"
+        app:navGraph="@navigation/home_nav_graph"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

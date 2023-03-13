@@ -2,9 +2,12 @@ package com.cmput301w23t47.canary.view.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,7 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
     public SplashFragment() {}
 
     FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
+    private View view;
 
     /**
      *  Handles the layout of the activity, and called on activity creation.
@@ -50,7 +54,8 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_splash, container, false);
+        view = inflater.inflate(R.layout.fragment_splash, container, false);
+        return view;
     }
 
     /**
@@ -66,14 +71,14 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
      * Navigates to the home screen; The player exists
      */
     private void navigateToHome() {
-        Navigation.findNavController(getView()).navigate(R.id.action_splashToHome);
+        Navigation.findNavController(view).navigate(SplashFragmentDirections.actionSplashFragmentToHomeActivity());
     }
 
     /**
      * Navigates to the create profile page; The player does not exist
      */
     private void navigateToCreateProfile() {
-        Navigation.findNavController(getView()).navigate(R.id.action_splashToCreateProfile);
+        Navigation.findNavController(view).navigate(SplashFragmentDirections.actionCreateProfile());
     }
 
     /**
@@ -83,10 +88,24 @@ public class SplashFragment extends Fragment implements OperationStatusCallback 
      */
     @Override
     public void operationStatus(boolean status) {
-        if (status) {
-            navigateToHome();
-        } else {
-            navigateToCreateProfile();
-        }
+        Handler handler = new Handler();
+        new Thread(() -> {
+            View view = null;
+            while (view == null) {
+                // wait for the view to be non null
+                view = getView();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {}
+            }
+            handler.post(() -> {
+                if (status) {
+                    navigateToHome();
+                } else {
+                    navigateToCreateProfile();
+                }
+            });
+        }).start();
+
     }
 }

@@ -33,6 +33,7 @@ public class PlayerQrCode {
      * @param date           the date
      * @param locationShared the location shared
      */
+
     public PlayerQrCode(QrCode qrCode, Date date, boolean locationShared) {
         this.qrCode = qrCode;
         this.scanDate = date;
@@ -162,4 +163,12 @@ public class PlayerQrCode {
         qrCode.setLocation(newLocation);
     }
 
+    /**
+     * Retrieves the qr image
+     * @return the qr image
+     */
+    public Bitmap retrieveQrImage() {
+        return qrCode.getQrImage();
+    }
 }
+

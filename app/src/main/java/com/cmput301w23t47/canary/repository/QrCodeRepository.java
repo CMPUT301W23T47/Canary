@@ -1,9 +1,11 @@
 package com.cmput301w23t47.canary.repository;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
 
+import com.cmput301w23t47.canary.controller.SnapshotController;
 import com.cmput301w23t47.canary.model.QrCode;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
@@ -22,8 +24,11 @@ public class QrCodeRepository {
     private String name;
     // date when qr was created
     private Timestamp createdOn;
+    // the photo of the qr
+    private String qrImage;
 
     public QrCodeRepository() {}
+
 
     /**
      * Instantiates a new Qr code repository.
@@ -33,11 +38,14 @@ public class QrCodeRepository {
      * @param location the location
      * @param name     the name
      */
-    public QrCodeRepository(String hash, long score, GeoPoint location, String name) {
+
+    public QrCodeRepository(String hash, long score, GeoPoint location, String name, String qrImage) {
+
         this.hash = hash;
         this.score = score;
         this.location = location;
         this.name = name;
+        this.qrImage = qrImage;
     }
 
     /**
@@ -50,7 +58,11 @@ public class QrCodeRepository {
         Location loc = new Location("");
         loc.setLatitude(location.getLatitude());
         loc.setLongitude(location.getLongitude());
-        return new QrCode(hash, score, loc , name);
+        Bitmap bitmap = null;
+        if (qrImage != "") {
+            bitmap = SnapshotController.getImage(qrImage);
+        }
+        return new QrCode(hash, score, loc , name, bitmap);
     }
 
     /**
@@ -60,7 +72,15 @@ public class QrCodeRepository {
      * @return the qr code repository
      */
     public static QrCodeRepository retrieveQrCodeRepo(QrCode qrCode) {
-        return new QrCodeRepository(qrCode.getHash(), qrCode.getScore(), new GeoPoint(0, 0), qrCode.getName());
+        GeoPoint point = null;
+        if (qrCode.hasLocation()) {
+            point = new GeoPoint(qrCode.getLocation().getLatitude(), qrCode.getLocation().getLongitude());
+        }
+        String imageBase64 = "";
+        if (qrCode.getQrImage() != null) {
+            imageBase64 = SnapshotController.getBase64Image(qrCode.getQrImage());
+        }
+        return new QrCodeRepository(qrCode.getHash(), qrCode.getScore(), point, qrCode.getName(), imageBase64);
     }
 
     /**
@@ -124,7 +144,7 @@ public class QrCodeRepository {
      */
     @Exclude
     public QrCode getQrCode() {
-        return new QrCode(hash, score, null, name);
+        return new QrCode(hash, score, null, name, SnapshotController.getImage(qrImage));
     }
 
     /**
@@ -161,6 +181,14 @@ public class QrCodeRepository {
      */
     public void setCreatedOn(Timestamp createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public String getQrImage() {
+        return qrImage;
+    }
+
+    public void setQrImage(String qrImage) {
+        this.qrImage = qrImage;
     }
 
     /**

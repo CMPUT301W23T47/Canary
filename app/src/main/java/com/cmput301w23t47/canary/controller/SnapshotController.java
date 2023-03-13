@@ -32,6 +32,9 @@ public class SnapshotController {
      * @return the bitmap
      */
     public static Bitmap getImage(String base64Image) {
+        if (base64Image == null || base64Image.equals("")) {
+            return null;
+        }
         byte[] imageBytes = Base64.getDecoder().decode(base64Image);
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }

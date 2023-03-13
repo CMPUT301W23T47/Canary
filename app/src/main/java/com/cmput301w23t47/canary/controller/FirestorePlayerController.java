@@ -86,7 +86,8 @@ public class FirestorePlayerController extends FirestoreController{
                 snapshotReference = persistSnapshot(playerQrCode.getSnapshot().getBitmap(), playerDocId);
             }
             playerRepo.getQrCodes().add(new PlayerQrCodeRepository(qrReference, snapshotReference,
-                    new Timestamp(playerQrCode.getScanDate()), playerQrCode.retrieveScore()));
+                    new Timestamp(playerQrCode.getScanDate()), playerQrCode.retrieveScore(),
+                    playerQrCode.isLocationShared()));
             updatePlayer(playerRepo);
             handler.post(() -> {
                callback.operationStatus(true);
@@ -126,6 +127,13 @@ public class FirestorePlayerController extends FirestoreController{
             DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
             GetIndexArg indexArg = new GetIndexArg();
             SnapshotRepository snapRepo = retrieveQrSnapshotFromPlayer(playerRepo, qrRef, indexArg);
+            boolean locationShared = false;
+            Log.d(TAG, "locationTest: " + indexArg.i);
+            if (indexArg.i >= 0) {
+                Log.d(TAG, "locationTest: " + indexArg.i + " " + playerRepo.getQrCodes().get(indexArg.i).isLocationShared());
+                locationShared = playerRepo.getQrCodes().get(indexArg.i).isLocationShared();
+            }
+            boolean finalLocationShared = locationShared;
             handler.post(() -> {
                 // return the playerQr Model
                 Timestamp scanDate = null;
@@ -134,9 +142,19 @@ public class FirestorePlayerController extends FirestoreController{
                 } else {
                     scanDate = qrRepo.getCreatedOn();
                 }
-                callback.getPlayerQr(PlayerQrCodeRepository.retrievePlayerQrCode(qrRepo, snapRepo, scanDate));
+                callback.getPlayerQr(PlayerQrCodeRepository.retrievePlayerQrCode(qrRepo, snapRepo, scanDate, finalLocationShared));
             });
         }).start();
+    }
+
+    /**
+     * Determines if the location is shared for the given qr
+     * @param playerRepository the player's repo model
+     * @param qrDoc the document reference of the qr
+     * @return true if location permission shared
+     */
+    private boolean isLocationSharedForQr(PlayerRepository playerRepository, DocumentReference qrDoc) {
+        return false;
     }
 
     /**
@@ -157,7 +175,6 @@ public class FirestorePlayerController extends FirestoreController{
             }
         }
         if (snapRef == null) {
-            indexArg.i = -1;
             return null;
         }
         Task<DocumentSnapshot> snapTask = snapRef.get();
