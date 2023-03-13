@@ -78,16 +78,20 @@ public abstract class LocationBaseFragment extends Fragment {
     /**
      * launches the request to get the current location
      */
+
     protected void getLocationRequest() {
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), (Location loc) -> {
-                    Log.d("TAG", "getLocationRequest: avail");
-                    if (loc != null) {
-                        Log.d("TAG", "getLocationRequest: notnull" + loc);
-                        this.playerLocation = loc;
-                        updateLocation();
-                    }
-                });
+        if ( ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), (Location loc) -> {
+                        if (loc != null) {
+                            this.playerLocation = loc;
+                            updateLocation();
+                        }
+                    }).addOnFailureListener((Exception err) -> {
+                        err.printStackTrace();
+                    });
+        }
     }
 
     abstract protected void updateLocation();
