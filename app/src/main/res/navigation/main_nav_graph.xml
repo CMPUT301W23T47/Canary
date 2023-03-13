@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.SplashFragment"
+        android:label="Splash Screen"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
+        <action
+            android:id="@+id/action_createProfile"
+            app:destination="@id/createProfileFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.cmput301w23t47.canary.view.activity.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
+    <fragment
+        android:id="@+id/createProfileFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.CreateProfileFragment"
+        android:label="CreateProfileFragment" >
+        <action
+            android:id="@+id/action_createProfileFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
+    </fragment>
+</navigation>

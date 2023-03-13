@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -33,6 +33,10 @@
         <action
             android:id="@+id/action_goToHomeFromQRCodeView"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="owner"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -42,30 +46,52 @@
     <fragment
         android:id="@+id/playerProfileFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.PlayerProfileFragment"
-        android:label="Profile"
+        android:label="Player Profile"
         tools:layout="@layout/fragment_player_profile" >
         <action
             android:id="@+id/action_qrCodeViewFromPlayerProfile"
             app:destination="@id/QRCodeView" />
     </fragment>
     <fragment
-        android:id="@+id/splashFragment"
-        android:name="com.cmput301w23t47.canary.view.fragment.SplashFragment"
-        android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
+        android:id="@+id/searchNearbyQrMapFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.SearchNearbyQrMapFragment"
+        android:label="Nearby QRs"
+        tools:layout="@layout/fragment_search_nearby_qr_map" >
         <action
-            android:id="@+id/action_splashToHome"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_searchNearbyQrsToQrPage"
+            app:destination="@id/QRCodeView" />
         <action
-            android:id="@+id/action_splashToCreateProfile"
-            app:destination="@id/createProfileFragment" />
+            android:id="@+id/action_searchNearbyQrMapToDistList"
+            app:destination="@id/nearbyQrCodeListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/createProfileFragment"
-        android:name="com.cmput301w23t47.canary.view.fragment.CreateProfileFragment"
-        android:label="Create Profile" >
+        android:id="@+id/playerSearchFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.PlayerSearchFragment"
+        android:label="fragment_player_search"
+        tools:layout="@layout/fragment_player_search" >
         <action
-            android:id="@+id/action_createProfileToHome"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_allPlayersToOtherPlayerProfile"
+            app:destination="@id/anotherPlayerProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/anotherPlayerProfileFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.AnotherPlayerProfileFragment"
+        android:label="Player Profile"
+        tools:layout="@layout/fragment_another_player_profile" >
+        <argument
+            android:name="playerId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_anotherPlayerToQrPage"
+            app:destination="@id/QRCodeView" />
+    </fragment>
+    <fragment
+        android:id="@+id/nearbyQrCodeListFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.NearbyQrCodeListFragment"
+        android:label="Search QR Codes"
+        tools:layout="@layout/fragment_nearby_qr_code_list" >
+        <action
+            android:id="@+id/action_nearbyQrListToQrCodePage"
+            app:destination="@id/QRCodeView" />
     </fragment>
 </navigation>
