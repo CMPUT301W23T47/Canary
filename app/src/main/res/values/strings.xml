@@ -33,4 +33,5 @@
     <string name="lowest_qr">Lowest QR</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>
