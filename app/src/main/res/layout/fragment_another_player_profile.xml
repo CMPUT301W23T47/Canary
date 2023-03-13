@@ -8,7 +8,7 @@
     android:paddingBottom="20dp"
     android:background="@color/light_gray"
     android:orientation="vertical"
-    tools:context=".view.fragment.AnotherPlayerProfileFragment"
+    tools:context=".view.fragment.PlayerProfileFragment"
     android:fillViewport="true" >
     <FrameLayout
         android:layout_width="match_parent"
