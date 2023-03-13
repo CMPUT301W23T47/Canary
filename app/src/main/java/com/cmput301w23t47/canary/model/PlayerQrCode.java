@@ -87,4 +87,12 @@ public class PlayerQrCode {
     public String retrieveHash() {
         return qrCode.getHash();
     }
+
+    /**
+     * Setter for the location in the qr code
+     * @param newLocation the new location to set
+     */
+    public void putLocation(Location newLocation) {
+        qrCode.setLocation(newLocation);
+    }
 }

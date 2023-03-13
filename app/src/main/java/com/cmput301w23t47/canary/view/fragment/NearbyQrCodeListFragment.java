@@ -96,7 +96,7 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
      */
     @Override
     protected void updateLocation() {
-
+        updateQrList();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
         if (qrCodes == null || qrCodes.size() == 0) {
             return;
         }
-        if (searchRadius == 0) {
+        if (searchRadius == 0 || playerLocation == null) {
             showAllQrs();
             return;
         }
