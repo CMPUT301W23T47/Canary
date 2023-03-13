@@ -127,6 +127,8 @@ public class FirestorePlayerController extends FirestoreController{
                 Timestamp scanDate = null;
                 if (indexArg.i > 0) {
                     scanDate = playerRepo.getQrCodes().get(indexArg.i).getScanDate();
+                } else {
+                    scanDate = qrRepo.getCreatedOn();
                 }
                 callback.getPlayerQr(PlayerQrCodeRepository.retrievePlayerQrCode(qrRepo, snapRepo, scanDate));
             });
