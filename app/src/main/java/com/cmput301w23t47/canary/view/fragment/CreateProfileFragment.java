@@ -3,6 +3,7 @@ package com.cmput301w23t47.canary.view.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.controller.FirestoreController;
+import com.cmput301w23t47.canary.controller.FirestorePlayerController;
 import com.cmput301w23t47.canary.databinding.FragmentCreateProfileBinding;
 import com.cmput301w23t47.canary.model.Player;
 
@@ -20,10 +23,10 @@ import com.cmput301w23t47.canary.model.Player;
  * Use the {@link CreateProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateProfileFragment extends Fragment {
+public class CreateProfileFragment extends Fragment implements OperationStatusCallback {
 
     private FragmentCreateProfileBinding binding;
-    private FirestoreController firestoreController;
+    private FirestorePlayerController firestorePlayerController;
 
     public CreateProfileFragment() {
         // Required empty public constructor
@@ -60,7 +63,7 @@ public class CreateProfileFragment extends Fragment {
     }
 
     private void init(){
-        firestoreController = new FirestoreController();
+        firestorePlayerController = new FirestorePlayerController();
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +72,7 @@ public class CreateProfileFragment extends Fragment {
                     String firstName = binding.firstNameEditView.getText().toString();
                     String lastName = binding.lastNameEditView.getText().toString();
                     Player player = new Player(username, firstName, lastName);
-                    firestoreController.setPlayer(player);
+                    firestorePlayerController.createPlayer(player, CreateProfileFragment.this);
                 }
                 else{
                     CharSequence fillAllFields = "Please enter all Fields to continue!";
@@ -79,5 +82,22 @@ public class CreateProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * Navigate to home fragment
+     */
+    private void navigateToHome() {
+        Navigation.findNavController(getView()).navigate(R.id.action_createProfileToHome);
+    }
+
+    @Override
+    public void operationStatus(boolean status) {
+        if (status) {
+            navigateToHome();
+        } else {
+            CharSequence errorMessage = "Couldn't create player!";
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -57,11 +57,25 @@ public class PlayerProfileFragment extends Fragment implements
     }
 
     /**
+     * Makes the request to firestore to get the player
+     */
+    private void makeFirestoreReqForPlayer() {
+        boolean currentPlayer = PlayerProfileFragmentArgs.fromBundle(getArguments()).getCurrentPlayer();
+        if (currentPlayer) {
+            firestorePlayerController.getCompleteCurrentPlayer(this);
+        } else {
+            // foreign player
+            String playerDocId = PlayerProfileFragmentArgs.fromBundle(getArguments()).getUsername();
+            firestorePlayerController.getCompleteForeignPlayer(playerDocId, this);
+        }
+    }
+
+    /**
      * Initializes the ui for the page
      */
     private void init(){
         showLoadingBar();
-        firestorePlayerController.getCompleteCurrentPlayer(this);
+        makeFirestoreReqForPlayer();
         qrCodeListAdapter = new QRCodeListAdapter(getContext(), new ArrayList<>());
         binding.qrsScannedList.setAdapter(qrCodeListAdapter);
         binding.qrsScannedList.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -73,7 +87,7 @@ public class PlayerProfileFragment extends Fragment implements
     @Override
     public void onHiddenChanged(boolean hidden){
         if(!hidden && player == null){
-            firestorePlayerController.getCompleteCurrentPlayer(this);
+            makeFirestoreReqForPlayer();
             showLoadingBar();
         }
     }

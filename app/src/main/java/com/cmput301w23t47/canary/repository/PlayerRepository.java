@@ -64,6 +64,7 @@ public class PlayerRepository {
         }
         player.setQrCodes(playerQrCodes);
         player.setScore(this.score);
+        player.setUniquePlayerId(docId);
         return player;
     }
 
