@@ -28,12 +28,8 @@ import java.util.Locale;
 public class LeaderboardFragment extends Fragment implements
         UpdateLeaderboardCallback {
     public static final String TAG = "LeaderboardFragment";
-    public static final String title = "Leaderboard";
-    private static final String progressBarTitle = "Loading Leaderboards";
-    private static final String progressBarMessage = "Should take only a moment...";
 
     private Leaderboard leaderboard;
-    private String playerUsername = "";
 
     private FragmentLeaderboardBinding binding;
     private FirestoreController firestoreController;
@@ -129,6 +125,10 @@ public class LeaderboardFragment extends Fragment implements
                 leaderboard.getMaxQrPlayer(), leaderboard.getMaxQr()));
 
         // set personal ranking
+        String playerUsername = "";
+        if (leaderboard.getCurrentPlayer() != null) {
+            playerUsername = leaderboard.getCurrentPlayer().getUsername();
+        }
         int playerScoreRank = LeaderboardController.getRankForPlayer(playerUsername, leaderboard.getByScore());
         int playerMaxQrRank = LeaderboardController.getRankForPlayer(playerUsername, leaderboard.getByHighestScoringQr());
         binding.scoreRankVal.setText(String.format(Locale.CANADA, "%d Out of %d",

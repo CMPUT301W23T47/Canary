@@ -301,11 +301,14 @@ public class FirestoreController {
             Leaderboard leaderboard = waitForTask(lbTask, Leaderboard.class);
             // Get Player ranks
             ArrayList<PlayerRepository> playersRepoList = getAllPlayers();
+            // get current player id
+            String currentPlayerId = identifyPlayer();
+            LeaderboardPlayer currentPlayer = PlayerRepository.retrievePlayerWithDocId(playersRepoList, currentPlayerId);
             // map the players into leaderboardPlayer
             ArrayList<LeaderboardPlayer> playerList =
                     LeaderboardController.getLeaderboardPlayerList(playersRepoList);
             leaderboard.setPlayers(playerList);
-
+            leaderboard.setCurrentPlayer(currentPlayer);
             handler.post(() -> {
                 callback.updateLeaderboard(leaderboard);
             });

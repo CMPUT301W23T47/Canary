@@ -29,6 +29,9 @@ public class Leaderboard {
     @Exclude
     // player with max qr
     private ArrayList<LeaderboardPlayer> byHighestScoringQr; // absent from Firestore
+    @Exclude
+    // the current player
+    private LeaderboardPlayer currentPlayer; // absent from Firestore
 
     /**
      * Instantiates a new Leaderboard.
@@ -147,6 +150,23 @@ public class Leaderboard {
     @Exclude
     public ArrayList<LeaderboardPlayer> getByHighestScoringQr() {
         return byHighestScoringQr;
+    }
+
+    /**
+     * Gives the current player
+     * @return the current player
+     */
+    @Exclude
+    public LeaderboardPlayer getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
+     * Sets the current player
+     * @param currentPlayer the current player
+     */
+    public void setCurrentPlayer(LeaderboardPlayer currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     /**

@@ -294,4 +294,19 @@ public class PlayerRepository {
         return new PlayerRepository(player.getUsername(), player.getFirstName(),
                 player.getLastName(), player.getScore(), 0, new ArrayList<>()   );
     }
+
+    /**
+     * Retrieves the player with the doc id
+     * @param players the list of players
+     * @param playerDocId the doc id of the player
+     * @return the player model
+     */
+    public static LeaderboardPlayer retrievePlayerWithDocId(ArrayList<PlayerRepository> players, String playerDocId) {
+        for (PlayerRepository p : players) {
+            if (p.docId.equals(playerDocId)) {
+                return p.retrieveLeaderboardPlayer();
+            }
+        }
+        return null;
+    }
 }
