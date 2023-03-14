@@ -159,8 +159,8 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
         hideLoadingBar();
         if (exists) {
             // if qr with the given hash exist, show an alert
-            builder.setMessage("The selected QR is deleted")
-                    .setTitle("QR Code Deleted")
+            builder.setMessage("The selected QR already exists")
+                    .setTitle("QR Code exists")
                     .setCancelable(false)
                     .setPositiveButton("Continue", (DialogInterface dialog, int id) -> {
                         // TODO: handle already scanned QR

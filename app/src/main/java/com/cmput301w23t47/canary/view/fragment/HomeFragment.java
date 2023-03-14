@@ -126,6 +126,9 @@ public class HomeFragment extends Fragment implements
      * @param qrHash Hash of the Qr code of player
      */
     private void receiveAddedQrCode(String qrHash) {
+        if (qrHash == null) {
+            return;
+        }
         HomeFragmentDirections.ActionQrCodeView action = HomeFragmentDirections.actionQrCodeView(qrHash);
         Navigation.findNavController(getView()).navigate(action);
     }

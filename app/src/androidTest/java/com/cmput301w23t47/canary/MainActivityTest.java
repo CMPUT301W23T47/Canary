@@ -54,7 +54,6 @@ public class MainActivityTest {
         if (player != null) {
             testPlayer = player;
         }
-        Intents.init();
         rule.getScenario().onActivity(activity -> {
             solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
         });
@@ -82,7 +81,7 @@ public class MainActivityTest {
     }
 
     /**
-     * Navigates to the player home page
+     * Navigates to the Map screen
      */
     @Test
     public void test_navigateToMapView() throws Exception{
@@ -96,7 +95,7 @@ public class MainActivityTest {
     }
 
     /**
-     * Navigates to the player home page
+     * Navigates to the leaderboard view
      */
     @Test
     public void test_navigateToLeaderboardView() throws Exception{
@@ -110,7 +109,7 @@ public class MainActivityTest {
     }
 
     /**
-     * Navigates to the player home page
+     * Navigates to the player search view
      */
     @Test
     public void test_navigateToPlayerSearchView() throws Exception{
@@ -124,7 +123,7 @@ public class MainActivityTest {
     }
 
     /**
-     * Navigates to the player home page
+     * Navigates to the player profile view
      */
     @Test
     public void test_navigateToPlayerProfileView() throws Exception{
