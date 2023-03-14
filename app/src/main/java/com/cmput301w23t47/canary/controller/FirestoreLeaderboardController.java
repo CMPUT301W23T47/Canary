@@ -49,11 +49,10 @@ public class FirestoreLeaderboardController extends FirestoreController{
         Task<QuerySnapshot> queryTask = players.orderBy("qrCodesSize", Query.Direction.DESCENDING).limit(1).get();
         waitForQuery(queryTask);
         if (!queryTask.getResult().isEmpty()) {
-            Log.d("TAG", "updatePlayerWithMaxQr: ");
             DocumentSnapshot maxQrPlayerDoc = queryTask.getResult().getDocuments().get(0);
             PlayerRepository maxQrPlayer = maxQrPlayerDoc.toObject(PlayerRepository.class);
             leaderboard.setMaxQrPlayer(maxQrPlayer.getUsername());
-            leaderboard.setMaxQr(maxQrPlayer.retrieveQrCodesSize());
+            leaderboard.setMaxQr(maxQrPlayer.getQrCodesSize());
             return true;
         }
         return false;
@@ -68,7 +67,6 @@ public class FirestoreLeaderboardController extends FirestoreController{
         Task<QuerySnapshot> queryTask = players.orderBy("score", Query.Direction.DESCENDING).limit(1).get();
         waitForQuery(queryTask);
         if (!queryTask.getResult().isEmpty()) {
-            Log.d("TAG", "updatePlayerWithMaxQr: ");
             DocumentSnapshot maxScorePlayerDoc = queryTask.getResult().getDocuments().get(0);
             PlayerRepository maxQrPlayer = maxScorePlayerDoc.toObject(PlayerRepository.class);
             leaderboard.setMaxScorePlayer(maxQrPlayer.getUsername());

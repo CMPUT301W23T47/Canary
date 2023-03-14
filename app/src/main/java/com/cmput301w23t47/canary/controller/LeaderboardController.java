@@ -50,7 +50,7 @@ public class LeaderboardController {
      */
     public static ArrayList<LeaderboardPlayer> getPlayersSortedByScore(ArrayList<LeaderboardPlayer> playersOrig) {
         ArrayList<LeaderboardPlayer> players = new ArrayList<>(playersOrig);
-        playersOrig.sort(Comparator.comparing(LeaderboardPlayer::getScore).reversed());
+        players.sort(Comparator.comparing(LeaderboardPlayer::getScore).reversed());
         return players;
     }
 
@@ -61,7 +61,7 @@ public class LeaderboardController {
      */
     public static ArrayList<LeaderboardPlayer> getPlayersSortedByMaxQr(ArrayList<LeaderboardPlayer> playersOrig) {
         ArrayList<LeaderboardPlayer> players = new ArrayList<>(playersOrig);
-        playersOrig.sort(Comparator.comparing(LeaderboardPlayer::getMaxScoreQr).reversed());
+        players.sort(Comparator.comparing(LeaderboardPlayer::getMaxScoreQr).reversed());
         return players;
     }
 

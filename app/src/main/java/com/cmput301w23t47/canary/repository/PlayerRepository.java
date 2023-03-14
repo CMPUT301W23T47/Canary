@@ -30,6 +30,8 @@ public class PlayerRepository {
     private long maxScoreQr;
     // qr codes that player has
     private ArrayList<PlayerQrCodeRepository> qrCodes;
+    // the number of qr codes that player has
+    private long qrCodesSize;
 
 
     // Default Constructor
@@ -40,13 +42,14 @@ public class PlayerRepository {
     /**
      * Constructor to set all attributes
      */
-    public PlayerRepository(String username, String firstName, String lastName, long score, long maxScoreQr, ArrayList<PlayerQrCodeRepository> qrCodes) {
+    public PlayerRepository(String username, String firstName, String lastName, long score, long maxScoreQr, ArrayList<PlayerQrCodeRepository> qrCodes, long qrCodesSize) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.score = score;
         this.maxScoreQr = maxScoreQr;
         this.qrCodes = qrCodes;
+        this.qrCodesSize = qrCodesSize;
     }
 
     /**
@@ -197,8 +200,17 @@ public class PlayerRepository {
      *
      * @return the qr codes size
      */
-    public long retrieveQrCodesSize() {
-        return qrCodes.size();
+    public long getQrCodesSize() {
+        return qrCodesSize;
+    }
+
+    /**
+     * Sets qr codes size.
+     *
+     * @param qrCodesSize the qr codes size
+     */
+    public void setQrCodesSize(long qrCodesSize) {
+        this.qrCodesSize = qrCodesSize;
     }
 
     /**
@@ -252,6 +264,7 @@ public class PlayerRepository {
     public void addQrToPlayerStats(PlayerQrCode playerQrCode) {
         score += playerQrCode.getQrCode().getScore();
         maxScoreQr = Math.max(maxScoreQr, playerQrCode.getQrCode().getScore());
+        qrCodesSize += 1;
     }
 
     /**
@@ -272,6 +285,7 @@ public class PlayerRepository {
             }
             maxScoreQr = locMaxScore;
         }
+        qrCodesSize = qrCodes.size();
     }
 
     /**
@@ -292,7 +306,7 @@ public class PlayerRepository {
      */
     public static PlayerRepository retrievePlayerRepo(Player player) {
         return new PlayerRepository(player.getUsername(), player.getFirstName(),
-                player.getLastName(), player.getScore(), 0, new ArrayList<>()   );
+                player.getLastName(), player.getScore(), 0, new ArrayList<>(), 0);
     }
 
     /**
