@@ -90,7 +90,9 @@ public class FirestorePlayerController extends FirestoreController{
                     playerQrCode.isLocationShared()));
             updatePlayer(playerRepo);
             handler.post(() -> {
-               callback.operationStatus(true);
+                // update leaderboard if required and return result; launched in different thread for faster response
+                firestoreLeaderboardController.updateLeaderboardIfRequired(playerRepo);
+                callback.operationStatus(true);
             });
         }).start();
     }

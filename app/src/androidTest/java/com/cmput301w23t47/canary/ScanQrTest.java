@@ -75,6 +75,7 @@ public class ScanQrTest {
         assertTrue(checkBox.isChecked());
         ConstraintLayout progressBarLayout = (ConstraintLayout) solo.getView(R.id.progress_bar_box);
         IntentTestUtil.waitForProgressBarToHide(progressBarLayout, solo);
+        // save the snapshot
         solo.clickOnView(solo.getView(R.id.no_snap));
         assertTrue(solo.waitForText("Snapshot"));
     }

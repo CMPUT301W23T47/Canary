@@ -114,6 +114,7 @@ public class Leaderboard {
      *
      * @return the players
      */
+    @Exclude
     public ArrayList<LeaderboardPlayer> getPlayers() {
         return players;
     }
@@ -134,6 +135,7 @@ public class Leaderboard {
      * Gives the list of the scores
      * @return  byScore Sorted list of scores
      */
+    @Exclude
     public ArrayList<LeaderboardPlayer> getByScore() {
         return byScore;
     }
@@ -142,6 +144,7 @@ public class Leaderboard {
      * Gives the list of qrs sorted by the highes score code
      * @return  byHighestScoringQr Sorted list
      */
+    @Exclude
     public ArrayList<LeaderboardPlayer> getByHighestScoringQr() {
         return byHighestScoringQr;
     }
