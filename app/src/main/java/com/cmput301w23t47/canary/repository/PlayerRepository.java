@@ -1,7 +1,5 @@
 package com.cmput301w23t47.canary.repository;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.model.LeaderboardPlayer;
@@ -9,8 +7,6 @@ import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -201,7 +197,7 @@ public class PlayerRepository {
      *
      * @return the qr codes size
      */
-    public long getQrCodesSize() {
+    public long retrieveQrCodesSize() {
         return qrCodes.size();
     }
 

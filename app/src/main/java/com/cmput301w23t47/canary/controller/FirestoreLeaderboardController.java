@@ -1,6 +1,5 @@
 package com.cmput301w23t47.canary.controller;
 
-import android.os.Handler;
 import android.util.Log;
 
 import com.cmput301w23t47.canary.model.Leaderboard;
@@ -54,7 +53,7 @@ public class FirestoreLeaderboardController extends FirestoreController{
             DocumentSnapshot maxQrPlayerDoc = queryTask.getResult().getDocuments().get(0);
             PlayerRepository maxQrPlayer = maxQrPlayerDoc.toObject(PlayerRepository.class);
             leaderboard.setMaxQrPlayer(maxQrPlayer.getUsername());
-            leaderboard.setMaxQr(maxQrPlayer.getQrCodesSize());
+            leaderboard.setMaxQr(maxQrPlayer.retrieveQrCodesSize());
             return true;
         }
         return false;
@@ -73,7 +72,7 @@ public class FirestoreLeaderboardController extends FirestoreController{
             DocumentSnapshot maxScorePlayerDoc = queryTask.getResult().getDocuments().get(0);
             PlayerRepository maxQrPlayer = maxScorePlayerDoc.toObject(PlayerRepository.class);
             leaderboard.setMaxScorePlayer(maxQrPlayer.getUsername());
-            leaderboard.setMaxScore(maxQrPlayer.getQrCodesSize());
+            leaderboard.setMaxScore(maxQrPlayer.getScore());
             return true;
         }
         return false;
