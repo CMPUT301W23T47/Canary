@@ -1,0 +1,12 @@
+com.cmput301w23t47.canary
+com.cmput301w23t47.canary.callback
+com.cmput301w23t47.canary.controller
+com.cmput301w23t47.canary.model
+com.cmput301w23t47.canary.repository
+com.cmput301w23t47.canary.util
+com.cmput301w23t47.canary.view.activity
+com.cmput301w23t47.canary.view.adapter
+com.cmput301w23t47.canary.view.contract
+com.cmput301w23t47.canary.view.drawable
+com.cmput301w23t47.canary.view.fragment
+com.cmput301w23t47.canary.view.model
