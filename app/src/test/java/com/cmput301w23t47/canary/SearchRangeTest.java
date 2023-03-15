@@ -73,7 +73,12 @@ public class SearchRangeTest {
 		assertEquals(3, FinalList.size());
 	
 	}
-	
+	/**
+	 * Test the search range with a limit
+	 * with a limit it means that some but not all of the qr codes should be stored in the list
+	 * that should be returned
+	 *
+	 */
 	@Test
 	public void testSearchRangeLimit() {
 		//this is a placeholder just in case we need to know the range
@@ -87,12 +92,14 @@ public class SearchRangeTest {
 		Location locaSearch = location;
 		
 		//change the locations and give each qr its own sepearte location
-		location.setLatitude( 53.5232 );
-		location.setLongitude( -113.5263 );
+		location.setLatitude( 52.6232 );
+		location.setLongitude( -112.6263 );
 		QrCode qrCode1 = new QrCode("hash1", 0, location, "QrCode1", null);
-		location.setLatitude( 53.0 );
-		location.setLongitude( -113.0 );
+		location.setLatitude( 52.3 );
+		location.setLongitude( -112.4 );
 		QrCode qrCode2 = new QrCode("hash2", 0, location, "QrCode2", null);
+		
+		// This code should be far enough away that it should not be in the list
 		location.setLatitude( 10.0 );
 		location.setLongitude( -1.0 );
 		QrCode qrCode3 = new QrCode("hash3", 0, location, "QrCode3", null);
@@ -119,6 +126,12 @@ public class SearchRangeTest {
 		assertEquals(2, FinalList.size());
 	}
 	
+	/**
+	 * Test the search range with a limit that is out of range
+	 * out of limit means that this should return an empty list
+	 *
+	 * done by setting the
+	 */
 	@Test
 	public void testSearchRangeOutOfLimit(){
 		//this is a placeholder to know the range without calling the range from the location
