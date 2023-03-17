@@ -2,7 +2,6 @@ package com.cmput301w23t47.canary.model;
 
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.os.Parcelable;
 
 import java.util.ArrayList;
 

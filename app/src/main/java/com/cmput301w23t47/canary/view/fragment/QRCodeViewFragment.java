@@ -162,10 +162,10 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         // comment list init
         commentListAdapter = new CommentListAdapter(new ArrayList<>());
         binding.qrCommentsList.setAdapter(commentListAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrCommentsList.getContext(),
-                DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
-        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrCommentsList.getContext(),
+//                DividerItemDecoration.VERTICAL);
+//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
+//        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
 
         // qr init
         String qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
