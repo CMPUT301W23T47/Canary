@@ -218,7 +218,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * this is used to make sure that the camera when first opens
      * is centered on the user not elsewhere
      */
-    private void setCameraView(){
+    private LatLngBounds setCameraView(){
+        // I changed this to being a return statement because I assume that this means all I have to do is get the PlayerLocation and then compare to this function
         double bottomBoundary = playerLocation.getLatitude() - .1;
         double leftBoundary = playerLocation.getLongitude() - .1;
         double topBoundary = playerLocation.getLatitude() + .1;
@@ -230,6 +231,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         );
 
         googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
+        
+        return mapBoundary;
     }
 
     /**
