@@ -13,7 +13,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.cmput301w23t47.canary.controller.FirestoreQrController;
 import com.cmput301w23t47.canary.controller.QrCodeController;
 import com.cmput301w23t47.canary.databinding.FragmentSearchNearbyQrMapBinding;
 import com.cmput301w23t47.canary.model.QrCode;
-import com.cmput301w23t47.canary.view.adapter.QRCodeListAdapter;
 import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -159,7 +157,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * @param title the title of the marker
      */
     private void addMarker(LatLng point, String title) {
-        BitmapDescriptor icon = bitmapDescriptorFromVector( getContext(), R.drawable.person_map_pin_display );
+        BitmapDescriptor icon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_player_location );
         googleMap.addMarker(new MarkerOptions().position(point).title(title).icon( icon ));
     }
 
@@ -253,7 +251,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         
         // Get a bitmap from the drawable
         //doing this here so dont have to go the function every time
-        BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.qr_code_pin_map,R.drawable.map_pin_qr_background);
+        BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_qr_foreground,R.drawable.map_pin_qr_background);
         
         
         ArrayList<QrCode> qrsOnMap = new ArrayList<>();
@@ -330,11 +328,23 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     
     /**
      * Turns a vector asset into a bitmap with a background
+     * does this by just overlaying the vector on top of the background
+     * they both start at the same point so need to shift image onto the background properly
+     * @param context the context
+     * @param vectorDrawableResourceId the resource id of the vector asset
+     * @param backgroundDrawableResourceId the resource id of the background
      */
     private BitmapDescriptor bitmapDescriptorFromVector(Context context,@DrawableRes int vectorDrawableResourceId, @DrawableRes int backgroundDrawableResourceId) {
+        // this makes the background
         Drawable background = ContextCompat.getDrawable(context, backgroundDrawableResourceId);
+        //set tje bounds of the background
+        // 0 means it will not be left shifted from start point and 0 means it will not be shifted down from the start point
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        //set the bounds of the vector
+        // 20 and 10 are the left and top shift
+        //change them or the size of the vector image to change the size and position of the vector
         vectorDrawable.setBounds(20, 10, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
         Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -342,6 +352,14 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+    
+    /**
+     * Turns a vector asset into a bitmap
+     * this one does not need the background because found goog default asset for the pin
+     * @param context the context
+     * @param vectorResId the resource id of the vector
+     * @return the updated bitmap -m ade from the vector
+     */
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
         vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
