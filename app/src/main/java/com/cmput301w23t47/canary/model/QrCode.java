@@ -124,6 +124,22 @@ public class QrCode {
     }
 
     /**
+     * Getter for comments
+     * @return the list of comments
+     */
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    /**
+     * Setter for comments
+     * @param comments the list of comments
+     */
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
+    /**
      * Determines whether location for the qr is available
      *
      * @return true if location is available

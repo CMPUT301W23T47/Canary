@@ -7,8 +7,10 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,8 +25,10 @@ import com.cmput301w23t47.canary.controller.FirestorePlayerController;
 import com.cmput301w23t47.canary.controller.LocationController;
 import com.cmput301w23t47.canary.databinding.FragmentQrCodeViewBinding;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
+import com.cmput301w23t47.canary.view.adapter.CommentListAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,6 +43,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
 
     private FragmentQrCodeViewBinding binding;
     AlertDialog.Builder builder;
+    private CommentListAdapter commentListAdapter;
 
     private final FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
 
@@ -97,6 +102,13 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         }
     }
 
+    /**
+     * Updates the comments in the view
+     */
+    private void updateComments() {
+        commentListAdapter.updateList(playerQrCode.getQrCode().getComments());
+    }
+
     public void updateFragmentData(){
         Log.d(TAG, "updateFragmentData: called");
         if (playerQrCode == null) {
@@ -111,6 +123,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         updateLocation();
         updateSnapshot();
         updateQrImage();
+        updateComments();
         hideLoadingBar();
     }
 
@@ -145,8 +158,19 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     private void init() {
         showLoadingBar();
+
+        // comment list init
+        commentListAdapter = new CommentListAdapter(new ArrayList<>());
+        binding.qrCommentsList.setAdapter(commentListAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrCommentsList.getContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
+        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
+
+        // qr init
         String qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         owner = QRCodeViewFragmentArgs.fromBundle(getArguments()).getOwner();
+
         if (!owner) {
             binding.qrDeleteIcon.setVisibility(View.GONE);
         }

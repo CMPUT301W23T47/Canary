@@ -182,78 +182,78 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--Snapshot layout-->
-<!--            <LinearLayout-->
-<!--                android:id="@+id/snapshot_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="32dp"-->
-<!--                android:layout_marginRight="32dp"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:background="@drawable/no_corners_rounded"-->
-<!--                android:paddingBottom="32dp"-->
-<!--                android:paddingHorizontal="32dp"-->
-<!--                android:paddingTop="10dp"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                android:orientation="vertical"-->
-<!--                >-->
+            <LinearLayout
+                android:id="@+id/snapshot_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/no_corners_rounded"
+                android:paddingBottom="32dp"
+                android:paddingHorizontal="32dp"
+                android:paddingTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="vertical"
+                >
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:text="@string/snapshot"-->
-<!--                    android:textSize="20sp"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    />-->
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@drawable/all_rounded_corners_border_nb"-->
-<!--                    android:layout_marginVertical="10dp"-->
-<!--                    >-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/snapshot"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/all_rounded_corners_border_nb"
+                    android:layout_marginVertical="10dp"
+                    >
 
-<!--                    <ImageView-->
-<!--                        android:id="@+id/qr_snapshot"-->
-<!--                        android:layout_width="200dp"-->
-<!--                        android:layout_height="200dp"-->
-<!--                        android:src="@drawable/profile_icon"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        android:visibility="gone"-->
-<!--                        />-->
+                    <ImageView
+                        android:id="@+id/qr_snapshot"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:src="@drawable/profile_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:visibility="gone"
+                        />
 
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/no_snapshot_box"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginHorizontal="20dp"-->
-<!--                        android:layout_marginVertical="20dp"-->
-<!--                        android:orientation="vertical"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent">-->
+                    <LinearLayout
+                        android:id="@+id/no_snapshot_box"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="20dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@string/blank"-->
-<!--                            android:textSize="20dp"-->
-<!--                            android:textStyle="bold"-->
-<!--                            />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/blank"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            />
 
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Not Saved"-->
-<!--                            android:textSize="20dp"-->
-<!--                            android:textStyle="bold"-->
-<!--                            />-->
-<!--                    </LinearLayout>-->
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--            </LinearLayout>-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Not Saved"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <!--Comments layout-->
             <LinearLayout
@@ -334,7 +334,7 @@
                     </LinearLayout>
                 </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/qr_items_list"
+                    android:id="@+id/qr_comments_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
