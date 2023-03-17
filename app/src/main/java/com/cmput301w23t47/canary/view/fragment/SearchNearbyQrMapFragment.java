@@ -1,11 +1,16 @@
 package com.cmput301w23t47.canary.view.fragment;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +32,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -142,7 +149,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
             point = new LatLng(37, -122);
         }
         addMarker(point, playerLocTitle);
-        googleMap.addMarker(new MarkerOptions().position(point).title(playerLocTitle));
+        //googleMap.addMarker(new MarkerOptions().position(point).title(playerLocTitle));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(point));
     }
 
@@ -152,7 +159,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * @param title the title of the marker
      */
     private void addMarker(LatLng point, String title) {
-        googleMap.addMarker(new MarkerOptions().position(point).title(title));
+        BitmapDescriptor icon = bitmapDescriptorFromVector( getContext(), R.drawable.person_map_pin_display );
+        googleMap.addMarker(new MarkerOptions().position(point).title(title).icon( icon ));
     }
 
     /**
@@ -242,7 +250,14 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         if (qrCodes == null || qrCodes.size() == 0) {
             return;
         }
+        
+        // Get a bitmap from the drawable
+        //doing this here so dont have to go the function every time
+        BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.qr_code_pin_map,R.drawable.map_pin_qr_background);
+        
+        
         ArrayList<QrCode> qrsOnMap = new ArrayList<>();
+        // this will place the markers on the map for the qr codes change this to being the qr icon
         for (QrCode qrCode : qrCodes) {
             if (!qrCode.hasLocation()) {
                 continue;
@@ -251,6 +266,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
             googleMap.addMarker(new MarkerOptions()
                     .position(retrieveLatLngForQr(qrCode))
                     .title(QrCodeController.getTitleForMapPin(qrCode))
+                    .icon(BitmapQRIcon)
             );
         }
         qrCodeListAdapter.updateList(qrsOnMap);
@@ -310,5 +326,28 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      */
     private void navigateToSearchRadiusPage() {
         Navigation.findNavController(getView()).navigate(R.id.action_searchNearbyQrMapToDistList);
+    }
+    
+    /**
+     * Turns a vector asset into a bitmap with a background
+     */
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context,@DrawableRes int vectorDrawableResourceId, @DrawableRes int backgroundDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, backgroundDrawableResourceId);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        vectorDrawable.setBounds(20, 10, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

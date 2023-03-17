@@ -20,7 +20,6 @@ import org.junit.Test;
 public class SearchNearbyQrMapFragmentTest {
 	private Solo solo;
 	private static FirestorePlayerTestUtil firestorePlayerTestUtil;
-	private static Player testPlayer = null;
 	
 	
 	@Rule
@@ -31,8 +30,15 @@ public class SearchNearbyQrMapFragmentTest {
 	public static void beforeAll() {
 		FirestoreController.switchToTestMode();
 		firestorePlayerTestUtil = new FirestorePlayerTestUtil();
-		testPlayer = firestorePlayerTestUtil.getTestPlayer();
+		//testPlayer = firestorePlayerTestUtil.getTestPlayer();
 	}
 	
 
+	@Test
+	public void testSearchRangeListAll() {
+		int SearchRange = 10000; // search with 10000 meters
+		solo = new Solo( solo.getCurrentFragment().getActivity );
+		solo.clickOnView( solo.getView( R.id.searchNearbyQrButton ) );
+	}
+	
 }
