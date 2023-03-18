@@ -25,6 +25,8 @@ public class Comment {
         this.date = date;
     }
 
+    public Comment(){};
+
     /**
      * Getter for username of player
      * @return

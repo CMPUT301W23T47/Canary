@@ -29,12 +29,13 @@ public class QrCode {
      * @param location the location
      * @param name     the name
      */
-    public QrCode(String hash, long score, Location location, String name, Bitmap qrImage) {
+    public QrCode(String hash, long score, Location location, String name, Bitmap qrImage, ArrayList<Comment> comments) {
         this.hash = hash;
         this.score = score;
         this.location = location;
         this.name = name;
         this.qrImage = qrImage;
+        this.comments = comments;
     }
 
     /**

@@ -8,6 +8,7 @@ import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerListCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
@@ -20,9 +21,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Firestore controller for interacting with Player model
@@ -336,6 +340,19 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    public void addCommentToExistingQr(String qrHash, Comment comment){
+        Handler handler = new Handler();
+        new Thread(()->{
+            Map<String, Object> newComment = new HashMap<>();
+            newComment.put("playerUsername", comment.getPlayerUsername());
+            newComment.put("message", comment.getMessage());
+            newComment.put("date", comment.getDate());
+            String docId = findQrDocId(qrHash);
+            DocumentReference documentReference= qrCodes.document(docId);
+            documentReference.update("comments", FieldValue.arrayUnion(newComment));
+        }).start();
+    }
+
     /**
      * Gets the index of the qr in the player
      * @param playerRepo the player to search
@@ -365,4 +382,5 @@ public class FirestorePlayerController extends FirestoreController{
         Task<Void> deleteTask = snapRef.delete();
         waitForUpdateTask(deleteTask);
     }
+
 }
