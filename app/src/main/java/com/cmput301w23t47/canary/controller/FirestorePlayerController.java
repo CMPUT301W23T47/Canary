@@ -343,13 +343,9 @@ public class FirestorePlayerController extends FirestoreController{
     public void addCommentToExistingQr(String qrHash, Comment comment){
         Handler handler = new Handler();
         new Thread(()->{
-            Map<String, Object> newComment = new HashMap<>();
-            newComment.put("playerUsername", comment.getPlayerUsername());
-            newComment.put("message", comment.getMessage());
-            newComment.put("date", comment.getDate());
             String docId = findQrDocId(qrHash);
             DocumentReference documentReference= qrCodes.document(docId);
-            documentReference.update("comments", FieldValue.arrayUnion(newComment));
+            documentReference.update("comments", FieldValue.arrayUnion(comment));
         }).start();
     }
 
