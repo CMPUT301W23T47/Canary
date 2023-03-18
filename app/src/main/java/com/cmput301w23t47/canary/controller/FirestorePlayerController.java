@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
+import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerListCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
@@ -245,6 +246,19 @@ public class FirestorePlayerController extends FirestoreController{
             });
         }).start();
     }
+
+    public void getCurrentPlayerUsername(GetCurrentPlayerUsernameCallback callback){
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String playerDocId = identifyPlayer();
+            Player player = retrieveCompletePlayer(playerDocId);
+            // return result
+            handler.post(() -> {
+                callback.getCurrentPlayerUsername(player.getUsername());
+            });
+        }).start();
+    }
+
 
     /**
      * Gets the complete model for the foreign player

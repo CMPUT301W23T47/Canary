@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.GetIndexCallback;
+import com.cmput301w23t47.canary.controller.CommentCompareController;
 import com.cmput301w23t47.canary.controller.QrCodeController;
 import com.cmput301w23t47.canary.model.Comment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * The adapter for the comments list; To be used with recycler view
@@ -69,6 +71,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void updateList(ArrayList<Comment> newComments) {
         comments.clear();
         comments.addAll(newComments);
+        Collections.sort(comments, new CommentCompareController()); // sort the list by date time
+        notifyDataSetChanged();
+    }
+
+    public void addComment(Comment comment){
+        comments.add(comment);
         notifyDataSetChanged();
     }
 
