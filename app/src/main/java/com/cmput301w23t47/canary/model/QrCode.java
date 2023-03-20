@@ -18,6 +18,8 @@ public class QrCode {
     private Location location;
     // name of the QR
     private String name;
+    //private image size
+    private int imageSize=100;
     // image of qr
     private Bitmap qrImage;
     ArrayList<Comment> comments = new ArrayList<>();
@@ -120,7 +122,11 @@ public class QrCode {
     }
 
     public void setQrImage(Bitmap qrImage) {
-        this.qrImage = qrImage;
+        this.qrImage = getResizedBitmap(qrImage, imageSize);
+    }
+
+    public int getImageSize(){
+        return imageSize;
     }
 
     /**
@@ -130,5 +136,25 @@ public class QrCode {
      */
     public boolean hasLocation() {
         return location != null;
+    }
+    /**
+     * reduces the size of the image
+     * @param image
+     * @param maxSize
+     * @return
+     */
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 }
