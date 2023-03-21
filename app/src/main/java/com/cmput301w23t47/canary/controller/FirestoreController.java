@@ -78,7 +78,7 @@ public class FirestoreController {
     }
 
     /**
-     * Waits for a particular task to be poerformed
+     * Waits for a particular task to be performed
      * @param snapshotTask the document snapshot object
      * @param classType
      * @return an object of a classtype

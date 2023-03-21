@@ -326,8 +326,11 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         Navigation.findNavController(getView()).navigate(R.id.action_searchNearbyQrMapToDistList);
     }
     
+    
+    
+    
     /**
-     * Turns a vector asset into a bitmap with a background
+     * Turns a vector image asset into a bitmap image asset with a background
      * does this by just overlaying the vector on top of the background
      * they both start at the same point so need to shift image onto the background properly
      * @param context the context
@@ -345,7 +348,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         //set the bounds of the vector
         // 20 and 10 are the left and top shift
         //change them or the size of the vector image to change the size and position of the vector
-        vectorDrawable.setBounds(20, 10, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        vectorDrawable.setBounds(15, 7, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
         Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         background.draw(canvas);
