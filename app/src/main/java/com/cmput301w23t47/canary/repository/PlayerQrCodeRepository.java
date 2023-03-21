@@ -1,5 +1,6 @@
 package com.cmput301w23t47.canary.repository;
 
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
@@ -7,6 +8,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Exclude;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
