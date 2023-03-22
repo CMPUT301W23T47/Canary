@@ -228,6 +228,23 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
                         dialog.dismiss();
                     }).create().show();
         });
+
+        binding.viewOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateLocation();
+
+                Location qrLocation = playerQrCode.getLocation();
+
+                if (!playerQrCode.isLocationShared()){
+//                    return;
+                    Toast.makeText(getContext(), "No Location found!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    returnToMapScreen(qrLocation);
+                }
+            }
+        });
         binding.postCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +326,12 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     protected void returnToHome() {
         Navigation.findNavController(getView()).navigate(R.id.action_goToHomeFromQRCodeView);
+    }
+
+    protected void returnToMapScreen(Location qrLocation){
+        QRCodeViewFragmentDirections.ActionQRCodeViewToSearchNearbyQrMapFragment action =
+                QRCodeViewFragmentDirections.actionQRCodeViewToSearchNearbyQrMapFragment(qrLocation);
+        Navigation.findNavController(getView()).navigate(action);
     }
 
     @Override

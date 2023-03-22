@@ -46,7 +46,6 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     private FirestoreQrController firestoreQrController;
     private FragmentSearchNearbyQrMapBinding binding;
     private SearchNearbyQrListAdapter qrCodeListAdapter;
-
     /**
      * Handles the layout of the activity, and called on activity creation.
      * @param inflater The LayoutInflater object that can be used to inflate
@@ -95,7 +94,6 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         firestoreQrController.getAllQrs(this);
         showLoadingBar();
         askPermissions();
-
         binding.enterSearchRadiusText.setOnClickListener(view -> {
             navigateToSearchRadiusPage();
         });
