@@ -228,7 +228,7 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
      * @param image The image to be compressed
      * @return The compressed image
      */
-    public Bitmap compressImage(Bitmap image) {
+    public static Bitmap compressImage(Bitmap image) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             int options = 100;
