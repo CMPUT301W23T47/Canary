@@ -12,13 +12,18 @@ import java.net.URL;
 
 public class ImageCompressionTest {
     @Test
-    public void testImageCompression() throws IOException {
-        URL url = new URL("https://picsum.photos/200");
-        Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        int bmpSize = bmp.getByteCount();
-        Bitmap compressed=QrCapturePreferenceFragment.compressImage(bmp);
-        int compressedSize = compressed.getByteCount();
-        // The compressed image should be smaller than the original
-        assert compressedSize < bmpSize;
+    public void testImageCompression(){
+        String url = "https://picsum.photos/200";
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert bitmap != null;
+        int size = bitmap.getByteCount();
+        Bitmap compressedBitmap = QrCapturePreferenceFragment.compressImage(bitmap);
+        int compressedSize = compressedBitmap.getByteCount();
+        assert compressedSize < size;
     }
 }
