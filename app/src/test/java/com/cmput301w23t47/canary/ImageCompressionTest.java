@@ -15,9 +15,9 @@ public class ImageCompressionTest {
     public void testImageCompression() throws IOException {
         URL url = new URL("https://picsum.photos/200");
         Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        Long bmpSize = bmp.getByteCount() / 1024L;
+        int bmpSize = bmp.getByteCount();
         Bitmap compressed=QrCapturePreferenceFragment.compressImage(bmp);
-        Long compressedSize = compressed.getByteCount() / 1024L;
+        int compressedSize = compressed.getByteCount();
         // The compressed image should be smaller than the original
         assert compressedSize < bmpSize;
     }
