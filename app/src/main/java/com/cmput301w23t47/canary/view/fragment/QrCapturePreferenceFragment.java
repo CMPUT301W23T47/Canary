@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -35,6 +36,8 @@ import com.cmput301w23t47.canary.view.contract.AddNewQrContract;
 import com.cmput301w23t47.canary.view.contract.SnapshotContract;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Locale;
 
@@ -213,11 +216,30 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
             playerQrCode.setLocationShared(true);
             playerQrCode.putLocation(playerLocation);
         }
+        Bitmap compressedImage = compressImage(snapshot);
         if (snapshot != null) {
-            playerQrCode.setSnapshot(new Snapshot(snapshot));
+            playerQrCode.setSnapshot(new Snapshot(compressedImage));
         }
+        // implement the image compression here
         firestorePlayerController.addQrToCurrentPlayer(playerQrCode, this);
     }
+    /*
+     *  This function implements the image compression
+     */
+    public Bitmap compressImage(Bitmap image) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            int options = 100;
+            while ( baos.toByteArray().length / 1024>1024) {
+                baos.reset();
+                image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+                options -= 10;
+            }
+            ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+            Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
+            return bitmap;
+    }
+
 
     /**
      * Calls the activity which captures a snapshot
