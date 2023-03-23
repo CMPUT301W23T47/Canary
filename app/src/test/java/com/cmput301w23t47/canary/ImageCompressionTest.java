@@ -16,7 +16,7 @@ public class ImageCompressionTest {
         String url = "https://picsum.photos/200";
         Bitmap bitmap = null;
         try {
-            bitmap = BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
+            bitmap = BitmapFactory.decodeStream(new URL(url).openStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
