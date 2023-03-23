@@ -224,7 +224,9 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
         firestorePlayerController.addQrToCurrentPlayer(playerQrCode, this);
     }
     /*
-     *  This function implements the image compression
+     * This function implements the image compression
+     * @param image The image to be compressed
+     * @return The compressed image
      */
     public Bitmap compressImage(Bitmap image) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
