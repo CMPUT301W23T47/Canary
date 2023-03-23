@@ -229,17 +229,14 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
      * @return The compressed image
      */
     public static Bitmap compressImage(Bitmap image) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            int options = 100;
-            while (baos.toByteArray().length / 1024 > 100) {
-                baos.reset();
-                image.compress(Bitmap.CompressFormat.JPEG, options, baos);
-                options -= 10;
-            }
-            ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-            Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
-            return bitmap;
+       Bitmap compressedImage = Bitmap.createScaledBitmap(image, 100, 100, true);
+       //2. initialize the output stream
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        compressedImage .compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] downsizedImageBytes = baos.toByteArray();
+        //3. convert the output stream to a Bitmap.
+        Bitmap downsizedImage = BitmapFactory.decodeByteArray(downsizedImageBytes, 0, downsizedImageBytes.length);
+        return downsizedImage;
     }
 
 
