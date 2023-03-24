@@ -68,7 +68,9 @@
             app:destination="@id/nearbyQrCodeListFragment" />
         <argument
             android:name="qrLocation"
-            app:argType="android.location.Location" />
+            app:argType="android.location.Location"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/playerSearchFragment"

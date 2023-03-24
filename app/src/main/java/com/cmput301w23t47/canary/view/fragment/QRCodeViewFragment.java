@@ -330,7 +330,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
 
     protected void returnToMapScreen(Location qrLocation){
         QRCodeViewFragmentDirections.ActionQRCodeViewToSearchNearbyQrMapFragment action =
-                QRCodeViewFragmentDirections.actionQRCodeViewToSearchNearbyQrMapFragment(qrLocation);
+                QRCodeViewFragmentDirections.actionQRCodeViewToSearchNearbyQrMapFragment().setQrLocation(qrLocation);
         Navigation.findNavController(getView()).navigate(action);
     }
 
