@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutionException;
  * Objects are singleton
  */
 public class FirestoreController {
-    public static boolean testMode = false;
+    public static boolean testMode = true;
     private static String collectionPrefix = "";
 
     private static String testPlayer = "dsvj1o1gQOe8mYWFe1U5To";

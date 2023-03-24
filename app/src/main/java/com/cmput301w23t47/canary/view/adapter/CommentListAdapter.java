@@ -70,9 +70,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
      */
     public void updateList(ArrayList<Comment> newComments) {
         comments.clear();
-        comments.addAll(newComments);
-        Collections.sort(comments, new CommentCompareController()); // sort the list by date time
-        notifyDataSetChanged();
+        if(newComments != null){
+            comments.addAll(newComments);
+            Collections.sort(comments, new CommentCompareController()); // sort the list by date time
+            notifyDataSetChanged();
+        }
     }
 
     public void addComment(Comment comment){
