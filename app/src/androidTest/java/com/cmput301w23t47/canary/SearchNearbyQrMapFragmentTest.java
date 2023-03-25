@@ -104,7 +104,7 @@ public class SearchNearbyQrMapFragmentTest {
 		
 		//For the test qr code just use this
 		// this might change as well but I think the database is pretty set on 4 qr codes
-		//assert( 4 == recyclerView.getAdapter().getItemCount() );
+		//55assert( 4 == recyclerView.getAdapter().getItemCount() );
 		
 	}
 	
