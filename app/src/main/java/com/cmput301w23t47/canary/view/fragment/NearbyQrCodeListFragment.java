@@ -43,7 +43,6 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
     private ArrayList<QrCode> qrCodes = new ArrayList<>();
     // the search radius in meters
     private double searchRadius = 0;
-    private String searchCity;
 
     private FragmentNearbyQrCodeListBinding binding;
     private FirestoreQrController firestoreQrController;
@@ -163,51 +162,7 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
         ArrayList<QrCode> filterQrs = QrCodeController.getQrsWithinDistance(qrCodes, playerLocation, searchRadius);
         qrCodeListAdapter.updateList(filterQrs);
     }
-    
-    /**
-     * Updates the qr list based on the information in the search bar
-     * this is for when the user enters a city name or part of a city name
-     * ie "Edmonton" or "Edm"
-     * this will then search for all the qr codes that are in the city of Edmonton
-     * or all cities that start with Edm
-     * this will then update the list to show all the qr codes that are in that city
-     */
-    private void updateQrListCity(){
-        // if nothing is in the search bar then we want to return dont want to do all this work for nothing
-        if(qrCodes == null || qrCodes.size() == 0){
-            return;
-        }
-        // if the search bar is empty then just return and show all the qr codes
-        if(searchCity == null || playerLocation == null){
-            showAllQrs();
-            return;
-        }
-        // will need these variables as
-        Geocoder geocoder = new Geocoder(getContext()); // the geocoder will hold the Address of the qr code
-        ArrayList<QrCode> filteredQrs = new ArrayList<>(); // this will show which ones you want to sort by
-        
-        // have to loop through all the qr codes because they are all in a list with unique addresses
-        for(QrCode qrind : qrCodes){
-            try{
-                // this will get the address of the qr code
-                List<Address> addresses = geocoder.getFromLocation(qrind.getLocation().getLatitude(), qrind.getLocation().getLongitude(), 1);
-                // this will get the city of the address of the qr code
-                String city = addresses.get(0).getLocality().toLowerCase();
-                // if the city of the qr code is the same as the city that the user entered then add it to the list
-                if(city.charAt(0) == searchCity.charAt(0)  && city.contains(searchCity)){
-                    // will check if the first letter of the city is the same as the first letter of the search city
-                    // this will hopefully prevent situations where the user enters "Edm" and it shows qrs in "monEdm"
-                    filteredQrs.add(qrind);
-                }
-            }catch( IOException e){
-                String message = "Error: " + e.getMessage();
-                Log.d( TAG, message);
-                e.printStackTrace();
-            }
-        }
-        // This is practically the return statement for the function
-        qrCodeListAdapter.updateList(filteredQrs);
-    }
+
     
     /**
      * The actions performed when the search button is pressed
@@ -219,20 +174,8 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
             return;
         }
         searchRadius = Double.parseDouble(searchText);
-        searchCity = searchText;
-        // we want to make sure that the only time we go to this is when we have a valid number
-        if(searchCity.contains("[a-zA-Z]+") == true && searchRadius == 0) {
-            // will only enter this part of the code if the search bar contains letters and no numbers
-            binding.searchResultHeading.setText( String.format(Locale.CANADA, "Within this city: %s", searchCity) );
-            searchCity = searchCity.toLowerCase();
-            updateQrListCity();
-        }
-        else{ // otherwise that means we have a string that does contain one of those
-            binding.searchResultHeading.setText( String.format( Locale.CANADA, "Within %.1f meters", searchRadius ) );
-            updateQrList();
-        }
-        
-        
+        binding.searchResultHeading.setText( String.format( Locale.CANADA, "Within %.1f meters", searchRadius ) );
+        updateQrList();
     }
 
     /**

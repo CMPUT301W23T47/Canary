@@ -306,6 +306,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * Navigates to the search radius page
      */
     private void navigateToSearchRadiusPage() {
-        Navigation.findNavController(getView()).navigate(R.id.action_searchNearbyQrMapToDistList);
+        Navigation.findNavController( getView() ).navigate( R.id.action_searchNearbyQrMapToDistList );
     }
+    
 }
