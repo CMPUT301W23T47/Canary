@@ -40,7 +40,6 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	private ArrayList<QrCode> qrCodes = new ArrayList<>();
 	// the search radius in meters
 	private String searchCity;
-	
 	private FragmentCitySearchQrCodeListBinding binding;
 	private FirestoreQrController firestoreQrController;
 	private SearchNearbyQrListAdapter qrCodeListAdapter;
@@ -78,7 +77,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 		firestoreQrController.getAllQrs(this);
 		showLoadingBar();
 		askPermissions();
-		playerLocation = new Location("");
+		//playerLocation = new Location("");
 		binding.searchQrButtonCity.setOnClickListener(view -> {
 			searchButtonPressed();
 		});
@@ -103,7 +102,9 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	 */
 	@Override
 	protected void updateLocation() {
-		updateQrList();
+		// I dont think we need to do anything here becuase what city gets searched for doesn't matter if
+		// the player is moving
+		//updateQrList();
 	}
 	
 	@Override
@@ -170,7 +171,8 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 			return;
 		}
 		// if the search bar is empty then just return and show all the qr codes
-		if(searchCity == null || playerLocation == null){
+		// dont think we need to keep track of player location but just in case
+		if(searchCity == null ){
 			showAllQrs();
 			return;
 		}
@@ -198,11 +200,14 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 			}
 		}
 		// This is practically the return statement for the function
+		// this will update the qr list to show all the qr codes that are in the specified city list
 		qrCodeListAdapter.updateList(filteredQrs);
 	}
 	
 	/**
 	 * The actions performed when the search button is pressed
+	 * this will get the text from the search bar
+	 * and then update the qr list to show all the qr codes that are in that city
 	 */
 	private void searchButtonPressed() {
 		String searchText = binding.searchQrCity.getText().toString();
@@ -210,9 +215,13 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 			showAllQrs();
 			return;
 		}
+		// this will set the search city to the text that the user entered
 		searchCity = searchText;
+		// this will update the heading to show the city that the user entered
 		binding.searchResultHeadingCity.setText( String.format( Locale.CANADA, "Within this city: %s", searchCity) );
+		// this will make the search city all lowercase so that we can have a more consistent search
 		searchCity = searchCity.toLowerCase();
+		// this will update the qr list to show all the qr codes that are in the city that the user entered
 		updateQrList();
 		
 		
@@ -220,7 +229,8 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	}
 	
 	/**
-	 * Shows all the qrs available
+	 * Shows all the qrs that are available
+	 * should act like a reset where you can see all the qrs again
 	 */
 	private void showAllQrs() {
 		qrCodeListAdapter.updateList(qrCodes);

@@ -96,8 +96,14 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         showLoadingBar();
         askPermissions();
 
+        // this will send us to the search radius page
         binding.enterSearchRadiusText.setOnClickListener(view -> {
             navigateToSearchRadiusPage();
+        });
+        
+        // this will send us to the search city page
+        binding.enterSearchCityText.setOnClickListener(view -> {
+            navigateToSearchCityPage();
         });
     }
 
@@ -309,4 +315,12 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         Navigation.findNavController( getView() ).navigate( R.id.action_searchNearbyQrMapToDistList );
     }
     
+    //ToDo: make sure correct
+    /**
+     * Navigates to the search City page
+     */
+    private void navigateToSearchCityPage() {
+        // my understanding says this will be right
+        Navigation.findNavController( getView() ).navigate(R.id.action_searchNearbyQrMapFragment_to_citySearchQrCodeListFragment);
+    }
 }
