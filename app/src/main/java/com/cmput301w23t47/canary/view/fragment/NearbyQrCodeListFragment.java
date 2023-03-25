@@ -3,6 +3,7 @@ package com.cmput301w23t47.canary.view.fragment;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,8 @@ import java.util.Locale;
  */
 public class NearbyQrCodeListFragment extends LocationBaseFragment implements GetQrListCallback,
         GetIndexCallback {
+    private final String TAG = "NearbyQrCodeListFragment";
+    
     // the list of qr codes
     private ArrayList<QrCode> qrCodes = new ArrayList<>();
     // the search radius in meters
@@ -196,6 +200,8 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
                     filteredQrs.add(qrind);
                 }
             }catch( IOException e){
+                String message = "Error: " + e.getMessage();
+                Log.d( TAG, message);
                 e.printStackTrace();
             }
         }
