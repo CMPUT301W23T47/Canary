@@ -70,6 +70,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	 * Initializes the ui
 	 */
 	private void init() {
+		//do we need to know the player location?
 		fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 		firestoreQrController = new FirestoreQrController();
 		qrCodeRecyclerViewInit();
@@ -78,7 +79,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 		showLoadingBar();
 		askPermissions();
 		playerLocation = new Location("");
-		binding.searchQrButton.setOnClickListener(view -> {
+		binding.searchQrButtonCity.setOnClickListener(view -> {
 			searchButtonPressed();
 		});
 	}
@@ -115,6 +116,11 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	
 	}
 	
+	/**
+	 * This method is called when the search button is pressed
+	 * it will then get the city name from the search bar
+	 * and then update the qr list to show all the qr codes that are in that city
+	 */
 	@Override
 	public void getQrList(ArrayList<QrCode> qrCodes) {
 		this.qrCodes = qrCodes;
@@ -122,6 +128,11 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 		updateQrList();
 	}
 	
+	/**
+	 * gets the qr code at the requested index
+	 * from the qr code list adapter
+	 * @param ind the requested index
+	 */
 	@Override
 	public void getIndex(int ind) {
 		QrCode qrCode = qrCodeListAdapter.getItemAt(ind);
