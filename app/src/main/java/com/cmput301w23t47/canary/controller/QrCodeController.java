@@ -1,5 +1,6 @@
 package com.cmput301w23t47.canary.controller;
 
+import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
 
@@ -99,4 +100,6 @@ public class QrCodeController {
         }
         return filterQrs;
     }
+    
+    // tried to add the geocoder here but it was not working because of the context
 }
