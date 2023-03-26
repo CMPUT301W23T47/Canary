@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -40,6 +41,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Locale;
+
+import io.grpc.Compressor;
 
 /**
  * A fragment for the setting the preference of capturing the Qr.
@@ -228,7 +231,7 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
      * @param image The image to be compressed
      * @return The compressed image
      */
-    public static Bitmap compressImage(Bitmap image){
+    public static Bitmap compressImage(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         int options = 100;
