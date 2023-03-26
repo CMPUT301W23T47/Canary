@@ -18,7 +18,7 @@ public class ImageGenerator{
     /**
      * Gets the image as an async operation
      * @param url the url to get the image from
-     * @param callback the callback function
+     * @param callback the csallback function
      * @return
      */
     public static void getImage(String url, GetImageCallback callback) {

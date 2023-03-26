@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.cmput301w23t47.canary.callback.GetImageCallback;
+import com.cmput301w23t47.canary.controller.ImageCompression;
 import com.cmput301w23t47.canary.controller.ImageGenerator;
 import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.view.fragment.QrCapturePreferenceFragment;
@@ -28,25 +29,28 @@ public class imageCompressionTest {
             countDownLatch.countDown();
         }
     }
-
+    /**
+     * Mock class for the image client
+     */
+    public static Bitmap getBitMapFromURL(){
+        try{
+            URL url = new URL("https://picsum.photos/200");
+            return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (IOException e) {
+            return null;
+        }
+    }
     @Test
     /**
      * Test the image compression
      */
-    public void testImageCompression() {
-        ImageClientMock mock1 = new ImageClientMock();
-        //create a QR code
-        ImageGenerator.getImage(ImageGenerator.imageUrl, mock1);
-        try {
-            mock1.countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Bitmap bitmap = mock1.bitmap;
+    public void testImageCompression()
+    {
+        Bitmap mock1 = getBitMapFromURL();
         //compress the image
-        Bitmap compressedBitmap = QrCapturePreferenceFragment.compressImage(bitmap);
+        Bitmap compressedBitmap = ImageCompression.compressImage(mock1);
         //check if the image is compressed
-        assert (bitmap.getByteCount() > compressedBitmap.getByteCount());
+        assert (mock1.getByteCount() > compressedBitmap.getByteCount());
     }
 }
 

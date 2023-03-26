@@ -77,4 +77,6 @@ dependencies {
     //custom dependencies (for generating random image beside qr name and score)
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.squareup.picasso:picasso:2.8'
+    //image compression
+    implementation 'id.zelory:compressor:3.0.1'
 }

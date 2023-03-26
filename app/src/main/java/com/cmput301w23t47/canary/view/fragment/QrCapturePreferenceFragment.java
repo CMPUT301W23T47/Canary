@@ -26,6 +26,7 @@ import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetImageCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
+import com.cmput301w23t47.canary.controller.ImageCompression;
 import com.cmput301w23t47.canary.controller.ImageGenerator;
 import com.cmput301w23t47.canary.controller.RandomNameGenerator;
 import com.cmput301w23t47.canary.controller.ScoreCalculator;
@@ -35,6 +36,7 @@ import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
 import com.cmput301w23t47.canary.view.contract.AddNewQrContract;
 import com.cmput301w23t47.canary.view.contract.SnapshotContract;
+import com.github.javafaker.App;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.ByteArrayInputStream;
@@ -219,33 +221,14 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
             playerQrCode.setLocationShared(true);
             playerQrCode.putLocation(playerLocation);
         }
-        Bitmap compressedImage = compressImage(snapshot);
+        ImageCompression imageCompression = new ImageCompression();
+        Bitmap compressedImage = imageCompression.compressImage(snapshot);
         if (snapshot != null) {
             playerQrCode.setSnapshot(new Snapshot(compressedImage));
         }
         // implement the image compression here
         firestorePlayerController.addQrToCurrentPlayer(playerQrCode, this);
     }
-    /*
-     * This function implements the image compression
-     * @param image The image to be compressed
-     * @return The compressed image
-     */
-    public static Bitmap compressImage(Bitmap image) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        int options = 100;
-        while (baos.toByteArray().length / 1024 > 100) {
-            baos.reset();
-            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
-            options -= 10;
-        }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
-        return bitmap;
-    }
-
-
     /**
      * Calls the activity which captures a snapshot
      */
