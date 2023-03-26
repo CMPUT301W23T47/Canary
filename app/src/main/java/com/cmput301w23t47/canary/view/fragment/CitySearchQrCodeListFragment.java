@@ -2,7 +2,6 @@ package com.cmput301w23t47.canary.view.fragment;
 		
 		import android.location.Address;
 		import android.location.Geocoder;
-		import android.location.Location;
 		import android.os.Bundle;
 		import android.util.Log;
 		import android.view.LayoutInflater;
@@ -15,13 +14,12 @@ package com.cmput301w23t47.canary.view.fragment;
 		import androidx.navigation.Navigation;
 		import androidx.recyclerview.widget.DividerItemDecoration;
 		
+		import com.cmput301w23t47.canary.MainActivity;
 		import com.cmput301w23t47.canary.R;
 		import com.cmput301w23t47.canary.callback.GetIndexCallback;
 		import com.cmput301w23t47.canary.callback.GetQrListCallback;
 		import com.cmput301w23t47.canary.controller.FirestoreQrController;
-		import com.cmput301w23t47.canary.controller.QrCodeController;
 		import com.cmput301w23t47.canary.databinding.FragmentCitySearchQrCodeListBinding;
-		import com.cmput301w23t47.canary.databinding.FragmentNearbyQrCodeListBinding;
 		import com.cmput301w23t47.canary.model.QrCode;
 		import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
 		import com.google.android.gms.location.LocationServices;
@@ -177,16 +175,22 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 			return;
 		}
 		// will need these variables as
-		Geocoder geocoder = new Geocoder(getContext()); // the geocoder will hold the Address of the qr code
+		Geocoder geocoder = new Geocoder( getContext() ); // the geocoder will hold the Address of the qr code
 		ArrayList<QrCode> filteredQrs = new ArrayList<>(); // this will show which ones you want to sort by
+		String city = ""; // this will hold the city of the qr code
+		List<Address> QrAddress; // this will hold the address of the qr code
 		
 		// have to loop through all the qr codes because they are all in a list with unique addresses
 		for(QrCode qrind : qrCodes){
 			try{
+				//TODO: figure out why line 189 is not returning an address
+				
 				// this will get the address of the qr code
-				List<Address> addresses = geocoder.getFromLocation(qrind.getLocation().getLatitude(), qrind.getLocation().getLongitude(), 1);
+				QrAddress = geocoder.getFromLocation(qrind.getLocation().getLatitude(), qrind.getLocation().getLongitude(), 1);
 				// this will get the city of the address of the qr code
-				String city = addresses.get(0).getLocality().toLowerCase();
+				
+				city = QrAddress.get(0).getLocality().toLowerCase(); // will get the lower case city name
+				
 				// if the city of the qr code is the same as the city that the user entered then add it to the list
 				if(city.charAt(0) == searchCity.charAt(0)  && city.contains(searchCity)){
 					// will check if the first letter of the city is the same as the first letter of the search city

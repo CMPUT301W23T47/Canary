@@ -42,17 +42,8 @@
                 android:textSize="16dp"
                 android:textColor="@color/black"
                 />
+                <!--ToDo: Add the linear layout such that the both searches are on the same line            -->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
-                android:background="@color/light_gray"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="5dp"
-                android:orientation="horizontal"
-                >
                 <TextView
                     android:id="@+id/enter_search_radius_text"
                     android:layout_width="wrap_content"
@@ -70,7 +61,6 @@
                     android:textColor="@color/purple_700"
                     android:textStyle="bold"
                     />
-            </LinearLayout>
 
 
             <androidx.recyclerview.widget.RecyclerView

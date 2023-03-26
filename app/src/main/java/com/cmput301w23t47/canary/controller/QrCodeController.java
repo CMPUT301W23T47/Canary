@@ -1,17 +1,20 @@
 package com.cmput301w23t47.canary.controller;
 
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
 
 import com.cmput301w23t47.canary.model.QrCode;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -102,4 +105,30 @@ public class QrCodeController {
     }
     
     // tried to add the geocoder here but it was not working because of the context
+//    public static ArrayList<QrCode> getQrsWithinCity(ArrayList<QrCode> qrCodes, String city) {
+//        // will need these variables as
+//        Geocoder geocoder = new Geocoder(this); // the geocoder will hold the Address of the qr code
+//        ArrayList<QrCode> filteredQrs = new ArrayList<>(); // this will show which ones you want to sort by
+//
+//        // have to loop through all the qr codes because they are all in a list with unique addresses
+//        for(QrCode qrind : qrCodes){
+//            try{
+//                // this will get the address of the qr code
+//                List<Address> addresses = geocoder.getFromLocation(qrind.getLocation().getLatitude(), qrind.getLocation().getLongitude(), 1);
+//                // this will get the city of the address of the qr code
+//                String addresscity = (String) addresses.get(0).getLocality().toLowerCase();
+//                // if the city of the qr code is the same as the city that the user entered then add it to the list
+//                if(addresscity.charAt(0) == city.charAt(0)  && addresscity.contains(city)){
+//                    // will check if the first letter of the city is the same as the first letter of the search city
+//                    // this will hopefully prevent situations where the user enters "Edm" and it shows qrs in "monEdm"
+//                    filteredQrs.add(qrind);
+//                }
+//            }catch( IOException e){
+//                String message = "Error: " + e.getMessage();
+//                Log.e("Error", message);
+//                e.printStackTrace();
+//            }
+//        }
+//        return filteredQrs;
+//    }
 }
