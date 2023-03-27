@@ -47,6 +47,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     private FragmentSearchNearbyQrMapBinding binding;
     private SearchNearbyQrListAdapter qrCodeListAdapter;
 
+    private Location selectedQrLocation;
     /**
      * Handles the layout of the activity, and called on activity creation.
      * @param inflater The LayoutInflater object that can be used to inflate
@@ -95,6 +96,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         firestoreQrController.getAllQrs(this);
         showLoadingBar();
         askPermissions();
+
+        selectedQrLocation = SearchNearbyQrMapFragmentArgs.fromBundle(getArguments()).getQrLocation();
 
         binding.enterSearchRadiusText.setOnClickListener(view -> {
             navigateToSearchRadiusPage();
@@ -175,6 +178,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         addMarker(point, playerLocTitle);
         centerMapCamera(point);
         setCameraView();
+        showSelectedQr();
     }
 
     /**
@@ -211,6 +215,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         this.qrCodes = qrCodes;
         hideLoadingBar();
         setTheQrPinsOnMap();
+
     }
 
     /**
@@ -230,6 +235,34 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         );
 
         googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
+    }
+
+    private void setCameraViewToQr(Location qrLocation){
+        if (qrLocation == null) {
+            return;
+        }
+        double bottomBoundary = qrLocation.getLatitude() - .1;
+        double leftBoundary = qrLocation.getLongitude() - .1;
+            double topBoundary = qrLocation.getLatitude() + .1;
+        double rightBoundary = qrLocation.getLongitude() + .1;
+
+        LatLngBounds mapBoundary = new LatLngBounds(
+                new LatLng(bottomBoundary, leftBoundary),
+                new LatLng(topBoundary, rightBoundary)
+        );
+
+        googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
+    }
+
+    private void showSelectedQr(){
+        if (selectedQrLocation == null){
+            return;
+        }
+        setCameraViewToQr(selectedQrLocation);
+        //LatLng latLng = new LatLng(selectedQrLocation.getLatitude(), selectedQrLocation.getLongitude());
+        LatLng latlng = getLatLng(selectedQrLocation);
+        addMarker(latlng, "Selected QR");
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
     }
 
     /**
