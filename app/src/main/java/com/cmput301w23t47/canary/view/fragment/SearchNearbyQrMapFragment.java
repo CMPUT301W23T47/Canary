@@ -251,7 +251,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         
         // Get a bitmap from the drawable
         //doing this here so dont have to go the function every time
-        BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_qr_foreground,R.drawable.map_pin_qr_background);
+        BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_qr_code_actual);
         
         
         ArrayList<QrCode> qrsOnMap = new ArrayList<>();
