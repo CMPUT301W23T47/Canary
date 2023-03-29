@@ -141,15 +141,15 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        LatLng point;
-        if (playerLocation != null) {
-            point = new LatLng(playerLocation.getLatitude(), playerLocation.getLongitude());
-        } else {
-            point = new LatLng(37, -122);
-        }
-        addMarker(point, playerLocTitle);
-        googleMap.addMarker(new MarkerOptions().position(point).title(playerLocTitle));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+//        LatLng point;
+//        if (playerLocation != null) {
+//            point = new LatLng(playerLocation.getLatitude(), playerLocation.getLongitude());
+//        } else {
+//            point = new LatLng(37, -122);
+//        }
+//        addMarker(point, playerLocTitle);
+//        googleMap.addMarker(new MarkerOptions().position(point).title(playerLocTitle));
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(point));
     }
 
     /**
