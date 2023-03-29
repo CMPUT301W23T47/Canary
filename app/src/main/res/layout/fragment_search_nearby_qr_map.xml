@@ -43,7 +43,12 @@
                 android:textColor="@color/black"
                 />
                 <!--ToDo: Add the linear layout such that the both searches are on the same line            -->
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                >
                 <TextView
                     android:id="@+id/enter_search_radius_text"
                     android:layout_width="wrap_content"
@@ -60,8 +65,9 @@
                     android:text="Search by City"
                     android:textColor="@color/purple_700"
                     android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
                     />
-
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/qr_items_list"
                 android:layout_width="match_parent"
