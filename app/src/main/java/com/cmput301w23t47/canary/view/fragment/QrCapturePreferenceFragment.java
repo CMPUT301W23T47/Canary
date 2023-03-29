@@ -4,23 +4,17 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cmput301w23t47.canary.MainActivity;
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetImageCallback;
@@ -36,15 +30,10 @@ import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
 import com.cmput301w23t47.canary.view.contract.AddNewQrContract;
 import com.cmput301w23t47.canary.view.contract.SnapshotContract;
-import com.github.javafaker.App;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Locale;
-
-import io.grpc.Compressor;
 
 /**
  * A fragment for the setting the preference of capturing the Qr.
@@ -221,9 +210,9 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
             playerQrCode.setLocationShared(true);
             playerQrCode.putLocation(playerLocation);
         }
-        ImageCompression imageCompression = new ImageCompression();
-        Bitmap compressedImage = imageCompression.compressImage(snapshot);
         if (snapshot != null) {
+            ImageCompression imageCompression = new ImageCompression();
+            Bitmap compressedImage = imageCompression.compressImage(snapshot);
             playerQrCode.setSnapshot(new Snapshot(compressedImage));
         }
         // implement the image compression here
