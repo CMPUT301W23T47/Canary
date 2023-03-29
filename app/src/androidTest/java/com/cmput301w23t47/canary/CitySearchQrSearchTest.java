@@ -1,4 +1,4 @@
-package com.cmput301w23t47.canary.util;
+package com.cmput301w23t47.canary;
 
 import static androidx.test.InstrumentationRegistry.getContext;
 import static org.junit.Assert.assertTrue;
