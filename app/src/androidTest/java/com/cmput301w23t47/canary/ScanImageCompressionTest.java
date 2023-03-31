@@ -2,14 +2,19 @@ package com.cmput301w23t47.canary;
 
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.widget.CheckBox;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -27,31 +32,36 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+@LargeTest
 public class ScanImageCompressionTest {
     private Solo solo;
+
     private static Player testPlayer = null;
     private static FirestorePlayerTestUtil firestorePlayerTestUtil;
 
     @Rule
     public ActivityTestRule<HomeActivity> rule =
             new ActivityTestRule<>(HomeActivity.class, true, true);
+
     @BeforeClass
     public static void beforeAll() {
         FirestoreController.switchToTestMode();
         firestorePlayerTestUtil = new FirestorePlayerTestUtil();
         testPlayer = firestorePlayerTestUtil.getTestPlayer();
     }
+
     @Before
     public void setUp() throws Exception {
         FirestoreController.switchToTestMode();
         Intents.init();
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
+
     /**
-     * Test if QR code is scanned and compressed
+     * Test for scanning the qr
      */
     @Test
-    public void testScanQrCompression() {
+    public void testImageCompression() {
         if (testPlayer == null) {
             return;
         }
@@ -70,11 +80,12 @@ public class ScanImageCompressionTest {
         // save the snapshot
         solo.clickOnView(solo.getView(R.id.no_snap));
         assertTrue(solo.waitForText("Snapshot"));
-        // check if the snapshot is compressed
-        Bitmap bitmap = (Bitmap) solo.getView(R.id.no_snap).getTag();
-        ImageCompression imageCompression = new ImageCompression();
-        int size = imageCompression.compressImage(bitmap).getByteCount();
-        assertTrue(size<bitmap.getByteCount());
+        //change view to bitmap and check if it is compressed
+        solo.clickOnView(solo.getView(R.id.no_snap));
+        //check if the bitmap is compressed
+        Bitmap bitmap = ImageCompression.getBitmapFromView(solo.getView(R.id.no_snap));
+        Bitmap compressedBitmap = ImageCompression.compressImage(bitmap);
+        assertTrue(bitmap.getByteCount() > compressedBitmap.getByteCount());
     }
 
     @After
