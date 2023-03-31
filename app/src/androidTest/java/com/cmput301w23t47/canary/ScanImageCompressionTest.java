@@ -85,7 +85,8 @@ public class ScanImageCompressionTest {
         //check if the bitmap is compressed
         Bitmap bitmap = ImageCompression.getBitmapFromView(solo.getView(R.id.no_snap));
         Bitmap compressedBitmap = ImageCompression.compressImage(bitmap);
-        assertTrue(bitmap.getByteCount() > compressedBitmap.getByteCount());
+        assertTrue(compressedBitmap.getByteCount()<bitmap.getByteCount());
+        assertTrue(compressedBitmap.getByteCount()!=bitmap.getByteCount());
         System.out.println("bitmap size: " + bitmap.getByteCount());
         System.out.println("compressed bitmap size: " + compressedBitmap.getByteCount());
     }
