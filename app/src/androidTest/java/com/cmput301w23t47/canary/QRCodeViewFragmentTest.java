@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.test.espresso.intent.Intents;
@@ -62,7 +63,9 @@ public class QRCodeViewFragmentTest {
         //going to the player profile page
         View playerProfile = solo.getView(R.id.playerProfileFragment);
         solo.clickOnView(playerProfile);
-
+        ListView qrsScannedList = (ListView) solo.getView(R.id.qrsScannedList);
+        ListAdapter qrAdapter = qrsScannedList.getAdapter();
+        int count = qrAdapter.getCount();
         //getting the first qr scanned in the list.
         solo.clickInList(1);
 
@@ -70,6 +73,13 @@ public class QRCodeViewFragmentTest {
         View deleteView = solo.getView(R.id.qr_delete_icon);
         solo.clickOnView(deleteView);
         solo.clickOnButton("Yes");
+        solo.clickOnButton("Continue");
+        solo.clickOnActionBarHomeButton();
+        solo.clickOnView(playerProfile);
+        ListView afterDeleteQrsScannedList = (ListView) solo.getView(R.id.qrsScannedList);
+        int afterDeleteCount = afterDeleteQrsScannedList.getAdapter().getCount();
+        int finalCount = count - afterDeleteCount;
+        assert( finalCount == 1);
 
     }
 
