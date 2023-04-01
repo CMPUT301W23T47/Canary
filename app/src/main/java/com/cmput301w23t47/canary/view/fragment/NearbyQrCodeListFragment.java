@@ -1,6 +1,9 @@
 package com.cmput301w23t47.canary.view.fragment;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +27,9 @@ import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -31,6 +37,8 @@ import java.util.Locale;
  */
 public class NearbyQrCodeListFragment extends LocationBaseFragment implements GetQrListCallback,
         GetIndexCallback {
+    private final String TAG = "NearbyQrCodeListFragment";
+    
     // the list of qr codes
     private ArrayList<QrCode> qrCodes = new ArrayList<>();
     // the search radius in meters
@@ -141,6 +149,7 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
 
     /**
      * Updates the qr list
+     * to be accurate with the search radius
      */
     private void updateQrList() {
         if (qrCodes == null || qrCodes.size() == 0) {
@@ -154,6 +163,7 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
         qrCodeListAdapter.updateList(filterQrs);
     }
 
+    
     /**
      * The actions performed when the search button is pressed
      */
@@ -164,7 +174,7 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
             return;
         }
         searchRadius = Double.parseDouble(searchText);
-        binding.searchResultHeading.setText(String.format(Locale.CANADA, "Within %.1f meters", searchRadius));
+        binding.searchResultHeading.setText( String.format( Locale.CANADA, "Within %.1f meters", searchRadius ) );
         updateQrList();
     }
 
@@ -185,4 +195,5 @@ public class NearbyQrCodeListFragment extends LocationBaseFragment implements Ge
                 NearbyQrCodeListFragmentDirections.actionNearbyQrListToQrCodePage(qrCode.getHash());
         Navigation.findNavController(getView()).navigate(action);
     }
+
 }

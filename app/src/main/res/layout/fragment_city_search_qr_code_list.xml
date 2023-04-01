@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.fragment.NearbyQrCodeListFragment"
+    tools:context=".view.fragment.CitySearchQrCodeListFragment"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,13 +34,12 @@
                     android:src="@drawable/search_icon"
                     />
                 <EditText
-                    android:id="@+id/search_qr_radius"
+                    android:id="@+id/search_qr_city"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="20dp"
-                    android:hint="Enter Radius in Meters"
+                    android:hint="Enter City Name"
                     android:textSize="16dp"
-                    android:inputType="numberDecimal"
                     />
             </LinearLayout>
             <View
@@ -48,7 +47,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.2"/>
             <Button
-                android:id="@+id/search_qr_button"
+                android:id="@+id/search_qr_button_city"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Search"
@@ -72,7 +71,7 @@
                 android:textColor="@color/black"
                 />
             <TextView
-                android:id="@+id/search_result_heading"
+                android:id="@+id/search_result_heading_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -82,7 +81,7 @@
                 />
             <androidx.recyclerview.widget.RecyclerView
                 android:paddingTop="15dp"
-                android:id="@+id/search_result_list"
+                android:id="@+id/search_result_list_city"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

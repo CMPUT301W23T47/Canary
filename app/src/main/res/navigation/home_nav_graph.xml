@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_searchNearbyQrMapToDistList"
             app:destination="@id/nearbyQrCodeListFragment" />
+        <action
+            android:id="@+id/action_searchNearbyQrMapFragment_to_citySearchQrCodeListFragment"
+            app:destination="@id/citySearchQrCodeListFragment" />
         <argument
             android:name="qrLocation"
             app:argType="android.location.Location"
@@ -100,6 +103,15 @@
         tools:layout="@layout/fragment_nearby_qr_code_list" >
         <action
             android:id="@+id/action_nearbyQrListToQrCodePage"
+            app:destination="@id/QRCodeView" />
+    </fragment>
+    <fragment
+        android:id="@+id/citySearchQrCodeListFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.CitySearchQrCodeListFragment"
+        android:label="fragment_city_search_qr_code_list"
+        tools:layout="@layout/fragment_city_search_qr_code_list" >
+        <action
+            android:id="@+id/action_citySearchQrCodeListFragment_to_QRCodeView"
             app:destination="@id/QRCodeView" />
     </fragment>
 </navigation>

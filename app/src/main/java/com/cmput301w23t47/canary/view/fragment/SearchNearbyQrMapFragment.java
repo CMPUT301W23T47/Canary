@@ -104,8 +104,14 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
 
         selectedQrLocation = SearchNearbyQrMapFragmentArgs.fromBundle(getArguments()).getQrLocation();
 
+        // this will send us to the search radius page
         binding.enterSearchRadiusText.setOnClickListener(view -> {
             navigateToSearchRadiusPage();
+        });
+
+        // this will send us to the search city page
+        binding.enterSearchCityText.setOnClickListener(view -> {
+            navigateToSearchCityPage();
         });
     }
 
@@ -221,7 +227,6 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         this.qrCodes = qrCodes;
         hideLoadingBar();
         setTheQrPinsOnMap();
-
     }
 
     /**
@@ -242,7 +247,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         );
 
         googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
-        
+
         return mapBoundary;
     }
 
@@ -281,12 +286,12 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         if (qrCodes == null || qrCodes.size() == 0) {
             return;
         }
-        
+
         // Get a bitmap from the drawable
         //doing this here so dont have to go the function every time
         BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_qr_code_actual);
-        
-        
+
+
         ArrayList<QrCode> qrsOnMap = new ArrayList<>();
         // this will place the markers on the map for the qr codes change this to being the qr icon
         for (QrCode qrCode : qrCodes) {
@@ -356,12 +361,12 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * Navigates to the search radius page
      */
     private void navigateToSearchRadiusPage() {
-        Navigation.findNavController(getView()).navigate(R.id.action_searchNearbyQrMapToDistList);
+        Navigation.findNavController( getView() ).navigate( R.id.action_searchNearbyQrMapToDistList );
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Turns a vector image asset into a bitmap image asset with a background
      * does this by just overlaying the vector on top of the background
@@ -376,7 +381,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         //set tje bounds of the background
         // 0 means it will not be left shifted from start point and 0 means it will not be shifted down from the start point
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
-        
+
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         //set the bounds of the vector
         // 20 and 10 are the left and top shift
@@ -388,7 +393,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-    
+
     /**
      * Turns a vector asset into a bitmap
      * this one does not need the background because found goog default asset for the pin
@@ -403,5 +408,14 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    //ToDo: make sure correct
+    /**
+     * Navigates to the search City page
+     */
+    private void navigateToSearchCityPage() {
+        // my understanding says this will be right
+        Navigation.findNavController( getView() ).navigate(R.id.action_searchNearbyQrMapFragment_to_citySearchQrCodeListFragment);
     }
 }
