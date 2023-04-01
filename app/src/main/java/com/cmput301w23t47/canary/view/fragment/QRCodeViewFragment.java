@@ -64,7 +64,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         Log.d(TAG, "updateLocation: " + playerQrCode.isLocationShared());
         if (playerQrCode.isLocationShared()) {
             String cityName = LocationController.retrieveCityName(playerQrCode.getLocation(), getContext());
-            if (cityName.equals("")) {
+            if (cityName == null || cityName.equals("")) {
                 // no city name given
                 binding.qrScanLocation.setText("_ _ _");
             } else {

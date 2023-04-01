@@ -307,6 +307,7 @@ public class PlayerRepository {
      */
     public void removeQrAt(int qrIndex, PlayerQrCode playerQrCode) {
         qrCodes.remove(qrIndex);
+        qrCodeReferences.remove(qrIndex);
         updateStatsAfterRemoveQr(playerQrCode);
     }
 

@@ -63,19 +63,7 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
         binding.playersWithSameQrList.addItemDecoration(dividerItemDecoration);
 
         firestorePlayerController.otherPlayerWithSameQr(qrHash, this);
-        setOnClickListeners();
         showLoadingBar();
-    }
-
-    private void setOnClickListeners(){
-        binding.playersWithSameQrList.setOnClickListener(view -> {
-            Log.d("TAG", "setOnClickListeners: Clicked");
-//            int itemPos = binding.playersWithSameQr.getChildLayoutPosition(view);
-//            Player selectedPlayer = viewAdapter.getItemAt(itemPos);
-//            if (selectedPlayer != null) {
-//                navigateToSelectedPlayer(selectedPlayer);
-//            }
-        });
     }
 
     private void showAllOtherPlayers() {

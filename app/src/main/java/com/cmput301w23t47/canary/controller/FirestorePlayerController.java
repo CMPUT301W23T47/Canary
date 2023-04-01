@@ -98,6 +98,7 @@ public class FirestorePlayerController extends FirestoreController{
             playerRepo.getQrCodes().add(new PlayerQrCodeRepository(qrReference, snapshotReference,
                     new Timestamp(playerQrCode.getScanDate()), playerQrCode.retrieveScore(),
                     playerQrCode.isLocationShared()));
+            playerRepo.getQrCodeReferences().add(qrReference);
             updatePlayer(playerRepo);
             handler.post(() -> {
                 // update leaderboard if required and return result; launched in different thread for faster response
@@ -376,6 +377,11 @@ public class FirestorePlayerController extends FirestoreController{
         waitForUpdateTask(deleteTask);
     }
 
+    /**
+     * Finds other players who have scanned the same QR
+     * @param qrHash the hash of the qrcode to search
+     * @param callback the callback object to notify when result available
+     */
     public void otherPlayerWithSameQr(String qrHash, GetPlayerListCallback callback){
         Handler handler = new Handler();
         new Thread(() -> {
@@ -390,7 +396,6 @@ public class FirestorePlayerController extends FirestoreController{
                 return;
             }
             DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
-            Log.d(TAG, "otherPlayerWithSameQr: " + qrRef);
             Task<QuerySnapshot> playerQueryTask = players.whereArrayContains("qrCodeReferences", qrRef).get();
             waitForQuery(playerQueryTask);
             for (DocumentSnapshot playerDoc : playerQueryTask.getResult().getDocuments()) {
