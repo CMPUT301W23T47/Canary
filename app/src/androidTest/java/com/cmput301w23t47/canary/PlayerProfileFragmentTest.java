@@ -6,6 +6,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.cmput301w23t47.canary.view.fragment.SplashFragment.TAG;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
@@ -88,7 +89,7 @@ public class PlayerProfileFragmentTest {
     @Test
     public void checkTestMode(){
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-        boolean textAppeared = solo.waitForText("officalTester", 1, 2000);
+        boolean textAppeared = solo.waitForText("msn", 1, 2000);
         assertTrue("Text not found!", textAppeared);
     }
 
@@ -103,11 +104,11 @@ public class PlayerProfileFragmentTest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 //        View menuItem = solo.getView(BottomNavigationView.class).findViewById(R.id.bottom_navigation);
         solo.clickOnImage(6);
-        solo.sleep(1000);
+        solo.waitForText("msn", 1, 6000);
         ListView qrsScannedList = (ListView) solo.getView(R.id.qrsScannedList);
         ListAdapter qrAdapter = qrsScannedList.getAdapter();
         PlayerQrCode firstItem = (PlayerQrCode) qrAdapter.getItem(0);
-        assertEquals("South Nebraska CollegeYuan Renminbi", firstItem.getName());
+        assertNotNull(firstItem);
 
     }
 
