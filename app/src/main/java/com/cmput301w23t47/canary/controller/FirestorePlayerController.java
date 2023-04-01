@@ -2,6 +2,9 @@ package com.cmput301w23t47.canary.controller;
 
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
@@ -16,19 +19,26 @@ import com.cmput301w23t47.canary.repository.PlayerQrCodeRepository;
 import com.cmput301w23t47.canary.repository.PlayerRepository;
 import com.cmput301w23t47.canary.repository.QrCodeRepository;
 import com.cmput301w23t47.canary.repository.SnapshotRepository;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Firestore controller for interacting with Player model
  */
 public class FirestorePlayerController extends FirestoreController{
     public static final String TAG = "FirestorePlayerController";
+
     FirestoreLeaderboardController firestoreLeaderboardController = new FirestoreLeaderboardController();
 
     /**
@@ -364,5 +374,33 @@ public class FirestorePlayerController extends FirestoreController{
         }
         Task<Void> deleteTask = snapRef.delete();
         waitForUpdateTask(deleteTask);
+    }
+
+    public void otherPlayerWithSameQr(String qrHash, GetPlayerListCallback callback){
+
+        CollectionReference hashRef = db.collection("QRCode");
+        ArrayList<Player> playerList = new ArrayList();
+        Query query = hashRef.whereEqualTo("hash", qrHash);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("QRCode")
+                .whereEqualTo("hash", qrHash)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                playerList.add(document.toObject(Player.class));
+                            }
+                            callback.getPlayerList(playerList);
+
+                        } else {
+                            Log.d(TAG, "Error getting hash: ", task.getException());
+                        }
+                    }
+                });
     }
 }

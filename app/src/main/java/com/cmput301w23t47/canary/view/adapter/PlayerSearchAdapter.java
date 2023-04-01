@@ -11,6 +11,7 @@ import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.GetIndexCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.model.Player;
+import com.cmput301w23t47.canary.view.fragment.ViewOtherPlayersFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class PlayerSearchAdapter extends RecyclerView.Adapter<PlayerSearchAdapte
         this.players = players;
         this.callback = callback;
     }
+
+//    public PlayerSearchAdapter(ArrayList<Player> players, ViewOtherPlayersFragment viewOtherPlayersFragment) {
+//    }
 
     /**
      * Updates the list view

@@ -1,9 +1,6 @@
 package com.cmput301w23t47.canary.view.fragment;
 
 import android.content.DialogInterface;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -14,8 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.cmput301w23t47.canary.MainActivity;
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
@@ -24,8 +23,6 @@ import com.cmput301w23t47.canary.controller.LocationController;
 import com.cmput301w23t47.canary.databinding.FragmentQrCodeViewBinding;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -42,6 +39,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
 
     private final FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
 
+    private String qrHash;
     /**
      * Required empty public constructor.
      */
@@ -145,7 +143,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     private void init() {
         showLoadingBar();
-        String qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
+        qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         owner = QRCodeViewFragmentArgs.fromBundle(getArguments()).getOwner();
         if (!owner) {
             binding.qrDeleteIcon.setVisibility(View.GONE);
@@ -189,6 +187,19 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
                         dialog.dismiss();
                     }).create().show();
         });
+
+        binding.viewOtherPlayers.setOnClickListener(view -> {
+            returnToViewOtherPlayers();
+            //builder.setMessage("HELLO").setTitle("Thrtr").create().show();
+        });
+    }
+
+    private void returnToViewOtherPlayers() {
+
+        QRCodeViewFragmentDirections.ActionQRCodeViewToViewOtherPlayersFragment action =
+                QRCodeViewFragmentDirections.actionQRCodeViewToViewOtherPlayersFragment(qrHash);
+        Navigation.findNavController(getView()).navigate(action);
+
     }
 
     /**
