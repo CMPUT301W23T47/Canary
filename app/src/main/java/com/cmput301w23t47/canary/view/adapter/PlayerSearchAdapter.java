@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.GetIndexCallback;
-import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.model.Player;
-import com.cmput301w23t47.canary.view.fragment.ViewOtherPlayersFragment;
 
 import java.util.ArrayList;
 import java.util.List;

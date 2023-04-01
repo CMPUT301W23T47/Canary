@@ -55,30 +55,32 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
     private void init(){
         qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         viewAdapter = new PlayerSearchAdapter(players, this);
-        binding.playersWithSameQr.setAdapter(viewAdapter);
-        binding.playersWithSameQr.setHasFixedSize(true);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.playersWithSameQr.getContext(),
+        binding.playersWithSameQrList.setAdapter(viewAdapter);
+        binding.playersWithSameQrList.setHasFixedSize(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.playersWithSameQrList.getContext(),
                 DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
-        binding.playersWithSameQr.addItemDecoration(dividerItemDecoration);
+        binding.playersWithSameQrList.addItemDecoration(dividerItemDecoration);
+
         firestorePlayerController.otherPlayerWithSameQr(qrHash, this);
         setOnClickListeners();
         showLoadingBar();
     }
 
     private void setOnClickListeners(){
-        binding.playersWithSameQr.setOnClickListener(view -> {
+        binding.playersWithSameQrList.setOnClickListener(view -> {
             Log.d("TAG", "setOnClickListeners: Clicked");
-            int itemPos = binding.playersWithSameQr.getChildLayoutPosition(view);
-            Player selectedPlayer = viewAdapter.getItemAt(itemPos);
-            if (selectedPlayer != null) {
-                navigateToSelectedPlayer(selectedPlayer);
-            }
+//            int itemPos = binding.playersWithSameQr.getChildLayoutPosition(view);
+//            Player selectedPlayer = viewAdapter.getItemAt(itemPos);
+//            if (selectedPlayer != null) {
+//                navigateToSelectedPlayer(selectedPlayer);
+//            }
         });
     }
 
     private void showAllOtherPlayers() {
         binding.searchResultHeading.setText("Players with Same QR");
+        Log.d("TAG", "showAllOtherPlayers: " + players.get(0).getUsername());
         viewAdapter.updateList(players);
     }
 

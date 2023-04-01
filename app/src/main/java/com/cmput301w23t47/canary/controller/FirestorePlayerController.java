@@ -377,30 +377,23 @@ public class FirestorePlayerController extends FirestoreController{
     }
 
     public void otherPlayerWithSameQr(String qrHash, GetPlayerListCallback callback){
-
-        CollectionReference hashRef = db.collection("QRCode");
-        ArrayList<Player> playerList = new ArrayList();
-        Query query = hashRef.whereEqualTo("hash", qrHash);
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("QRCode")
-                .whereEqualTo("hash", qrHash)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                playerList.add(document.toObject(Player.class));
-                            }
-                            callback.getPlayerList(playerList);
-
-                        } else {
-                            Log.d(TAG, "Error getting hash: ", task.getException());
-                        }
-                    }
+        Handler handler = new Handler();
+        new Thread(() -> {
+            ArrayList<Player> playerList = new ArrayList<>();
+            Task<QuerySnapshot> qrCodeQuery = qrCodes.whereEqualTo("hash", qrHash).get();
+            waitForQuery(qrCodeQuery);
+            if (qrCodeQuery.getResult().isEmpty()) {
+                handler.post(() -> {
+                    callback.getPlayerList(playerList);
                 });
+                // the given qr does not exist
+                return;
+            }
+            DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
+            Task<QuerySnapshot> playerQueryTask = players.whereArrayContains("qrCodes.qrCode", qrRef).get();
+            waitForQuery(playerQueryTask);
+            Log.d(TAG, "otherPlayerWithSameQr: " + playerQueryTask.getResult().size());
+        }).start();
+
     }
 }
