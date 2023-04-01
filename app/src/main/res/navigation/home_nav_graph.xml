@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_QRCodeView_to_searchNearbyQrMapFragment"
             app:destination="@id/searchNearbyQrMapFragment" />
+        <action
+            android:id="@+id/action_QRCodeView_to_viewOtherPlayersFragment"
+            app:destination="@id/viewOtherPlayersFragment" />
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -113,5 +116,18 @@
         <action
             android:id="@+id/action_citySearchQrCodeListFragment_to_QRCodeView"
             app:destination="@id/QRCodeView" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewOtherPlayersFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.ViewOtherPlayersFragment"
+        android:label="View Other Players "
+        tools:layout="@layout/fragment_player_other" >
+        <action
+            android:id="@+id/action_viewOtherPlayersFragment_to_anotherPlayerProfileFragment"
+            app:destination="@id/anotherPlayerProfileFragment" />
+        <argument
+            android:name="qrHash"
+            app:argType="string" />
     </fragment>
 </navigation>

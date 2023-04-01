@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetPlayersScannedQrCallBack;
 import com.cmput301w23t47.canary.callback.GetQrListCallback;
+import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.model.QrCode;
 import com.cmput301w23t47.canary.repository.PlayerRepository;
 import com.cmput301w23t47.canary.repository.QrCodeRepository;
@@ -68,5 +69,18 @@ public class FirestoreQrController extends FirestoreController {
                callback.getQrList(qrList);
             });
         }).start();
+    }
+
+    /**
+     * Updates the location of the newly scanned qr code
+     * Adds the location if wasn't available previously
+     * Updates the location otherwise
+     */
+    public void updateQrLocationIfNotAvailable(PlayerQrCode playerQrCode) {
+        if (!playerQrCode.isLocationShared() || playerQrCode.getLocation() == null) {
+            // don't want to use location if it wasn't shared
+            return;
+        }
+
     }
 }

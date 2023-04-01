@@ -2,6 +2,9 @@ package com.cmput301w23t47.canary.controller;
 
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
@@ -18,8 +21,10 @@ import com.cmput301w23t47.canary.repository.PlayerQrCodeRepository;
 import com.cmput301w23t47.canary.repository.PlayerRepository;
 import com.cmput301w23t47.canary.repository.QrCodeRepository;
 import com.cmput301w23t47.canary.repository.SnapshotRepository;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -93,6 +98,7 @@ public class FirestorePlayerController extends FirestoreController{
             playerRepo.getQrCodes().add(new PlayerQrCodeRepository(qrReference, snapshotReference,
                     new Timestamp(playerQrCode.getScanDate()), playerQrCode.retrieveScore(),
                     playerQrCode.isLocationShared()));
+            playerRepo.getQrCodeReferences().add(qrReference);
             updatePlayer(playerRepo);
             handler.post(() -> {
                 // update leaderboard if required and return result; launched in different thread for faster response
@@ -393,4 +399,34 @@ public class FirestorePlayerController extends FirestoreController{
         waitForUpdateTask(deleteTask);
     }
 
+    /**
+     * Finds other players who have scanned the same QR
+     * @param qrHash the hash of the qrcode to search
+     * @param callback the callback object to notify when result available
+     */
+    public void otherPlayerWithSameQr(String qrHash, GetPlayerListCallback callback){
+        Handler handler = new Handler();
+        new Thread(() -> {
+            ArrayList<Player> playerList = new ArrayList<>();
+            Task<QuerySnapshot> qrCodeQuery = qrCodes.whereEqualTo("hash", qrHash).get();
+            waitForQuery(qrCodeQuery);
+            if (qrCodeQuery.getResult().isEmpty()) {
+                handler.post(() -> {
+                    callback.getPlayerList(playerList);
+                });
+                // the given qr does not exist
+                return;
+            }
+            DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
+            Task<QuerySnapshot> playerQueryTask = players.whereArrayContains("qrCodeReferences", qrRef).get();
+            waitForQuery(playerQueryTask);
+            for (DocumentSnapshot playerDoc : playerQueryTask.getResult().getDocuments()) {
+                playerList.add(playerDoc.toObject(PlayerRepository.class).retrieveParsedPlayer());
+            }
+            handler.post(() -> {
+                callback.getPlayerList(playerList);
+            });
+        }).start();
+
+    }
 }

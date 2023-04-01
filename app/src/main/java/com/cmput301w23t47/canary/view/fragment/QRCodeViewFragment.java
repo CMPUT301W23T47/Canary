@@ -18,8 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.cmput301w23t47.canary.MainActivity;
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
@@ -52,6 +54,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
 
     private final FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
 
+    private String qrHash;
     /**
      * Required empty public constructor.
      */
@@ -76,7 +79,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         Log.d(TAG, "updateLocation: " + playerQrCode.isLocationShared());
         if (playerQrCode.isLocationShared()) {
             String cityName = LocationController.retrieveCityName(playerQrCode.getLocation(), getContext());
-            if (cityName.equals("")) {
+            if (cityName == null || cityName.equals("")) {
                 // no city name given
                 binding.qrScanLocation.setText("_ _ _");
             } else {
@@ -173,7 +176,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
 //        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
 
         // qr init
-        String qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
+        qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         owner = QRCodeViewFragmentArgs.fromBundle(getArguments()).getOwner();
 
         if (!owner) {
@@ -263,6 +266,17 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
                 }
             }
         });
+
+        binding.viewOtherPlayers.setOnClickListener(view -> {
+            returnToViewOtherPlayers();
+            //builder.setMessage("HELLO").setTitle("Thrtr").create().show();
+        });
+    }
+
+    private void returnToViewOtherPlayers() {
+        QRCodeViewFragmentDirections.ActionQRCodeViewToViewOtherPlayersFragment action =
+                QRCodeViewFragmentDirections.actionQRCodeViewToViewOtherPlayersFragment(qrHash);
+        Navigation.findNavController(getView()).navigate(action);
     }
 
     /**

@@ -441,8 +441,13 @@ public class FirestoreController {
         Task<QuerySnapshot> qrCodeQuery = qrCodes.whereEqualTo("hash", qrCodeRepository.getHash()).get();
         waitForQuery(qrCodeQuery);
         if (qrCodeQuery.getResult().getDocuments().size() > 0) {
-            // qr resource exist; return reference to it
-            return qrCodeQuery.getResult().getDocuments().get(0).getReference();
+            // qr resource exist; update its location if applicable and return reference to it
+            DocumentReference qrDocRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
+            if (qrCodeRepository.getLocation() != null) {
+                Task<Void> updateTask = qrDocRef.update("location", qrCodeRepository.getLocation());
+                waitForUpdateTask(updateTask);
+            }
+            return qrDocRef;
         }
         // create the QR Code repo
         return persistQrCode(qrCodeRepository);
