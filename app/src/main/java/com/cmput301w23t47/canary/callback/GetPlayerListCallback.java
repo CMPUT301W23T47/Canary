@@ -12,5 +12,5 @@ public interface GetPlayerListCallback {
      * Method to get the list of players
      * @param players the list of players
      */
-    public void getPlayerList(ArrayList<Player> players);
+    void getPlayerList(ArrayList<Player> players);
 }

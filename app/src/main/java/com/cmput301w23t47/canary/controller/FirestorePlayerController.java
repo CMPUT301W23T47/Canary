@@ -390,9 +390,15 @@ public class FirestorePlayerController extends FirestoreController{
                 return;
             }
             DocumentReference qrRef = qrCodeQuery.getResult().getDocuments().get(0).getReference();
-            Task<QuerySnapshot> playerQueryTask = players.whereArrayContains("qrCodes.qrCode", qrRef).get();
+            Log.d(TAG, "otherPlayerWithSameQr: " + qrRef);
+            Task<QuerySnapshot> playerQueryTask = players.whereArrayContains("qrCodeReferences", qrRef).get();
             waitForQuery(playerQueryTask);
-            Log.d(TAG, "otherPlayerWithSameQr: " + playerQueryTask.getResult().size());
+            for (DocumentSnapshot playerDoc : playerQueryTask.getResult().getDocuments()) {
+                playerList.add(playerDoc.toObject(PlayerRepository.class).retrieveParsedPlayer());
+            }
+            handler.post(() -> {
+                callback.getPlayerList(playerList);
+            });
         }).start();
 
     }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * Models the storage for models on Firestore
+ * Models the storage for Player on Firestore
  */
 public class PlayerRepository {
     // Document Id
@@ -32,6 +32,8 @@ public class PlayerRepository {
     private ArrayList<PlayerQrCodeRepository> qrCodes;
     // the number of qr codes that player has
     private long qrCodesSize;
+    // the references to the scanned QR; for querying the scanned QRs among all players
+        private ArrayList<DocumentReference> qrCodeReferences;
 
 
     // Default Constructor
@@ -42,7 +44,8 @@ public class PlayerRepository {
     /**
      * Constructor to set all attributes
      */
-    public PlayerRepository(String username, String firstName, String lastName, long score, long maxScoreQr, ArrayList<PlayerQrCodeRepository> qrCodes, long qrCodesSize) {
+    public PlayerRepository(String username, String firstName, String lastName, long score, long maxScoreQr, ArrayList<PlayerQrCodeRepository> qrCodes, long qrCodesSize,
+                            ArrayList<DocumentReference> qrCodeReferences) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,6 +53,7 @@ public class PlayerRepository {
         this.maxScoreQr = maxScoreQr;
         this.qrCodes = qrCodes;
         this.qrCodesSize = qrCodesSize;
+        this.qrCodeReferences = qrCodeReferences;
     }
 
     /**
@@ -213,6 +217,14 @@ public class PlayerRepository {
         this.qrCodesSize = qrCodesSize;
     }
 
+    public ArrayList<DocumentReference> getQrCodeReferences() {
+        return qrCodeReferences;
+    }
+
+    public void setQrCodeReferences(ArrayList<DocumentReference> qrCodeReferences) {
+        this.qrCodeReferences = qrCodeReferences;
+    }
+
     /**
      * Retrieve leaderboard player leaderboard player.
      *
@@ -306,7 +318,7 @@ public class PlayerRepository {
      */
     public static PlayerRepository retrievePlayerRepo(Player player) {
         return new PlayerRepository(player.getUsername(), player.getFirstName(),
-                player.getLastName(), player.getScore(), 0, new ArrayList<>(), 0);
+                player.getLastName(), player.getScore(), 0, new ArrayList<>(), 0, new ArrayList<>());
     }
 
     /**

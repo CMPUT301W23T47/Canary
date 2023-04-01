@@ -80,14 +80,10 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
 
     private void showAllOtherPlayers() {
         binding.searchResultHeading.setText("Players with Same QR");
-        Log.d("TAG", "showAllOtherPlayers: " + players.get(0).getUsername());
         viewAdapter.updateList(players);
     }
 
     private void navigateToSelectedPlayer(Player player) {
-//        PlayerSearchFragmentDirections.ActionAllPlayersToOtherPlayerProfile action =
-//                PlayerSearchFragmentDirections.actionAllPlayersToOtherPlayerProfile(player.getUniquePlayerId());
-//        Navigation.findNavController(getView()).navigate(action);
         ViewOtherPlayersFragmentDirections.ActionViewOtherPlayersFragmentToAnotherPlayerProfileFragment action =
                 ViewOtherPlayersFragmentDirections.actionViewOtherPlayersFragmentToAnotherPlayerProfileFragment(player.getUniquePlayerId());
         Navigation.findNavController(getView()).navigate(action);
