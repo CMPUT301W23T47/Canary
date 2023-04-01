@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t47.canary.view.activity.CaptureSnapshotActivity;
 import com.cmput301w23t47.canary.view.activity.ScanQRCodeActivity;
 
+/**
+ * Contract for launching the Snapshot capture activity
+ */
 public class SnapshotContract extends ActivityResultContract<Object, Bitmap> {
     static public final String RESPONSE_TAG = "SnapshotContractResp";
 

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 class FirestorePlayerControllerTest implements GetPlayerCallback {
@@ -27,7 +28,7 @@ class FirestorePlayerControllerTest implements GetPlayerCallback {
         Player testPlayer = new Player("dsingh", "Dhruvraj","Singh") ;
         testController.setPlayer(testPlayer);
 
-        QrCode testCode = new QrCode("-67-126471-32-11-5810071-121-115-36-30-56-95-1238-21037344-6-32-491009716-117-35-76-93",83,null,"randomTest", null);
+        QrCode testCode = new QrCode("-67-126471-32-11-5810071-121-115-36-30-56-95-1238-21037344-6-32-491009716-117-35-76-93",83,null,"randomTest", null, new ArrayList<>());
 
         PlayerQrCode testPlayerCode = new PlayerQrCode(testCode, testDate, false);
 

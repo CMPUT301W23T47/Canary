@@ -32,16 +32,37 @@ public class CreateProfileFragment extends Fragment implements OperationStatusCa
         // Required empty public constructor
     }
 
+    /**
+     * Creates a new CreateProfileFragment and returns it
+     * @return fragment (CreateProfileFragment): a new fragment created to work on
+     */
     public static CreateProfileFragment newInstance() {
         CreateProfileFragment fragment = new CreateProfileFragment();
         return fragment;
     }
 
+    /**
+     * Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,10 +72,19 @@ public class CreateProfileFragment extends Fragment implements OperationStatusCa
         return binding.getRoot();
     }
 
+    /**
+     * Checks if the editText in empty or not
+     * @param e An editText object from the layout
+     * @return boolean value for empty or not
+     */
     public boolean isEmptyEditText(EditText e){
         return e.getText().toString().trim().length() == 0;
     }
 
+    /**
+     * Checks if all the editText boxes are filled or not
+     * @return boolean value for empty or not
+     */
     private boolean allValuesFilled(){
         return (!isEmptyEditText(binding.usernameEditView)) &&
                 (!isEmptyEditText(binding.firstNameEditView)) &&
@@ -62,6 +92,9 @@ public class CreateProfileFragment extends Fragment implements OperationStatusCa
                 (!isEmptyEditText(binding.contactEditView));
     }
 
+    /**
+     * Initializes the UI for this page.
+     */
     private void init(){
         firestorePlayerController = new FirestorePlayerController();
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +124,10 @@ public class CreateProfileFragment extends Fragment implements OperationStatusCa
         Navigation.findNavController(binding.getRoot()).navigate(CreateProfileFragmentDirections.actionCreateProfileFragmentToHomeActivity());
     }
 
+    /**
+     * Depending upon status, determines whether the player has been created or not.
+     * @param status boolean value giving if a state is valid or not
+     */
     @Override
     public void operationStatus(boolean status) {
         if (status) {

@@ -1,6 +1,6 @@
 package com.cmput301w23t47.canary.controller;
 
-import android.os.Handler;
+import android.util.Log;
 
 import com.cmput301w23t47.canary.model.Leaderboard;
 import com.cmput301w23t47.canary.repository.PlayerRepository;
@@ -23,10 +23,12 @@ public class FirestoreLeaderboardController extends FirestoreController{
             Task<DocumentSnapshot> lbTask = leaderboard.document(globalLeaderboardDocument).get();
             Leaderboard leaderboard = waitForTask(lbTask, Leaderboard.class);
             boolean updateLeaderboard = false;
-            if (leaderboard.getMaxQrPlayer().equals(playerRepo.getUsername())) {
+            if (leaderboard.getMaxQrPlayer().equals(playerRepo.getUsername()) ||
+                leaderboard.getMaxQr() < playerRepo.getQrCodes().size()) {
                 updateLeaderboard = updatePlayerWithMaxQr(leaderboard);
             }
-            if (leaderboard.getMaxScorePlayer().equals(playerRepo.getUsername())) {
+            if (leaderboard.getMaxScorePlayer().equals(playerRepo.getUsername()) ||
+                    leaderboard.getMaxScore() < playerRepo.getScore()) {
                 updateLeaderboard |= updatePlayerWithMaxScore(leaderboard);
             }
 
@@ -38,6 +40,11 @@ public class FirestoreLeaderboardController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Updates the player with the maximum number of qrcodes
+     * @param leaderboard The leaderboard to update
+     * @return boolean True if updated, False if not
+     */
     protected boolean updatePlayerWithMaxQr(Leaderboard leaderboard) {
         Task<QuerySnapshot> queryTask = players.orderBy("qrCodesSize", Query.Direction.DESCENDING).limit(1).get();
         waitForQuery(queryTask);
@@ -51,6 +58,11 @@ public class FirestoreLeaderboardController extends FirestoreController{
         return false;
     }
 
+    /**
+     * Updates the player with the maximum qr code score
+     * @param leaderboard The leaderboard to update
+     * @return boolean True if updated, False if not
+     */
     protected boolean updatePlayerWithMaxScore(Leaderboard leaderboard) {
         Task<QuerySnapshot> queryTask = players.orderBy("score", Query.Direction.DESCENDING).limit(1).get();
         waitForQuery(queryTask);
@@ -58,12 +70,16 @@ public class FirestoreLeaderboardController extends FirestoreController{
             DocumentSnapshot maxScorePlayerDoc = queryTask.getResult().getDocuments().get(0);
             PlayerRepository maxQrPlayer = maxScorePlayerDoc.toObject(PlayerRepository.class);
             leaderboard.setMaxScorePlayer(maxQrPlayer.getUsername());
-            leaderboard.setMaxScore(maxQrPlayer.getQrCodesSize());
+            leaderboard.setMaxScore(maxQrPlayer.getScore());
             return true;
         }
         return false;
     }
 
+    /**
+     * Gets the global leaderboard document
+     * @return global leaderboard document
+     */
     protected DocumentReference getGlobalLeaderboardDoc() {
         return leaderboard.document(globalLeaderboardDocument);
     }

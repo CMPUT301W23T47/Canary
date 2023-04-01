@@ -7,44 +7,62 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.cmput301w23t47.canary.MainActivity;
 import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
 import com.cmput301w23t47.canary.controller.LocationController;
 import com.cmput301w23t47.canary.databinding.FragmentQrCodeViewBinding;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
+import com.cmput301w23t47.canary.view.adapter.CommentListAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * Fragment to view the QR Code page
  */
-public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback, OperationStatusCallback {
+public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback, OperationStatusCallback, GetCurrentPlayerUsernameCallback {
     private static final String TAG = "QRCodeViewFragment";
-
+    private String currentPlayerUsername;
     private PlayerQrCode playerQrCode;
     private boolean owner = false;
 
     private FragmentQrCodeViewBinding binding;
     AlertDialog.Builder builder;
+    private CommentListAdapter commentListAdapter;
 
     private final FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
-    // Default constructor
+
+    /**
+     * Required empty public constructor.
+     */
     public QRCodeViewFragment() {
     }
 
+    /**
+     *  Handles the layout of the activity, and called on activity creation.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +107,13 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         }
     }
 
+    /**
+     * Updates the comments in the view
+     */
+    private void updateComments() {
+        commentListAdapter.updateList(playerQrCode.getQrCode().getComments());
+    }
+
     public void updateFragmentData(){
         Log.d(TAG, "updateFragmentData: called");
         if (playerQrCode == null) {
@@ -103,6 +128,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         updateLocation();
         updateSnapshot();
         updateQrImage();
+        updateComments();
         hideLoadingBar();
     }
 
@@ -133,18 +159,42 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     }
 
     /**
-     * Initializes the view
+     * Initializes the view for this page
      */
     private void init() {
         showLoadingBar();
+
+        // comment list init
+        commentListAdapter = new CommentListAdapter(new ArrayList<>());
+        binding.qrCommentsList.setAdapter(commentListAdapter);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrCommentsList.getContext(),
+//                DividerItemDecoration.VERTICAL);
+//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
+//        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
+
+        // qr init
         String qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         owner = QRCodeViewFragmentArgs.fromBundle(getArguments()).getOwner();
+
         if (!owner) {
             binding.qrDeleteIcon.setVisibility(View.GONE);
         }
         firestorePlayerController.getPlayerQr(qrHash, this);
+        firestorePlayerController.getCurrentPlayerUsername(this);
     }
 
+    /**
+     * Initializes the view and creates a bundle object for this view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the binding object on which we can work
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -155,10 +205,19 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         return binding.getRoot();
     }
 
+    public boolean isEmptyEditText(EditText e){
+        return e.getText().toString().trim().length() == 0;
+    }
+
+    private String getMessage(){
+        return binding.addCommentText.getText().toString();
+    }
+
     /**
      * Initializes the UI
      */
     private void initUi() {
+
         binding.qrDeleteIcon.setOnClickListener(view -> {
             builder.setMessage("Are you sure you want to delete this QR. This will update your score")
                     .setTitle("Delete QR")
@@ -169,8 +228,46 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
                         dialog.dismiss();
                     }).create().show();
         });
+
+        binding.viewOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateLocation();
+
+                Location qrLocation = playerQrCode.getLocation();
+
+                if (!playerQrCode.isLocationShared()){
+//                    return;
+                    Toast.makeText(getContext(), "No Location found!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    returnToMapScreen(qrLocation);
+                }
+            }
+        });
+        binding.postCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = getMessage();
+                if(!isEmptyEditText(binding.addCommentText) ) {
+                    Comment comment = new Comment(currentPlayerUsername, message, new Date() );
+                    firestorePlayerController.addCommentToExistingQr(playerQrCode.retrieveHash(), comment);
+                    commentListAdapter.addComment(comment);
+                    binding.addCommentText.setText("");
+                }
+                else{
+                    CharSequence fillComment = "Please enter comment!";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getContext(), fillComment,duration);
+                    toast.show();
+                }
+            }
+        });
     }
 
+    /**
+     * Deletes a Qr from a player's profile by calling the firestore controller.
+     */
     private void deleteQr() {
         if (playerQrCode == null) {
             return;
@@ -179,18 +276,29 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         firestorePlayerController.deleteQrFromPlayer(playerQrCode, this);
     }
 
+    /**
+     * Defines what to do on resuming the activity
+     */
     @Override
     public void onResume() {
         super.onResume();
         init();
     }
 
+    /**
+     * Sets the playerqrcode to the given code
+     * @param playerQrCode To be set
+     */
     @Override
     public void getPlayerQr(PlayerQrCode playerQrCode) {
         this.playerQrCode = playerQrCode;
         updateFragmentData();
     }
 
+    /**
+     * Depending upon status, determines whether the player has been created or not.
+     * @param status boolean value giving if a state is valid or not
+     */
     @Override
     public void operationStatus(boolean status) {
         hideLoadingBar();
@@ -218,6 +326,18 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     protected void returnToHome() {
         Navigation.findNavController(getView()).navigate(R.id.action_goToHomeFromQRCodeView);
+    }
+
+    protected void returnToMapScreen(Location qrLocation){
+        QRCodeViewFragmentDirections.ActionQRCodeViewToSearchNearbyQrMapFragment action =
+                QRCodeViewFragmentDirections.actionQRCodeViewToSearchNearbyQrMapFragment().setQrLocation(qrLocation);
+        Navigation.findNavController(getView()).navigate(action);
+    }
+
+    @Override
+    public void getCurrentPlayerUsername(String playerUsername) {
+        this.currentPlayerUsername = playerUsername;
+        binding.currentPlayerUsername.setText(currentPlayerUsername);
     }
 
 

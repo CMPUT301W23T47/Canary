@@ -4,10 +4,12 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
+import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerListCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
@@ -20,9 +22,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Firestore controller for interacting with Player model
@@ -90,11 +95,17 @@ public class FirestorePlayerController extends FirestoreController{
                     playerQrCode.isLocationShared()));
             updatePlayer(playerRepo);
             handler.post(() -> {
-               callback.operationStatus(true);
+                // update leaderboard if required and return result; launched in different thread for faster response
+                firestoreLeaderboardController.updateLeaderboardIfRequired(playerRepo);
+                callback.operationStatus(true);
             });
         }).start();
     }
 
+    /**
+     * Updates the player and sets the details
+     * @param playerRepo Player to be updated
+     */
     protected void updatePlayer(PlayerRepository playerRepo) {
         Task<Void> updatePlayerTask = players.document(playerRepo.getDocId()).set(playerRepo);
         waitForUpdateTask(updatePlayerTask);
@@ -236,6 +247,19 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    public void getCurrentPlayerUsername(GetCurrentPlayerUsernameCallback callback){
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String playerDocId = identifyPlayer();
+            Player player = retrieveCompletePlayer(playerDocId);
+            // return result
+            handler.post(() -> {
+                callback.getCurrentPlayerUsername(player.getUsername());
+            });
+        }).start();
+    }
+
+
     /**
      * Gets the complete model for the foreign player
      * @param callback the callback to return the response to
@@ -251,6 +275,11 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Retrieves the completed player
+     * @param playerDocId id of the player that is completed
+     * @return The completed Player
+     */
     protected Player retrieveCompletePlayer(String playerDocId) {
         Task<DocumentSnapshot> playerTask = players.document(playerDocId).get();
         PlayerRepository playerRepository = waitForTask(playerTask, PlayerRepository.class);
@@ -325,6 +354,15 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    public void addCommentToExistingQr(String qrHash, Comment comment){
+        Handler handler = new Handler();
+        new Thread(()->{
+            String docId = findQrDocId(qrHash);
+            DocumentReference documentReference= qrCodes.document(docId);
+            documentReference.update("comments", FieldValue.arrayUnion(comment));
+        }).start();
+    }
+
     /**
      * Gets the index of the qr in the player
      * @param playerRepo the player to search
@@ -354,4 +392,5 @@ public class FirestorePlayerController extends FirestoreController{
         Task<Void> deleteTask = snapRef.delete();
         waitForUpdateTask(deleteTask);
     }
+
 }

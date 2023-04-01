@@ -4,6 +4,9 @@ import com.github.javafaker.Faker;
 
 import java.util.Random;
 
+/**
+ * A random Name generator
+ */
 public class RandomNameGenerator {
     Faker faker = new Faker();
     private String combinedWords=randomGenName();

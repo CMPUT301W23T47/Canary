@@ -27,13 +27,16 @@ public class SearchNearbyQrListAdapter extends RecyclerView.Adapter<SearchNearby
     private ArrayList<QrCode> qrCodes;
     private GetIndexCallback callback;
 
+    /**
+     * Required public constructor.
+     */
     public SearchNearbyQrListAdapter(ArrayList<QrCode> qrcodes, GetIndexCallback callback) {
         this.qrCodes = qrcodes;
         this.callback = callback;
     }
 
     /**
-     * the view holder for the recycler view
+     * The view holder for the recycler view
      */
     @NonNull
     @Override
@@ -43,7 +46,7 @@ public class SearchNearbyQrListAdapter extends RecyclerView.Adapter<SearchNearby
     }
 
     /**
-     * sets the text for the qr name and qr point total
+     * Sets the text for the qr name and qr point total
      * this acts like an update function
      * as well as a listen for if an item was clicked
      * @param holder the view holder for the recycler view this is an item
@@ -58,7 +61,7 @@ public class SearchNearbyQrListAdapter extends RecyclerView.Adapter<SearchNearby
 
 
     /**
-     * gets the size of the list
+     * Gets the size of the list
      * @return the size of the list
      */
     @Override
@@ -86,7 +89,7 @@ public class SearchNearbyQrListAdapter extends RecyclerView.Adapter<SearchNearby
         if (pos >= qrCodes.size()) {
             return null;
         }
-        return qrCodes.get(pos);
+        return qrCodes.get( pos );
     }
 
     /**
@@ -100,7 +103,9 @@ public class SearchNearbyQrListAdapter extends RecyclerView.Adapter<SearchNearby
 
         GetIndexCallback callback;
 
-
+        /**
+         * A class with a constructor which gives the view and initializes the qrdata
+         */
         public ViewHolder(View itemView, GetIndexCallback callback){
             super(itemView);
             // get the views

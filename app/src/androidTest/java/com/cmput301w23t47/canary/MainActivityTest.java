@@ -3,15 +3,24 @@ package com.cmput301w23t47.canary;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Instrumentation;
+import android.util.Log;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.cmput301w23t47.canary.controller.FirestoreController;
+import com.cmput301w23t47.canary.model.Player;
+import com.cmput301w23t47.canary.util.FirestorePlayerTestUtil;
+import com.cmput301w23t47.canary.view.activity.HomeActivity;
 import com.cmput301w23t47.canary.view.activity.ScanQRCodeActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.robotium.solo.Solo;
 
+import org.checkerframework.common.subtyping.qual.Bottom;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,7 +30,15 @@ import org.junit.Test;
  * Intent tests for MainActivity
  */
 public class MainActivityTest {
+    private static final String TAG = "MainActivityTest";
     private Solo solo;
+    private Player testPlayer = null;
+
+    static {
+        FirestoreController.switchToTestMode();
+    }
+
+    FirestorePlayerTestUtil firestorePlayerTestUtil;
 
     @Rule
     public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
@@ -32,7 +49,11 @@ public class MainActivityTest {
      */
     @Before
     public void setUp() throws Exception{
-        Intents.init();
+        firestorePlayerTestUtil = new FirestorePlayerTestUtil();
+        Player player = firestorePlayerTestUtil.getTestPlayer();
+        if (player != null) {
+            testPlayer = player;
+        }
         rule.getScenario().onActivity(activity -> {
             solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
         });
@@ -44,25 +65,77 @@ public class MainActivityTest {
      */
     @Test
     public void startActivity() throws Exception{
-        rule.getScenario().onActivity(activity -> {
-        });
+        assertTrue(solo.waitForActivity(MainActivity.class));
     }
 
     /**
-     * Launches the QR Code scanner activity and confirms whether
-     * QR Code is returned
-     * @throws Exception Failure
+     * Navigates to the player home page
      */
     @Test
-    public void launchQRCodeScanner() throws Exception{
-        solo.assertCurrentActivity("Err Wrong Activity", MainActivity.class);
-
-        // set up the stubbing when scanQrCode page launched
-        Instrumentation.ActivityResult resIntent = IntentTestUtil.getMockResultForScanQrCodeActivity();
-        intending(hasComponent(ScanQRCodeActivity.class.getName()))
-                .respondWith(resIntent);
-        solo.clickOnView(solo.getView(R.id.scan_qr));
+    public void test_navigateToPlayerHome() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.assertCurrentActivity("Wrong Activity", HomeActivity.class);
     }
+
+    /**
+     * Navigates to the Map screen
+     */
+    @Test
+    public void test_navigateToMapView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Search");
+        assertTrue(solo.waitForText("Enter Search Radius", 1, 2000));
+    }
+
+    /**
+     * Navigates to the leaderboard view
+     */
+    @Test
+    public void test_navigateToLeaderboardView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Rank");
+        assertTrue(solo.waitForText("Leaderboard", 1, 3000));
+    }
+
+    /**
+     * Navigates to the player search view
+     */
+    @Test
+    public void test_navigateToPlayerSearchView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Players");
+        assertTrue(solo.waitForText("All Players", 1, 3000));
+    }
+
+    /**
+     * Navigates to the player profile view
+     */
+    @Test
+    public void test_navigateToPlayerProfileView() throws Exception{
+        if (testPlayer == null) {
+            // skip the tests
+            return;
+        }
+        solo.waitForText(testPlayer.getUsername());
+        solo.clickOnText("Profile");
+        assertTrue(solo.waitForText("QRs Scanned", 1, 3000));
+    }
+
 
     /**
      * Closes the activity after each test

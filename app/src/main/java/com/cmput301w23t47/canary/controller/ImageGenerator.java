@@ -13,11 +13,12 @@ import java.io.IOException;
  * Image generator controller; Makes a get request
  */
 public class ImageGenerator{
+    public static String imageUrl = "https://picsum.photos/200";
 
     /**
      * Gets the image as an async operation
      * @param url the url to get the image from
-     * @param callback the callback function
+     * @param callback the csallback function
      * @return
      */
     public static void getImage(String url, GetImageCallback callback) {

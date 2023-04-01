@@ -35,6 +35,11 @@ public class FirestoreQrController extends FirestoreController {
         }).start();
     }
 
+    /**
+     * Gives the list of the usernames of players who scanned a particular qrcode
+     * @param qrCode The qrcode which players scanned
+     * @param getPlayersScannedQrCallBack Callback for informing about the result
+     */
     public void getUsernamesOfPlayersWhoScanned(QrCode qrCode, GetPlayersScannedQrCallBack getPlayersScannedQrCallBack){
         Handler handler = new Handler();
         new Thread(() -> {

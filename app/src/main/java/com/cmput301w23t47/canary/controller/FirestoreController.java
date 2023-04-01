@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.callback.UpdateLeaderboardCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.Leaderboard;
 import com.cmput301w23t47.canary.model.LeaderboardPlayer;
 import com.cmput301w23t47.canary.model.Player;
@@ -24,6 +25,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -41,14 +43,16 @@ import java.util.concurrent.ExecutionException;
  */
 public class FirestoreController {
     public static boolean testMode = false;
-    private static String testPlayer = "fzDzmMoLTOCxpMD8fGjVms";
+    private static String collectionPrefix = "";
+
+    private static String testPlayer = "dsvj1o1gQOe8mYWFe1U5To";
     public static boolean firstTimeTester = false;
     private static String firstTimeTestPlayer = "testPlayerFirst";
     protected static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    protected static final CollectionReference players = db.collection("Player");
-    protected final CollectionReference qrCodes = db.collection("QRCode");
-    protected final CollectionReference leaderboard = db.collection("Leaderboard");
-    protected final CollectionReference snapshot = db.collection("Snapshot");
+    protected static final CollectionReference players = db.collection(collectionPrefix + "Player");
+    protected final CollectionReference qrCodes = db.collection(collectionPrefix + "QRCode");
+    protected final CollectionReference leaderboard = db.collection(collectionPrefix + "Leaderboard");
+    protected final CollectionReference snapshot = db.collection(collectionPrefix + "Snapshot");
     protected final String globalLeaderboardDocument = "Global";
 
     private static final String TAG = "Firestore Controller";
@@ -67,6 +71,21 @@ public class FirestoreController {
         return instance;
     }
 
+    /**
+     * Switches to test mode
+     */
+    public static void switchToTestMode() {
+        testMode = true;
+        collectionPrefix = "Test";
+    }
+
+    /**
+     * Waits for a particular task to be performed
+     * @param snapshotTask the document snapshot object
+     * @param classType
+     * @return an object of a classtype
+     * @param <TResult>
+     */
     protected  <TResult> TResult waitForTask(Task<DocumentSnapshot> snapshotTask, @NonNull Class<TResult> classType) {
         try {
             DocumentSnapshot doc = Tasks.await(snapshotTask);
@@ -138,6 +157,10 @@ public class FirestoreController {
         }
     }
 
+    /**
+     * Sets the data of the player in the firestore
+     * @param player
+     */
     public void setPlayer(Player player){
         FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
         firebaseInstallations.getId().addOnSuccessListener(new OnSuccessListener<String>() {
@@ -181,6 +204,11 @@ public class FirestoreController {
 
     }
 
+    /**
+     * Gives the active player's username
+     * @param successListener OnSuccessListener object which performs some task
+     * @param failureListener OnfailureListener object which performs some task
+     */
     public void getActivePlayerUserName(OnSuccessListener<String> successListener, OnFailureListener failureListener){
         FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
         firebaseInstallations.getId().addOnSuccessListener(installationId -> {
@@ -275,11 +303,14 @@ public class FirestoreController {
             Leaderboard leaderboard = waitForTask(lbTask, Leaderboard.class);
             // Get Player ranks
             ArrayList<PlayerRepository> playersRepoList = getAllPlayers();
+            // get current player id
+            String currentPlayerId = identifyPlayer();
+            LeaderboardPlayer currentPlayer = PlayerRepository.retrievePlayerWithDocId(playersRepoList, currentPlayerId);
             // map the players into leaderboardPlayer
             ArrayList<LeaderboardPlayer> playerList =
                     LeaderboardController.getLeaderboardPlayerList(playersRepoList);
             leaderboard.setPlayers(playerList);
-
+            leaderboard.setCurrentPlayer(currentPlayer);
             handler.post(() -> {
                 callback.updateLeaderboard(leaderboard);
             });
@@ -305,6 +336,11 @@ public class FirestoreController {
     }
 
 
+    /**
+     * Gives the list of players who scanned a given qr code
+     * @param qrHash Hash of the given qrcode
+     * @return usernameList A list with usernames of all the players who scanned the code
+     */
     protected ArrayList<String> getUsernamesOfPlayersWhoScanned(String qrHash){
         String qrDocID = findQrDocId(qrHash);
         ArrayList<String> usernameList = new ArrayList<>();
@@ -327,6 +363,11 @@ public class FirestoreController {
         return usernameList;
     }
 
+    /**
+     * Gives the document id of the qrcode
+     * @param qrHash Hash of the given qrcode
+     * @return DocumentId of the qrcode
+     */
     protected String findQrDocId(String qrHash){
         Task<QuerySnapshot> qrCodeQuery = qrCodes.whereEqualTo("hash", qrHash).get();
         try {
@@ -407,10 +448,18 @@ public class FirestoreController {
         return persistQrCode(qrCodeRepository);
     }
 
+    /**
+     * Gives the persisted qr code
+     * @param qrCodeRepository repo that contains qrcodes
+     * @return Qrcode which was requested
+     */
     protected DocumentReference persistQrCode(QrCodeRepository qrCodeRepository) {
+        qrCodeRepository.setComments(new ArrayList<Comment>());
         qrCodeRepository.setCreatedOn(Timestamp.now());
         Task<DocumentReference> referenceTask = qrCodes.add(qrCodeRepository);
         waitForReference(referenceTask);
         return referenceTask.getResult();
     }
+
+
 }

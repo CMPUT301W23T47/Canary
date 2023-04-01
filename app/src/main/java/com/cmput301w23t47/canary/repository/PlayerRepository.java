@@ -1,7 +1,5 @@
 package com.cmput301w23t47.canary.repository;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.model.LeaderboardPlayer;
@@ -9,8 +7,6 @@ import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -56,6 +52,11 @@ public class PlayerRepository {
         this.qrCodesSize = qrCodesSize;
     }
 
+    /**
+     * Retrieve parsed player player.
+     *
+     * @return the player
+     */
     public Player retrieveParsedPlayer() {
         Player player = new Player(username, firstName, lastName);
         ArrayList<PlayerQrCode> playerQrCodes = new ArrayList<>();
@@ -68,80 +69,174 @@ public class PlayerRepository {
         return player;
     }
 
+    /**
+     * Gets doc id.
+     *
+     * @return the doc id
+     */
     public String getDocId() {
         return docId;
     }
 
+    /**
+     * Sets doc id.
+     *
+     * @param docId the doc id
+     */
     public void setDocId(String docId) {
         this.docId = docId;
     }
 
+    /**
+     * Gets username.
+     *
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets username.
+     *
+     * @param username the username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Gets first name.
+     *
+     * @return the first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Sets first name.
+     *
+     * @param firstName the first name
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * Gets last name.
+     *
+     * @return the last name
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Sets last name.
+     *
+     * @param lastName the last name
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     * Gets qr codes.
+     *
+     * @return the qr codes
+     */
     public ArrayList<PlayerQrCodeRepository> getQrCodes() {
         return qrCodes;
     }
 
+    /**
+     * Sets qr codes.
+     *
+     * @param qrCodes the qr codes
+     */
     public void setQrCodes(ArrayList<PlayerQrCodeRepository> qrCodes) {
         this.qrCodes = qrCodes;
     }
 
+    /**
+     * Gets score.
+     *
+     * @return the score
+     */
     public long getScore() {
         return score;
     }
 
+    /**
+     * Sets score.
+     *
+     * @param score the score
+     */
     public void setScore(long score) {
         this.score = score;
     }
 
+    /**
+     * Gets max score qr.
+     *
+     * @return the max score qr
+     */
     public long getMaxScoreQr() {
         return maxScoreQr;
     }
 
+    /**
+     * Sets max score qr.
+     *
+     * @param maxScoreQr the max score qr
+     */
     public void setMaxScoreQr(long maxScoreQr) {
         this.maxScoreQr = maxScoreQr;
     }
 
+    /**
+     * Gets qr codes size.
+     *
+     * @return the qr codes size
+     */
     public long getQrCodesSize() {
         return qrCodesSize;
     }
 
+    /**
+     * Sets qr codes size.
+     *
+     * @param qrCodesSize the qr codes size
+     */
     public void setQrCodesSize(long qrCodesSize) {
         this.qrCodesSize = qrCodesSize;
     }
 
+    /**
+     * Retrieve leaderboard player leaderboard player.
+     *
+     * @return the leaderboard player
+     */
     public LeaderboardPlayer retrieveLeaderboardPlayer() {
         return new LeaderboardPlayer(username, score, maxScoreQr);
     }
 
+    /**
+     * Converts a String to a specific date format
+     * @return The converted String
+     */
     @NonNull
     @Override
     public String toString() {
         return String.format(Locale.CANADA, "{%s, %s, %s, %d}", username, firstName, lastName, qrCodes.size());
     }
 
+    /**
+     * Sets fields in player.
+     *
+     * @param player the player
+     */
     public void setFieldsInPlayer(Player player) {
         player.setUsername(username);
         player.setFirstName(firstName);
@@ -169,6 +264,7 @@ public class PlayerRepository {
     public void addQrToPlayerStats(PlayerQrCode playerQrCode) {
         score += playerQrCode.getQrCode().getScore();
         maxScoreQr = Math.max(maxScoreQr, playerQrCode.getQrCode().getScore());
+        qrCodesSize += 1;
     }
 
     /**
@@ -189,6 +285,7 @@ public class PlayerRepository {
             }
             maxScoreQr = locMaxScore;
         }
+        qrCodesSize = qrCodes.size();
     }
 
     /**
@@ -210,5 +307,20 @@ public class PlayerRepository {
     public static PlayerRepository retrievePlayerRepo(Player player) {
         return new PlayerRepository(player.getUsername(), player.getFirstName(),
                 player.getLastName(), player.getScore(), 0, new ArrayList<>(), 0);
+    }
+
+    /**
+     * Retrieves the player with the doc id
+     * @param players the list of players
+     * @param playerDocId the doc id of the player
+     * @return the player model
+     */
+    public static LeaderboardPlayer retrievePlayerWithDocId(ArrayList<PlayerRepository> players, String playerDocId) {
+        for (PlayerRepository p : players) {
+            if (p.docId.equals(playerDocId)) {
+                return p.retrieveLeaderboardPlayer();
+            }
+        }
+        return null;
     }
 }

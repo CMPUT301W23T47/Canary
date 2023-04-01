@@ -9,8 +9,18 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+/**
+ * The type Leaderboard test.
+ */
 public class LeaderboardTest {
+    /**
+     * The Leaderboard.
+     */
     Leaderboard leaderboard = new Leaderboard();
+
+    /**
+     * Gets highest scoring qr test.
+     */
     @Test
     public void getHighestScoringQrTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -31,6 +41,10 @@ public class LeaderboardTest {
         //user  function to get highest scoring qr
         assertEquals(30, maxScoreQr);
     }
+
+    /**
+     * Gets highest score test.
+     */
     @Test
     public void getHighestScoreTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -51,6 +65,10 @@ public class LeaderboardTest {
         //user  function to get highest score
         assertEquals(30, maxScore);
     }
+
+    /**
+     * Gets leaderboard test.
+     */
     @Test
     public void getLeaderboardTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -69,6 +87,10 @@ public class LeaderboardTest {
         //user  function to get leaderboard
         assertEquals(3, leaderboard.size());
     }
+
+    /**
+     * Gets leaderboard player test.
+     */
     @Test
     public void getLeaderboardPlayerTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -89,6 +111,10 @@ public class LeaderboardTest {
         //user  function to get leaderboard player
         assertEquals("player1", leaderboardPlayer.getUsername());
     }
+
+    /**
+     * Gets leaderboard player score test.
+     */
     @Test
     public void getLeaderboardPlayerScoreTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -109,6 +135,10 @@ public class LeaderboardTest {
         //user  function to get leaderboard player score
         assertEquals(10, leaderboardPlayer.getScore());
     }
+
+    /**
+     * Gets leaderboard player max score qr test.
+     */
     @Test
     public void getLeaderboardPlayerMaxScoreQrTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -129,6 +159,10 @@ public class LeaderboardTest {
         //user  function to get leaderboard player max score qr
         assertEquals(10, leaderboardPlayer.getMaxScoreQr());
     }
+
+    /**
+     * Sets leaderboard player test.
+     */
     @Test
     public void setLeaderboardPlayerTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -149,6 +183,10 @@ public class LeaderboardTest {
         //user  function to set leaderboard player
         assertEquals("player1", leaderboardPlayer.getUsername());
     }
+
+    /**
+     * Set leaderboard player score test.
+     */
     @Test
     public void setLeaderboardPlayerScoreTest(){
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -169,6 +207,10 @@ public class LeaderboardTest {
         //user  function to set leaderboard player score
         assertEquals(10, leaderboardPlayer.getScore());
     }
+
+    /**
+     * Sets leaderboard player max score qr test.
+     */
     @Test
     public void setLeaderboardPlayerMaxScoreQrTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
@@ -189,6 +231,10 @@ public class LeaderboardTest {
         //user  function to set leaderboard player max score qr
         assertEquals(10, leaderboardPlayer.getMaxScoreQr());
     }
+
+    /**
+     * Gets leaderboard player score qr test.
+     */
     @Test
     public void getLeaderboardPlayerScoreQrTest() {
         LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
