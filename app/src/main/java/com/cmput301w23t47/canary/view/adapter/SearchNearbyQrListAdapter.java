@@ -89,7 +89,7 @@ public class SearchNearbyQrListAdapter extends RecyclerView.Adapter<SearchNearby
         if (pos >= qrCodes.size()) {
             return null;
         }
-        return qrCodes.get(pos);
+        return qrCodes.get( pos );
     }
 
     /**

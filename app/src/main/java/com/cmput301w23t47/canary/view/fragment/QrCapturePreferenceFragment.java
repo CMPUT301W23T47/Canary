@@ -4,26 +4,23 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cmput301w23t47.canary.MainActivity;
 import com.cmput301w23t47.canary.R;
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
 import com.cmput301w23t47.canary.callback.GetImageCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
+import com.cmput301w23t47.canary.controller.ImageCompression;
 import com.cmput301w23t47.canary.controller.ImageGenerator;
 import com.cmput301w23t47.canary.controller.RandomNameGenerator;
 import com.cmput301w23t47.canary.controller.ScoreCalculator;
@@ -214,11 +211,13 @@ public class QrCapturePreferenceFragment extends LocationBaseFragment implements
             playerQrCode.putLocation(playerLocation);
         }
         if (snapshot != null) {
-            playerQrCode.setSnapshot(new Snapshot(snapshot));
+            ImageCompression imageCompression = new ImageCompression();
+            Bitmap compressedImage = imageCompression.compressImage(snapshot);
+            playerQrCode.setSnapshot(new Snapshot(compressedImage));
         }
+        // implement the image compression here
         firestorePlayerController.addQrToCurrentPlayer(playerQrCode, this);
     }
-
     /**
      * Calls the activity which captures a snapshot
      */

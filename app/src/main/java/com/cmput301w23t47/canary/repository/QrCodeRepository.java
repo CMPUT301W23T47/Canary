@@ -6,11 +6,13 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.controller.SnapshotController;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.QrCode;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class QrCodeRepository {
@@ -26,6 +28,7 @@ public class QrCodeRepository {
     private Timestamp createdOn;
     // the photo of the qr
     private String qrImage;
+    ArrayList <Comment> comments;
 
     public QrCodeRepository() {}
 
@@ -61,7 +64,7 @@ public class QrCodeRepository {
         if (qrImage != "") {
             bitmap = SnapshotController.getImage(qrImage);
         }
-        return new QrCode(hash, score, loc , name, bitmap);
+        return new QrCode(hash, score, loc , name, bitmap, comments);
     }
 
     /**
@@ -143,7 +146,7 @@ public class QrCodeRepository {
      */
     @Exclude
     public QrCode getQrCode() {
-        return new QrCode(hash, score, null, name, SnapshotController.getImage(qrImage));
+        return new QrCode(hash, score, null, name, SnapshotController.getImage(qrImage), comments);
     }
 
     /**
@@ -199,4 +202,13 @@ public class QrCodeRepository {
     public String toString() {
         return String.format(Locale.CANADA, "%s", name);
     }
+
+    public ArrayList<Comment> getComments(){
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments){
+        this.comments = comments;
+    }
+
 }

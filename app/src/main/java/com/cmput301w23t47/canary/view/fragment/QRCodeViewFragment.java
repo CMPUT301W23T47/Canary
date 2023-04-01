@@ -1,41 +1,56 @@
 package com.cmput301w23t47.canary.view.fragment;
 
 import android.content.DialogInterface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
 import com.cmput301w23t47.canary.controller.LocationController;
 import com.cmput301w23t47.canary.databinding.FragmentQrCodeViewBinding;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
+import com.cmput301w23t47.canary.view.adapter.CommentListAdapter;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Fragment to view the QR Code page
  */
-public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback, OperationStatusCallback {
+public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback, OperationStatusCallback, GetCurrentPlayerUsernameCallback {
     private static final String TAG = "QRCodeViewFragment";
-
+    private String currentPlayerUsername;
     private PlayerQrCode playerQrCode;
     private boolean owner = false;
 
     private FragmentQrCodeViewBinding binding;
     AlertDialog.Builder builder;
+    private CommentListAdapter commentListAdapter;
 
     private final FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
 
@@ -95,6 +110,13 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         }
     }
 
+    /**
+     * Updates the comments in the view
+     */
+    private void updateComments() {
+        commentListAdapter.updateList(playerQrCode.getQrCode().getComments());
+    }
+
     public void updateFragmentData(){
         Log.d(TAG, "updateFragmentData: called");
         if (playerQrCode == null) {
@@ -109,6 +131,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         updateLocation();
         updateSnapshot();
         updateQrImage();
+        updateComments();
         hideLoadingBar();
     }
 
@@ -143,12 +166,24 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     private void init() {
         showLoadingBar();
+
+        // comment list init
+        commentListAdapter = new CommentListAdapter(new ArrayList<>());
+        binding.qrCommentsList.setAdapter(commentListAdapter);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrCommentsList.getContext(),
+//                DividerItemDecoration.VERTICAL);
+//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
+//        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
+
+        // qr init
         qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         owner = QRCodeViewFragmentArgs.fromBundle(getArguments()).getOwner();
+
         if (!owner) {
             binding.qrDeleteIcon.setVisibility(View.GONE);
         }
         firestorePlayerController.getPlayerQr(qrHash, this);
+        firestorePlayerController.getCurrentPlayerUsername(this);
     }
 
     /**
@@ -173,10 +208,19 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         return binding.getRoot();
     }
 
+    public boolean isEmptyEditText(EditText e){
+        return e.getText().toString().trim().length() == 0;
+    }
+
+    private String getMessage(){
+        return binding.addCommentText.getText().toString();
+    }
+
     /**
      * Initializes the UI
      */
     private void initUi() {
+
         binding.qrDeleteIcon.setOnClickListener(view -> {
             builder.setMessage("Are you sure you want to delete this QR. This will update your score")
                     .setTitle("Delete QR")
@@ -188,6 +232,41 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
                     }).create().show();
         });
 
+        binding.viewOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateLocation();
+
+                Location qrLocation = playerQrCode.getLocation();
+
+                if (!playerQrCode.isLocationShared()){
+//                    return;
+                    Toast.makeText(getContext(), "No Location found!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    returnToMapScreen(qrLocation);
+                }
+            }
+        });
+        binding.postCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = getMessage();
+                if(!isEmptyEditText(binding.addCommentText) ) {
+                    Comment comment = new Comment(currentPlayerUsername, message, new Date() );
+                    firestorePlayerController.addCommentToExistingQr(playerQrCode.retrieveHash(), comment);
+                    commentListAdapter.addComment(comment);
+                    binding.addCommentText.setText("");
+                }
+                else{
+                    CharSequence fillComment = "Please enter comment!";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getContext(), fillComment,duration);
+                    toast.show();
+                }
+            }
+        });
+
         binding.viewOtherPlayers.setOnClickListener(view -> {
             returnToViewOtherPlayers();
             //builder.setMessage("HELLO").setTitle("Thrtr").create().show();
@@ -195,11 +274,9 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     }
 
     private void returnToViewOtherPlayers() {
-
         QRCodeViewFragmentDirections.ActionQRCodeViewToViewOtherPlayersFragment action =
                 QRCodeViewFragmentDirections.actionQRCodeViewToViewOtherPlayersFragment(qrHash);
         Navigation.findNavController(getView()).navigate(action);
-
     }
 
     /**
@@ -263,6 +340,18 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     protected void returnToHome() {
         Navigation.findNavController(getView()).navigate(R.id.action_goToHomeFromQRCodeView);
+    }
+
+    protected void returnToMapScreen(Location qrLocation){
+        QRCodeViewFragmentDirections.ActionQRCodeViewToSearchNearbyQrMapFragment action =
+                QRCodeViewFragmentDirections.actionQRCodeViewToSearchNearbyQrMapFragment().setQrLocation(qrLocation);
+        Navigation.findNavController(getView()).navigate(action);
+    }
+
+    @Override
+    public void getCurrentPlayerUsername(String playerUsername) {
+        this.currentPlayerUsername = playerUsername;
+        binding.currentPlayerUsername.setText(currentPlayerUsername);
     }
 
 

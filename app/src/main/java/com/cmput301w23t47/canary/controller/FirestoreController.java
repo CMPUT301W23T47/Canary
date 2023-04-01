@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.callback.UpdateLeaderboardCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.Leaderboard;
 import com.cmput301w23t47.canary.model.LeaderboardPlayer;
 import com.cmput301w23t47.canary.model.Player;
@@ -24,6 +25,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -78,7 +80,7 @@ public class FirestoreController {
     }
 
     /**
-     * Waits for a particular task to be poerformed
+     * Waits for a particular task to be performed
      * @param snapshotTask the document snapshot object
      * @param classType
      * @return an object of a classtype
@@ -457,9 +459,12 @@ public class FirestoreController {
      * @return Qrcode which was requested
      */
     protected DocumentReference persistQrCode(QrCodeRepository qrCodeRepository) {
+        qrCodeRepository.setComments(new ArrayList<Comment>());
         qrCodeRepository.setCreatedOn(Timestamp.now());
         Task<DocumentReference> referenceTask = qrCodes.add(qrCodeRepository);
         waitForReference(referenceTask);
         return referenceTask.getResult();
     }
+
+
 }

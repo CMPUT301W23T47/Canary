@@ -7,10 +7,12 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 
 import com.cmput301w23t47.canary.callback.DoesResourceExistCallback;
+import com.cmput301w23t47.canary.callback.GetCurrentPlayerUsernameCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerListCallback;
 import com.cmput301w23t47.canary.callback.OperationStatusCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerQrCallback;
+import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.Player;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.model.Snapshot;
@@ -25,20 +27,18 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Firestore controller for interacting with Player model
  */
 public class FirestorePlayerController extends FirestoreController{
     public static final String TAG = "FirestorePlayerController";
-
     FirestoreLeaderboardController firestoreLeaderboardController = new FirestoreLeaderboardController();
 
     /**
@@ -253,6 +253,19 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    public void getCurrentPlayerUsername(GetCurrentPlayerUsernameCallback callback){
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String playerDocId = identifyPlayer();
+            Player player = retrieveCompletePlayer(playerDocId);
+            // return result
+            handler.post(() -> {
+                callback.getCurrentPlayerUsername(player.getUsername());
+            });
+        }).start();
+    }
+
+
     /**
      * Gets the complete model for the foreign player
      * @param callback the callback to return the response to
@@ -344,6 +357,15 @@ public class FirestorePlayerController extends FirestoreController{
             handler.post(() -> {
                 callback.operationStatus(playerTask.getResult().exists());
             });
+        }).start();
+    }
+
+    public void addCommentToExistingQr(String qrHash, Comment comment){
+        Handler handler = new Handler();
+        new Thread(()->{
+            String docId = findQrDocId(qrHash);
+            DocumentReference documentReference= qrCodes.document(docId);
+            documentReference.update("comments", FieldValue.arrayUnion(comment));
         }).start();
     }
 
