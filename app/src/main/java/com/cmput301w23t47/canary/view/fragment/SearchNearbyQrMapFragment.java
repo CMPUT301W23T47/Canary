@@ -1,14 +1,18 @@
 package com.cmput301w23t47.canary.view.fragment;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +24,14 @@ import com.cmput301w23t47.canary.controller.FirestoreQrController;
 import com.cmput301w23t47.canary.controller.QrCodeController;
 import com.cmput301w23t47.canary.databinding.FragmentSearchNearbyQrMapBinding;
 import com.cmput301w23t47.canary.model.QrCode;
-import com.cmput301w23t47.canary.view.adapter.QRCodeListAdapter;
 import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -47,6 +52,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     private FragmentSearchNearbyQrMapBinding binding;
     private SearchNearbyQrListAdapter qrCodeListAdapter;
 
+    private Location selectedQrLocation;
     /**
      * Handles the layout of the activity, and called on activity creation.
      * @param inflater The LayoutInflater object that can be used to inflate
@@ -96,11 +102,13 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         showLoadingBar();
         askPermissions();
 
+        selectedQrLocation = SearchNearbyQrMapFragmentArgs.fromBundle(getArguments()).getQrLocation();
+
         // this will send us to the search radius page
         binding.enterSearchRadiusText.setOnClickListener(view -> {
             navigateToSearchRadiusPage();
         });
-        
+
         // this will send us to the search city page
         binding.enterSearchCityText.setOnClickListener(view -> {
             navigateToSearchCityPage();
@@ -148,7 +156,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
 //            point = new LatLng(37, -122);
 //        }
 //        addMarker(point, playerLocTitle);
-//        googleMap.addMarker(new MarkerOptions().position(point).title(playerLocTitle));
+//        //googleMap.addMarker(new MarkerOptions().position(point).title(playerLocTitle));
 //        googleMap.moveCamera(CameraUpdateFactory.newLatLng(point));
     }
 
@@ -158,7 +166,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * @param title the title of the marker
      */
     private void addMarker(LatLng point, String title) {
-        googleMap.addMarker(new MarkerOptions().position(point).title(title));
+        BitmapDescriptor icon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_player_location );
+        googleMap.addMarker(new MarkerOptions().position(point).title(title).icon( icon ));
     }
 
     /**
@@ -181,6 +190,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         addMarker(point, playerLocTitle);
         centerMapCamera(point);
         setCameraView();
+        showSelectedQr();
     }
 
     /**
@@ -224,7 +234,8 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
      * this is used to make sure that the camera when first opens
      * is centered on the user not elsewhere
      */
-    private void setCameraView(){
+    private LatLngBounds setCameraView(){
+        // I changed this to being a return statement because I assume that this means all I have to do is get the PlayerLocation and then compare to this function
         double bottomBoundary = playerLocation.getLatitude() - .1;
         double leftBoundary = playerLocation.getLongitude() - .1;
         double topBoundary = playerLocation.getLatitude() + .1;
@@ -236,6 +247,36 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         );
 
         googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
+
+        return mapBoundary;
+    }
+
+    private void setCameraViewToQr(Location qrLocation){
+        if (qrLocation == null) {
+            return;
+        }
+        double bottomBoundary = qrLocation.getLatitude() - .1;
+        double leftBoundary = qrLocation.getLongitude() - .1;
+            double topBoundary = qrLocation.getLatitude() + .1;
+        double rightBoundary = qrLocation.getLongitude() + .1;
+
+        LatLngBounds mapBoundary = new LatLngBounds(
+                new LatLng(bottomBoundary, leftBoundary),
+                new LatLng(topBoundary, rightBoundary)
+        );
+
+        googleMap.moveCamera( CameraUpdateFactory.newLatLngBounds(mapBoundary, 0));
+    }
+
+    private void showSelectedQr(){
+        if (selectedQrLocation == null){
+            return;
+        }
+        setCameraViewToQr(selectedQrLocation);
+        //LatLng latLng = new LatLng(selectedQrLocation.getLatitude(), selectedQrLocation.getLongitude());
+        LatLng latlng = getLatLng(selectedQrLocation);
+        addMarker(latlng, "Selected QR");
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
     }
 
     /**
@@ -245,7 +286,14 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
         if (qrCodes == null || qrCodes.size() == 0) {
             return;
         }
+
+        // Get a bitmap from the drawable
+        //doing this here so dont have to go the function every time
+        BitmapDescriptor BitmapQRIcon = bitmapDescriptorFromVector( getContext(), R.drawable.map_pin_qr_code_actual);
+
+
         ArrayList<QrCode> qrsOnMap = new ArrayList<>();
+        // this will place the markers on the map for the qr codes change this to being the qr icon
         for (QrCode qrCode : qrCodes) {
             if (!qrCode.hasLocation()) {
                 continue;
@@ -254,6 +302,7 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
             googleMap.addMarker(new MarkerOptions()
                     .position(retrieveLatLngForQr(qrCode))
                     .title(QrCodeController.getTitleForMapPin(qrCode))
+                    .icon(BitmapQRIcon)
             );
         }
         qrCodeListAdapter.updateList(qrsOnMap);
@@ -314,7 +363,53 @@ public class SearchNearbyQrMapFragment extends LocationBaseFragment implements O
     private void navigateToSearchRadiusPage() {
         Navigation.findNavController( getView() ).navigate( R.id.action_searchNearbyQrMapToDistList );
     }
-    
+
+
+
+
+    /**
+     * Turns a vector image asset into a bitmap image asset with a background
+     * does this by just overlaying the vector on top of the background
+     * they both start at the same point so need to shift image onto the background properly
+     * @param context the context
+     * @param vectorDrawableResourceId the resource id of the vector asset
+     * @param backgroundDrawableResourceId the resource id of the background
+     */
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context,@DrawableRes int vectorDrawableResourceId, @DrawableRes int backgroundDrawableResourceId) {
+        // this makes the background
+        Drawable background = ContextCompat.getDrawable(context, backgroundDrawableResourceId);
+        //set tje bounds of the background
+        // 0 means it will not be left shifted from start point and 0 means it will not be shifted down from the start point
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        //set the bounds of the vector
+        // 20 and 10 are the left and top shift
+        //change them or the size of the vector image to change the size and position of the vector
+        vectorDrawable.setBounds(15, 7, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    /**
+     * Turns a vector asset into a bitmap
+     * this one does not need the background because found goog default asset for the pin
+     * @param context the context
+     * @param vectorResId the resource id of the vector
+     * @return the updated bitmap -m ade from the vector
+     */
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
     //ToDo: make sure correct
     /**
      * Navigates to the search City page

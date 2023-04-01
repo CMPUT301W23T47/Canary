@@ -37,6 +37,9 @@
             android:name="owner"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_QRCodeView_to_searchNearbyQrMapFragment"
+            app:destination="@id/searchNearbyQrMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -66,6 +69,11 @@
         <action
             android:id="@+id/action_searchNearbyQrMapFragment_to_citySearchQrCodeListFragment"
             app:destination="@id/citySearchQrCodeListFragment" />
+        <argument
+            android:name="qrLocation"
+            app:argType="android.location.Location"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/playerSearchFragment"
