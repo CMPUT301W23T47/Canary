@@ -281,11 +281,12 @@
                     android:typeface="sans"
                     />
                 <!--TODO: Fix scrolling in ranking-->
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ranking_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="vertical"
+                    android:layout_marginTop="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

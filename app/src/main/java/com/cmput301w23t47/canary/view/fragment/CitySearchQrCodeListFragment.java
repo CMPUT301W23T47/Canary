@@ -100,9 +100,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	 */
 	@Override
 	protected void updateLocation() {
-		// I dont think we need to do anything here becuase what city gets searched for doesn't matter if
-		// the player is moving
-		//updateQrList();
+		// No action required
 	}
 	
 	@Override
@@ -112,7 +110,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	
 	@Override
 	protected void locationPermissionNotGranted() {
-	
+
 	}
 	
 	/**
@@ -170,7 +168,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 		}
 		// if the search bar is empty then just return and show all the qr codes
 		// dont think we need to keep track of player location but just in case
-		if(searchCity == null ){
+		if(searchCity == null || searchCity.equals("") ){
 			showAllQrs();
 			return;
 		}
@@ -181,7 +179,6 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 		List<Address> QrAddress; // this will hold the address of the qr code
 		
 		// have to loop through all the qr codes because they are all in a list with unique addresses
-		Log.d(TAG, "updateQrList: " + qrCodes.size());
 		for(QrCode qrind : qrCodes){
 			try{
 				
@@ -190,7 +187,6 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 				// this will get the city of the address of the qr code
 				
 				if(QrAddress.size() > 0) {
-					Log.d(TAG, "Valid Qr Location: " + QrAddress.get(0).getLocality());
 					city = QrAddress.get( 0 ).getLocality().toLowerCase(); // will get the lower case city name
 					// if the city of the qr code is the same as the city that the user entered then add it to the list
 					if ( city.charAt( 0 ) == searchCity.charAt( 0 ) && city.contains( searchCity ) ) {
@@ -198,10 +194,7 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 						// this will hopefully prevent situations where the user enters "Edm" and it shows qrs in "monEdm"
 						filteredQrs.add( qrind );
 					}
-				} else{
-					Log.d( TAG, qrind.getName()+" : Latitude:" + qrind.getLocation().getLatitude() + "  Longitude:" + qrind.getLocation().getLongitude() );
 				}
-				
 			}catch( IOException e){
 				String message = "Error: " + e.getMessage();
 				Log.d( TAG, message);
@@ -232,9 +225,6 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 		searchCity = searchCity.toLowerCase();
 		// this will update the qr list to show all the qr codes that are in the city that the user entered
 		updateQrList();
-		
-		
-		
 	}
 	
 	/**
@@ -251,8 +241,9 @@ public class CitySearchQrCodeListFragment extends LocationBaseFragment implement
 	 * @param qrCode the qr code selected
 	 */
 	private void navigateToSelectedQr(QrCode qrCode) {
-		NearbyQrCodeListFragmentDirections.ActionNearbyQrListToQrCodePage action =
-				NearbyQrCodeListFragmentDirections.actionNearbyQrListToQrCodePage(qrCode.getHash());
+		Log.d(TAG, "navigateToSelectedQr: " + qrCode.getName());
+		CitySearchQrCodeListFragmentDirections.ActionCitySearchQrCodeListFragmentToQRCodeView action =
+				CitySearchQrCodeListFragmentDirections.actionCitySearchQrCodeListFragmentToQRCodeView(qrCode.getHash());
 		Navigation.findNavController(getView()).navigate(action);
 	}
 	
