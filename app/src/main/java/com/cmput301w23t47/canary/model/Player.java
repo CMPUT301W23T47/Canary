@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 /**
  * Class for Player
- *
  * @author Meharpreet Singh Nanda
  */
 public class Player {
@@ -185,16 +184,11 @@ public class Player {
      * @return the highest qr score
      */
     public long getHighestQr(){
-        if (qrCodes.isEmpty()) {
+        PlayerQrCode highest = retrieveQrWithHighestScore();
+        if (highest == null) {
             return 0;
         }
-        long highest = 0;
-        for (PlayerQrCode qr: qrCodes){
-            long qrScore = qr.getQrCode().getScore();
-            if( qrScore > highest)
-                highest = qrScore;
-        }
-        return highest;
+        return highest.retrieveScore();
     }
 
     /**
@@ -203,16 +197,11 @@ public class Player {
      * @return the lowest qr
      */
     public long getLowestQr(){
-        if (qrCodes.isEmpty()) {
+        PlayerQrCode lowest = retrieveQrWithLowestScore();
+        if (lowest == null) {
             return 0;
         }
-        long lowest = Long.MAX_VALUE;
-        for (PlayerQrCode qr: qrCodes){
-            long qrScore = qr.getQrCode().getScore();
-            if( qrScore < lowest)
-                lowest = qrScore;
-        }
-        return lowest;
+        return lowest.retrieveScore();
     }
 
     /**
@@ -222,5 +211,37 @@ public class Player {
      */
     public String retrieveStringToDraw() {
         return String.valueOf(username.charAt(0));
+    }
+
+    /**
+     * Retrieves the qr with highest score
+     * @return the QR with highest score
+     */
+    public PlayerQrCode retrieveQrWithHighestScore() {
+        if (qrCodes.isEmpty()) {
+            return null;
+        }
+        PlayerQrCode highest = qrCodes.get(0);
+        for (PlayerQrCode qr: qrCodes){
+            if(highest.retrieveScore() < qr.retrieveScore())
+                highest = qr;
+        }
+        return highest;
+    }
+
+    /**
+     * Retrieves the qr with lowest score
+     * @return the QR with lowest score
+     */
+    public PlayerQrCode retrieveQrWithLowestScore() {
+        if (qrCodes.isEmpty()) {
+            return null;
+        }
+        PlayerQrCode lowest = qrCodes.get(0);
+        for (PlayerQrCode qr: qrCodes){
+            if(lowest.retrieveScore() > qr.retrieveScore())
+                lowest = qr;
+        }
+        return lowest;
     }
 }

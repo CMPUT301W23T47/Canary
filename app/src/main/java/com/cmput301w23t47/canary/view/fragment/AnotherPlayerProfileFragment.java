@@ -89,6 +89,7 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         makeFirestoreReqForPlayer();
         qrCodeListAdapter = new QRCodeListAdapter(new ArrayList<>(), this);
         initQrCodeList();
+        initClickHandlers();
     }
 
     /**
@@ -100,6 +101,20 @@ public class AnotherPlayerProfileFragment extends Fragment implements
                 DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
         binding.qrsScannedList.addItemDecoration(dividerItemDecoration);
+    }
+
+    /**
+     * Initializes the click listeners for layout elements
+     */
+    private void initClickHandlers() {
+        binding.highestQrLayout.setOnClickListener(view -> {
+            if (player == null) { return; }
+            navigateToSelectedQr(player.retrieveQrWithHighestScore());
+        });
+        binding.lowestQrLayout.setOnClickListener(view -> {
+            if (player == null) { return; }
+            navigateToSelectedQr(player.retrieveQrWithLowestScore());
+        });
     }
 
     /**
@@ -187,6 +202,9 @@ public class AnotherPlayerProfileFragment extends Fragment implements
      * @param playerQrCode the selected qr code
      */
     private void navigateToSelectedQr(PlayerQrCode playerQrCode) {
+        if (playerQrCode == null) {
+            return;
+        }
         AnotherPlayerProfileFragmentDirections.ActionAnotherPlayerToQrPage action =
                 AnotherPlayerProfileFragmentDirections.actionAnotherPlayerToQrPage(playerQrCode.retrieveHash());
         Navigation.findNavController(getView()).navigate(action);
