@@ -208,10 +208,10 @@ public class PlayerProfileFragment extends Fragment implements
 
     @Override
     public void getIndex(int ind) {
-        Log.d(TAG, "getIndex: " + ind);
-//        QrCode qrCode = qrCodeListAdapter.getItemAt(ind);
-//        if (qrCode != null) {
-//            navigateToSelectedQr(qrCode);
-//        }
+        PlayerQrCode qrCode = qrCodeListAdapter.getItemAt(ind);
+        if (qrCode == null) {
+            return;
+        }
+        navigateToSelectedQr(qrCode);
     }
 }

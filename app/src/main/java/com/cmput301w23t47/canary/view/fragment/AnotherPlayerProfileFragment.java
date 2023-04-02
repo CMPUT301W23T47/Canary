@@ -194,6 +194,10 @@ public class AnotherPlayerProfileFragment extends Fragment implements
 
     @Override
     public void getIndex(int ind) {
-
+        PlayerQrCode qrCode = qrCodeListAdapter.getItemAt(ind);
+        if (qrCode == null) {
+            return;
+        }
+        navigateToSelectedQr(qrCode);
     }
 }
