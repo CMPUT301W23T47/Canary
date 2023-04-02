@@ -39,8 +39,6 @@ public class PlayerProfileFragment extends Fragment implements
     private FirestorePlayerController firestorePlayerController = new FirestorePlayerController();
     private Player player;
     private QRCodeListAdapter qrCodeListAdapter;
-    private static final String progressBarTitle = "Loading Player Profile";
-    private static final String progressBarMessage = "Should take only a moment...";
 
     /**
      * Required empty public constructor.

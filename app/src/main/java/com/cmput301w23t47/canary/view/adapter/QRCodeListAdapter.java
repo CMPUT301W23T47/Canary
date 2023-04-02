@@ -116,8 +116,6 @@ public class QRCodeListAdapter extends RecyclerView.Adapter<QRCodeListAdapter.Vi
             itemView.setOnClickListener((view -> {
                 callback.getIndex(getAdapterPosition());
             }));
-            // hide the scan date; not required for this view
-            qrLastScanDate.setVisibility(View.GONE);
         }
     }
 }

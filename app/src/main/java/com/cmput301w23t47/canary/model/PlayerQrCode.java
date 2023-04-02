@@ -2,6 +2,7 @@ package com.cmput301w23t47.canary.model;
 
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.util.Log;
 
 import com.cmput301w23t47.canary.controller.QrCodeController;
 

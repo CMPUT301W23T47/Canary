@@ -82,7 +82,7 @@ public class QrCodeController {
      */
     public static String getDisplayName(String qrName) {
         if (qrName.length() <= 16) {
-            return qrName;
+            return String.format(Locale.CANADA, "%-16s", qrName);
         }
         return String.format(Locale.CANADA, "%s...", qrName.substring(0, 13));
     }

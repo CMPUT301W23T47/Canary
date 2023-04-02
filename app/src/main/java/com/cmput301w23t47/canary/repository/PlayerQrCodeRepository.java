@@ -1,5 +1,7 @@
 package com.cmput301w23t47.canary.repository;
 
+import android.util.Log;
+
 import com.cmput301w23t47.canary.model.Comment;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.cmput301w23t47.canary.model.QrCode;
