@@ -118,7 +118,6 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     }
 
     public void updateFragmentData(){
-        Log.d(TAG, "updateFragmentData: called");
         if (playerQrCode == null) {
             return;
         }
@@ -170,10 +169,6 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         // comment list init
         commentListAdapter = new CommentListAdapter(new ArrayList<>());
         binding.qrCommentsList.setAdapter(commentListAdapter);
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrCommentsList.getContext(),
-//                DividerItemDecoration.VERTICAL);
-//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
-//        binding.qrCommentsList.addItemDecoration(dividerItemDecoration);
 
         // qr init
         qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
@@ -306,6 +301,7 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
     @Override
     public void getPlayerQr(PlayerQrCode playerQrCode) {
         this.playerQrCode = playerQrCode;
+
         updateFragmentData();
     }
 

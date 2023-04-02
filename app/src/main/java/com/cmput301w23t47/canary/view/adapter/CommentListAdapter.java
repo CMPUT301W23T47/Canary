@@ -43,7 +43,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         Comment comment = comments.get(position);
         // TODO: Set image
         holder.commentPlayerUsername.setText(comment.getPlayerUsername());
-        holder.commentDate.setText(QrCodeController.getFormattedDate(comment.getDate()));
+        holder.commentDate.setText(QrCodeController.getFormattedDateTime(comment.getDate()));
         holder.commentBody.setText(comment.getMessage());
         setUserProfileImage(holder, comment.getPlayerUsername());
     }
@@ -75,12 +75,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         }
         comments.clear();
         comments.addAll(newComments);
-        Collections.sort(comments, new CommentCompareController()); // sort the list by date time
+        comments.sort(new CommentCompareController()); // sort the list by date time
         notifyDataSetChanged();
     }
 
     public void addComment(Comment comment){
-        comments.add(comment);
+        comments.add(0, comment);
         notifyDataSetChanged();
     }
 
