@@ -68,13 +68,13 @@
                     android:layout_marginLeft="30dp"
                     />
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/qr_items_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/qr_items_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    />
         </LinearLayout>
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout

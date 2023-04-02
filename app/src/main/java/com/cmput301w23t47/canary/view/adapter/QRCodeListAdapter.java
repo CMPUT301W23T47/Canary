@@ -1,17 +1,16 @@
 package com.cmput301w23t47.canary.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.GetIndexCallback;
 import com.cmput301w23t47.canary.controller.QrCodeController;
 import com.cmput301w23t47.canary.model.PlayerQrCode;
 
@@ -19,68 +18,106 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * Adapter for QR Code list
+ * Adapter for viewing the qr items in the recycler view
  */
-public class QRCodeListAdapter extends ArrayAdapter<PlayerQrCode> {
-
+public class QRCodeListAdapter extends RecyclerView.Adapter<QRCodeListAdapter.ViewHolder> {
     private ArrayList<PlayerQrCode> playerQrCodesList;
+    private GetIndexCallback callback;
 
     /**
-     * Constructor to initialize the context and list
-     * @param context the context to work on
-     * @param qrCodes the list of qrcodes
+     * Required public constructor.
      */
-    public QRCodeListAdapter(Context context, ArrayList<PlayerQrCode> qrCodes){
-        super(context, 0, qrCodes);
-        this.playerQrCodesList = qrCodes;
+    public QRCodeListAdapter(ArrayList<PlayerQrCode> playerQrCodesList, GetIndexCallback callback) {
+        this.playerQrCodesList = playerQrCodesList;
+        this.callback = callback;
     }
 
     /**
-     * Gives the list of Qr codes
-     * @return List of playerQrCode
-     */
-    public ArrayList<PlayerQrCode> getPlayerQrCodesList() {return playerQrCodesList;}
-
-    /**
-     * Sets the qr list in the adapter
-     * @param playerQrCodes the new qr list to set
-     */
-    public void setQrList(ArrayList<PlayerQrCode> playerQrCodes) {
-        this.playerQrCodesList.clear();
-        this.playerQrCodesList.addAll(playerQrCodes);
-    }
-
-    /**
-     * Gets the view and updates the data to be shown on the screen
-     * @param position The position of the item within the adapter's data set of the item whose view
-     *        we want.
-     * @param convertView The old view to reuse, if possible. Note: You should check that this view
-     *        is non-null and of an appropriate type before using. If it is not possible to convert
-     *        this view to display the correct data, this method can create a new view.
-     *        Heterogeneous lists can specify their number of view types, so that this View is
-     *        always of the right type (see {@link #getViewTypeCount()} and
-     *        {@link #getItemViewType(int)}).
-     * @param parent The parent that this view will eventually be attached to
-     * @return view the updated view
+     * The view holder for the recycler view
      */
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view;
-        if (convertView == null) {
-            view = LayoutInflater.from(super.getContext()).inflate(R.layout.content_qr_code_list_item,parent,false);
-        }else{
-            view = convertView;
+    public QRCodeListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_qr_code_list_item, parent, false);
+        return new ViewHolder(view, callback);
+    }
+
+    /**
+     * Sets the text for the qr name and qr point total
+     * this acts like an update function
+     * as well as a listen for if an item was clicked
+     * @param holder the view holder for the recycler view this is an item
+     * @param position the position of the item that was clicked
+     */
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        PlayerQrCode playerQrCode = playerQrCodesList.get(position);
+        holder.qrName.setText(QrCodeController.getDisplayName(playerQrCode.getName()));
+        holder.qrScore.setText(String.format(Locale.CANADA, "%d", playerQrCode.retrieveScore()));
+        holder.qrLastScanDate.setText(playerQrCode.retrieveDateString());
+    }
+
+
+    /**
+     * Gets the size of the list
+     * @return the size of the list
+     */
+    @Override
+    public int getItemCount() {
+        return playerQrCodesList.size();
+    }
+
+    /**
+     * Updates the list to display the new list of items
+     * @param newQrList the new list of Qrs
+     */
+    public void updateList(ArrayList<PlayerQrCode> newQrList) {
+        playerQrCodesList.clear();
+        playerQrCodesList.addAll(newQrList);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Gets the item at the given position
+     * @param pos the position to get the item at
+     * @return the QrCode object at that position
+     */
+    public PlayerQrCode getItemAt(int pos) {
+        if (pos >= playerQrCodesList.size()) {
+            return null;
         }
-        PlayerQrCode qr = getItem(position);
-        ImageView qrCodeImage = view.findViewById(R.id.listQrCodeImage);
-        // qrCodeImage.setImageBitmap(qr.getSnapshot()); TODO: fix this later
-        TextView qrUsername = view.findViewById(R.id.listQrName);
-        qrUsername.setText(QrCodeController.getDisplayName(qr.getName()));
-        TextView qrCodeScore = view.findViewById(R.id.listQrCodeScore);
-        qrCodeScore.setText(String.format(Locale.CANADA, "%d", qr.retrieveScore()));
-        TextView qrCodeScanDateTime = view.findViewById(R.id.listQrCodeScanDateTime);
-        qrCodeScanDateTime.setText(qr.retrieveDateString());
-        return view;
+        return playerQrCodesList.get( pos );
+    }
+
+    /**
+     * sets the list of qr codes
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView qrName;
+        private TextView qrLastScanDate;
+        private TextView qrScore;
+        private ImageView qrImage;
+
+        GetIndexCallback callback;
+
+        /**
+         * A class with a constructor which gives the view and initializes the qrdata
+         */
+        public ViewHolder(View itemView, GetIndexCallback callback){
+            super(itemView);
+            // get the views
+            qrName = itemView.findViewById(R.id.listQrName);
+            qrLastScanDate = itemView.findViewById(R.id.listQrCodeScanDateTime);
+            qrScore = itemView.findViewById(R.id.listQrCodeScore);
+            qrImage = itemView.findViewById(R.id.listQrCodeImage);
+            this.callback = callback;
+
+
+            itemView.setOnClickListener((view -> {
+                callback.getIndex(getAdapterPosition());
+            }));
+            // hide the scan date; not required for this view
+            qrLastScanDate.setVisibility(View.GONE);
+        }
     }
 }
