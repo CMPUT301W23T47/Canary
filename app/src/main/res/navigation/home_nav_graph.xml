@@ -81,7 +81,7 @@
     <fragment
         android:id="@+id/playerSearchFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.PlayerSearchFragment"
-        android:label="fragment_player_search"
+        android:label="Search Players"
         tools:layout="@layout/fragment_player_search" >
         <action
             android:id="@+id/action_allPlayersToOtherPlayerProfile"
