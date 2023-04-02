@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -102,14 +103,11 @@ public class PlayerProfileFragmentTest {
     @Test
     public void checkPastQrExists() throws InterruptedException {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-//        View menuItem = solo.getView(BottomNavigationView.class).findViewById(R.id.bottom_navigation);
         solo.clickOnImage(6);
         solo.waitForText("msn", 1, 6000);
-        ListView qrsScannedList = (ListView) solo.getView(R.id.qrsScannedList);
-        ListAdapter qrAdapter = qrsScannedList.getAdapter();
-        PlayerQrCode firstItem = (PlayerQrCode) qrAdapter.getItem(0);
-        assertNotNull(firstItem);
-
+        RecyclerView qrsScannedList = (RecyclerView) solo.getView(R.id.qrsScannedList);
+        RecyclerView.Adapter qrAdapter = qrsScannedList.getAdapter();
+        assertTrue( qrAdapter.getItemCount() > 0) ;
     }
 
     /**
