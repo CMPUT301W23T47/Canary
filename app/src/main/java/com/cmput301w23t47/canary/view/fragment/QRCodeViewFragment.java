@@ -96,8 +96,6 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
             binding.qrSnapshot.setImageBitmap(playerQrCode.getSnapshot().getBitmap());
             binding.noSnapshotBox.setVisibility(View.GONE);
             binding.qrSnapshot.setVisibility(View.VISIBLE);
-        } else {
-
         }
     }
 
@@ -115,6 +113,12 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      */
     private void updateComments() {
         commentListAdapter.updateList(playerQrCode.getQrCode().getComments());
+        int commentsSize = playerQrCode.getQrCode().getComments().size();
+        if (commentsSize == 0) {
+            binding.noCommentsText.setText(R.string.no_comments);
+        } else {
+            binding.noCommentsText.setText(String.format(Locale.CANADA, "%d Comments", commentsSize));
+        }
     }
 
     public void updateFragmentData(){
@@ -251,6 +255,8 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
                     Comment comment = new Comment(currentPlayerUsername, message, new Date() );
                     firestorePlayerController.addCommentToExistingQr(playerQrCode.retrieveHash(), comment);
                     commentListAdapter.addComment(comment);
+                    binding.noCommentsText.setText(String.format(Locale.CANADA, "%d Comments",
+                            commentListAdapter.getItemCount()));
                     binding.addCommentText.setText("");
                 }
                 else{
@@ -264,7 +270,6 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
 
         binding.viewOtherPlayers.setOnClickListener(view -> {
             returnToViewOtherPlayers();
-            //builder.setMessage("HELLO").setTitle("Thrtr").create().show();
         });
     }
 
@@ -349,24 +354,4 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
         this.currentPlayerUsername = playerUsername;
         binding.currentPlayerUsername.setText(currentPlayerUsername);
     }
-
-
-//    /**
-//     * Retrieves the city name
-//     * @param location the location to parse
-//     * @return the city name if applicable, empty string "" otherwise
-//     */
-//    public String retrieveCityName(Location location) {
-//        try {
-//            Geocoder geocoder = new Geocoder(getContext());
-//            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-//            if (addresses.isEmpty()) {
-//                return "";
-//            }
-//            return addresses.get(0).getLocality();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "";
-//    }
 }
