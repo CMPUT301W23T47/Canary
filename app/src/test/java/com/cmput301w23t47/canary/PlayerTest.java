@@ -129,7 +129,4 @@ public class PlayerTest {
         Player player = mockPlayer();
         assertEquals("t",player.retrieveStringToDraw());
     }
-
-
-
 }

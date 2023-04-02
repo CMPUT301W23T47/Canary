@@ -1,259 +1,126 @@
 package com.cmput301w23t47.canary;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.cmput301w23t47.canary.model.Leaderboard;
 import com.cmput301w23t47.canary.model.LeaderboardPlayer;
+import com.google.common.collect.Comparators;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
- * The type Leaderboard test.
+ * The tests Leaderboard Model.
  */
 public class LeaderboardTest {
-    /**
-     * The Leaderboard.
-     */
-    Leaderboard leaderboard = new Leaderboard();
+    // The leaderboard object
+    Leaderboard leaderboard = null;
 
     /**
-     * Gets highest scoring qr test.
+     * Prepares the mock object for leaderboard
      */
-    @Test
-    public void getHighestScoringQrTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<Long> playersMaxScoreQr = new ArrayList<>();
-        playersMaxScoreQr.add(player1.getMaxScoreQr());
-        playersMaxScoreQr.add(player2.getMaxScoreQr());
-        playersMaxScoreQr.add(player3.getMaxScoreQr());
-        //get highest scoring qr
-        long maxScoreQr = 0;
-        for (long score : playersMaxScoreQr) {
-            if (score > maxScoreQr) {
-                maxScoreQr = score;
-            }
-        }
-        //user  function to get highest scoring qr
-        assertEquals(30, maxScoreQr);
+    public void setMockLeaderboard() {
+        ArrayList<LeaderboardPlayer> players = new ArrayList<>();
+        LeaderboardPlayer p = new LeaderboardPlayer("testPlayer1", 100, 10);
+        players.add(p);
+        players.add(new LeaderboardPlayer("testPlayer2", 222, 100));
+        players.add(new LeaderboardPlayer("testPlayer3", 500, 13));
+        players.add(new LeaderboardPlayer("testPlayer4", 450, 43));
+        players.add(new LeaderboardPlayer("testPlayer5", 230, 88));
+        leaderboard = new Leaderboard("testPlayer4", 50, "testPlayer2", 100, null, p);
+        leaderboard.setPlayers(players);
     }
 
     /**
-     * Gets highest score test.
+     * Tests the call for getting player with maximum QR
      */
     @Test
-    public void getHighestScoreTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<Long> playersScore = new ArrayList<>();
-        playersScore.add(player1.getScore());
-        playersScore.add(player2.getScore());
-        playersScore.add(player3.getScore());
-        //get highest score
-        long maxScore = 0;
-        for (long score : playersScore) {
-            if (score > maxScore) {
-                maxScore = score;
-            }
-        }
-        //user  function to get highest score
-        assertEquals(30, maxScore);
+    public void testGetMaxQr() {
+        setMockLeaderboard();
+        assertEquals(leaderboard.getMaxQrPlayer(), "testPlayer4");
+        assertEquals(leaderboard.getMaxQr(), 50);
+    }
+
+    /**
+     * Tests the call for getting player with maximum score
+     */
+    @Test
+    public void testGetMaxScore() {
+        setMockLeaderboard();
+        assertEquals(leaderboard.getMaxScorePlayer(), "testPlayer2");
+        assertEquals(leaderboard.getMaxScore(), 100);
+    }
+
+    /**
+     * Tests the call for getting the current player
+     */
+    @Test
+    public void testGetCurrentPlayer() {
+        setMockLeaderboard();
+        assertEquals(leaderboard.getCurrentPlayer().getUsername(), "testPlayer1");
+    }
+
+    /**
+     * Tests the call for getting the players sorted by score
+     */
+    @Test
+    public void testGetByScore() {
+        setMockLeaderboard();
+        // assert that the players are sorted in descending order by score
+        assertTrue(Comparators.isInOrder(leaderboard.getByScore(), (Object o1, Object o2) ->
+                (int)(((LeaderboardPlayer)o2).getScore() - ((LeaderboardPlayer)o1).getScore()))
+        );
+    }
+
+
+    /**
+     * Tests the call for getting the players sorted by Highest Scoring QR
+     */
+    @Test
+    public void testGetByHighestScoringQr() {
+        setMockLeaderboard();
+        // assert that the players are sorted in descending order by maxScoreQr
+        assertTrue(Comparators.isInOrder(leaderboard.getByHighestScoringQr(), (Object o1, Object o2) ->
+                (int)(((LeaderboardPlayer)o2).getMaxScoreQr() - ((LeaderboardPlayer)o1).getMaxScoreQr()))
+        );
     }
 
     /**
      * Gets leaderboard test.
      */
     @Test
-    public void getLeaderboardTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //get leaderboard
-        ArrayList<LeaderboardPlayer> leaderboard = new ArrayList<>();
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            leaderboard.add(player);
-        }
-        //user  function to get leaderboard
-        assertEquals(3, leaderboard.size());
+    public void testSetPlayers() {
+        setMockLeaderboard();
+        // add more players to leaderboard
+        ArrayList<LeaderboardPlayer> players = new ArrayList<>();
+        players.addAll(leaderboard.getPlayers());
+        players.add(new LeaderboardPlayer("testPlayer11", 234, 23));
+        players.add(new LeaderboardPlayer("testPlayer12", 123, 12));
+        players.add(new LeaderboardPlayer("testPlayer13", 123, 53));
+        players.add(new LeaderboardPlayer("testPlayer14", 324, 54));
+        leaderboard.setPlayers(players);
+        // verify the size of players
+        assertEquals(leaderboard.getPlayers().size(), players.size());
+        // verify the ordering of new players
+        assertTrue(Comparators.isInOrder(leaderboard.getByHighestScoringQr(), (Object o1, Object o2) ->
+                (int)(((LeaderboardPlayer)o2).getMaxScoreQr() - ((LeaderboardPlayer)o1).getMaxScoreQr()))
+        );
+        assertTrue(Comparators.isInOrder(leaderboard.getByScore(), (Object o1, Object o2) ->
+                (int)(((LeaderboardPlayer)o2).getScore() - ((LeaderboardPlayer)o1).getScore()))
+        );
     }
 
     /**
-     * Gets leaderboard player test.
+     * Tests the call for getting the players sorted by Highest Scoring QR
      */
     @Test
-    public void getLeaderboardPlayerTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //get leaderboard player
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to get leaderboard player
-        assertEquals("player1", leaderboardPlayer.getUsername());
+    public void testLeaderboardPlayer() {
+        LeaderboardPlayer player = new LeaderboardPlayer("testPlayer11", 234, 23);
+        assertEquals(player.getUsername(), "testPlayer11");
+        assertEquals(player.getScore(), 234);
+        assertEquals(player.getMaxScoreQr(), 23);
     }
-
-    /**
-     * Gets leaderboard player score test.
-     */
-    @Test
-    public void getLeaderboardPlayerScoreTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //get leaderboard player score
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to get leaderboard player score
-        assertEquals(10, leaderboardPlayer.getScore());
-    }
-
-    /**
-     * Gets leaderboard player max score qr test.
-     */
-    @Test
-    public void getLeaderboardPlayerMaxScoreQrTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //get leaderboard player max score qr
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to get leaderboard player max score qr
-        assertEquals(10, leaderboardPlayer.getMaxScoreQr());
-    }
-
-    /**
-     * Sets leaderboard player test.
-     */
-    @Test
-    public void setLeaderboardPlayerTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //set leaderboard player
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to set leaderboard player
-        assertEquals("player1", leaderboardPlayer.getUsername());
-    }
-
-    /**
-     * Set leaderboard player score test.
-     */
-    @Test
-    public void setLeaderboardPlayerScoreTest(){
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //set leaderboard player score
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to set leaderboard player score
-        assertEquals(10, leaderboardPlayer.getScore());
-    }
-
-    /**
-     * Sets leaderboard player max score qr test.
-     */
-    @Test
-    public void setLeaderboardPlayerMaxScoreQrTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //set leaderboard player max score qr
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to set leaderboard player max score qr
-        assertEquals(10, leaderboardPlayer.getMaxScoreQr());
-    }
-
-    /**
-     * Gets leaderboard player score qr test.
-     */
-    @Test
-    public void getLeaderboardPlayerScoreQrTest() {
-        LeaderboardPlayer player1 = new LeaderboardPlayer("player1", 10, 10);
-        LeaderboardPlayer player2 = new LeaderboardPlayer("player2", 20, 20);
-        LeaderboardPlayer player3 = new LeaderboardPlayer("player3", 30, 30);
-        //add players to leaderboard
-        ArrayList<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
-        leaderboardPlayers.add(player1);
-        leaderboardPlayers.add(player2);
-        leaderboardPlayers.add(player3);
-        //get leaderboard player score qr
-        LeaderboardPlayer leaderboardPlayer = new LeaderboardPlayer("player1", 10, 10);
-        for (LeaderboardPlayer player : leaderboardPlayers) {
-            if (player.getUsername().equals(leaderboardPlayer.getUsername())) {
-                leaderboardPlayer = player;
-            }
-        }
-        //user  function to get leaderboard player score qr
-        assertEquals(10, leaderboardPlayer.getScore());
-    }
-
 }
