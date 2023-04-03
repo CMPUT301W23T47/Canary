@@ -7,7 +7,7 @@ An android application for the QR scanning game: Canary. Use it to scan QR Codes
 The android app is developed using Java. Firestore is used for the persistance layer. 
 
 ## Running instructions:
-To run the application from the command line, navigate to the root of the project and execute the following command:
+To build the application from the command line, navigate to the root of the project and execute the following command:
 ```sh
-./gradlew bootRun 
+./gradlew build 
 ```
