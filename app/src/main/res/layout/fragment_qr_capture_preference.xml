@@ -14,112 +14,145 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/main_content_box"
+        android:weightSum="1"
         >
         <LinearLayout
-            android:layout_width="300dp"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:background="#FFFFFF">
-
-            <ImageView
-                android:contentDescription="profile photo"
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="24dp"
-                tools:srcCompat="@tools:sample/avatars" >
-            </ImageView>
-
+            android:orientation="vertical"
+            android:layout_weight="0.7"
+            >
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:padding="20dp"
                 android:background="#FFFFFF">
 
-                <TextView
-                    android:id="@+id/qr_name"
+                <ImageView
+                    android:contentDescription="profile photo"
+                    android:id="@+id/imageView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name "
-                    android:textSize="20sp"
-                    tools:layout_editor_absoluteX="180dp"
-                    tools:layout_editor_absoluteY="34dp"
-                    android:ems="8">
-                </TextView>
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="24dp"
+                    tools:srcCompat="@tools:sample/avatars" >
+                </ImageView>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:background="#FFFFFF">
+
+                    <TextView
+                        android:id="@+id/qr_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name "
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="180dp"
+                        tools:layout_editor_absoluteY="34dp"
+                        android:ems="8">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/qr_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Score"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="180dp"
+                        tools:layout_editor_absoluteY="71dp"
+                        android:ems="8">
+
+                    </TextView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:layout_marginTop="20dp"
+                android:background="#FFFFFF">
                 <TextView
-                    android:id="@+id/qr_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Score"
-                    android:textSize="20sp"
-                    tools:layout_editor_absoluteX="180dp"
-                    tools:layout_editor_absoluteY="71dp"
-                    android:ems="8">
+                    android:text="Preferences"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    />
 
-                </TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/all_rounded_corners_border_nb"
+                    android:orientation="horizontal"
+                    android:paddingVertical="15dp"
+                    android:paddingHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="1"
+                    >
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="0.8"
+                        android:layout_marginEnd="2dp"
+                        >
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Save Location"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Saving the location helps other players find it!"
+                            />
+                    </LinearLayout>
+                    <CheckBox
+                        android:id="@+id/saveLocationCheckbox"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="300dp"
-            android:layout_gravity="center"
-
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="20dp"
-
-            android:background="#FFFFFF">
-
-            <CheckBox
-                android:id="@+id/saveLocationCheckbox"
+            >
+            <Button
+                android:id="@+id/take_snap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save Location?"
-                tools:layout_editor_absoluteX="38dp"
-                tools:layout_editor_absoluteY="255dp" />
-
-            <TextView
-                android:id="@+id/textView6"
+                android:layout_gravity="center"
+                android:text="Snapshot"
+                />
+            <Button
+                android:id="@+id/no_snap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Saving the location helps other players find it!"
-                tools:layout_editor_absoluteX="38dp"
-                tools:layout_editor_absoluteY="303dp" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Preferences"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="38dp"
-                tools:layout_editor_absoluteY="223dp" />
+                android:layout_gravity="center"
+                android:text="Continue without snapshot"
+                tools:layout_editor_absoluteX="68dp"
+                tools:layout_editor_absoluteY="650dp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/take_snap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="300dp"
-            android:layout_gravity="center"
-            android:text="Snapshot"
-            tools:layout_editor_absoluteX="142dp"
-            tools:layout_editor_absoluteY="602dp" />
-
-        <Button
-            android:id="@+id/no_snap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-
-            android:text="Continue without snapshot"
-            tools:layout_editor_absoluteX="68dp"
-            tools:layout_editor_absoluteY="650dp" />
 
 
     </LinearLayout>
