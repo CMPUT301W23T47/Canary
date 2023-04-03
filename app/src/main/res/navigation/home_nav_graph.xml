@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_qrCodeViewFromPlayerProfile"
             app:destination="@id/QRCodeView" />
+        <action
+            android:id="@+id/action_playerProfileFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchNearbyQrMapFragment"
@@ -81,7 +84,7 @@
     <fragment
         android:id="@+id/playerSearchFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.PlayerSearchFragment"
-        android:label="fragment_player_search"
+        android:label="Search Players"
         tools:layout="@layout/fragment_player_search" >
         <action
             android:id="@+id/action_allPlayersToOtherPlayerProfile"
@@ -102,7 +105,7 @@
     <fragment
         android:id="@+id/nearbyQrCodeListFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.NearbyQrCodeListFragment"
-        android:label="Search QR Codes"
+        android:label="Search QR Codes by Distance"
         tools:layout="@layout/fragment_nearby_qr_code_list" >
         <action
             android:id="@+id/action_nearbyQrListToQrCodePage"
@@ -111,7 +114,7 @@
     <fragment
         android:id="@+id/citySearchQrCodeListFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.CitySearchQrCodeListFragment"
-        android:label="fragment_city_search_qr_code_list"
+        android:label="Search QR Codes by City"
         tools:layout="@layout/fragment_city_search_qr_code_list" >
         <action
             android:id="@+id/action_citySearchQrCodeListFragment_to_QRCodeView"
@@ -130,4 +133,9 @@
             android:name="qrHash"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/updateProfileFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.UpdateProfileFragment"
+        android:label="Update Profile"
+        tools:layout="@layout/fragment_update_profile" />
 </navigation>

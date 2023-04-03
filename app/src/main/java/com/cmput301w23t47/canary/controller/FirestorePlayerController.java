@@ -253,6 +253,22 @@ public class FirestorePlayerController extends FirestoreController{
         }).start();
     }
 
+    /**
+     * Gets the Shallow model for the current player
+     * @param callback the callback to return the response to
+     */
+    public void getCurrentPlayerShallow(GetPlayerCallback callback) {
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String playerDocId = identifyPlayer();
+            Player player = retrievePlayerShallow(playerDocId);
+            // return result
+            handler.post(() -> {
+                callback.getPlayer(player);
+            });
+        }).start();
+    }
+
     public void getCurrentPlayerUsername(GetCurrentPlayerUsernameCallback callback){
         Handler handler = new Handler();
         new Thread(() -> {
@@ -304,6 +320,17 @@ public class FirestorePlayerController extends FirestoreController{
     }
 
     /**
+     * Retrieves the completed player
+     * @param playerDocId id of the player that is completed
+     * @return The completed Player
+     */
+    protected Player retrievePlayerShallow(String playerDocId) {
+        Task<DocumentSnapshot> playerTask = players.document(playerDocId).get();
+        PlayerRepository playerRepository = waitForTask(playerTask, PlayerRepository.class);
+        return playerRepository.retrieveParsedPlayer();
+    }
+
+    /**
      * Creates the player
      * @param player the player to save
      */
@@ -314,6 +341,23 @@ public class FirestorePlayerController extends FirestoreController{
             PlayerRepository playerRepo = PlayerRepository.retrievePlayerRepo(player);
             // save the player
             Task<Void> saveTask = players.document(playerDocId).set(playerRepo);
+            waitForUpdateTask(saveTask);
+            handler.post(() -> {
+                callback.operationStatus(true);
+            });
+        }).start();
+    }
+
+    /**
+     * Updates the player profile
+     * @param player the player whose profile needs to be updated
+     */
+    public void updatePlayerProfile(Player player, OperationStatusCallback callback) {
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String playerDocId = identifyPlayer();
+            // save the player
+            Task<Void> saveTask = players.document(playerDocId).update(player.retrieveProfileMap());
             waitForUpdateTask(saveTask);
             handler.post(() -> {
                 callback.operationStatus(true);
@@ -427,6 +471,5 @@ public class FirestorePlayerController extends FirestoreController{
                 callback.getPlayerList(playerList);
             });
         }).start();
-
     }
 }

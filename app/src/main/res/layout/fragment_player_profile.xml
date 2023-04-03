@@ -76,6 +76,7 @@
                         android:typeface="sans" />
 
                     <ImageView
+                        android:id="@+id/editPlayerProfileIcon"
                         android:layout_width="40dp"
                         android:layout_height="60dp"
                         android:src="@drawable/edit_icon"
@@ -269,16 +270,13 @@
                     android:textSize="26sp"
                     android:textStyle="bold"
                     android:typeface="sans" />
-                <!--TODO: Show no items if list is empty-->
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/qrsScannedList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@android:color/transparent"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
-                    android:dividerHeight="10.0sp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     />
-
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cmput301w23t47.canary.callback.GetIndexCallback;
 import com.cmput301w23t47.canary.callback.UpdateLeaderboardCallback;
 import com.cmput301w23t47.canary.controller.FirestoreController;
 import com.cmput301w23t47.canary.controller.LeaderboardController;
@@ -26,7 +27,7 @@ import java.util.Locale;
  * Fragment for the leaderboard
  */
 public class LeaderboardFragment extends Fragment implements
-        UpdateLeaderboardCallback {
+        UpdateLeaderboardCallback, GetIndexCallback {
     public static final String TAG = "LeaderboardFragment";
 
     private Leaderboard leaderboard;
@@ -77,7 +78,7 @@ public class LeaderboardFragment extends Fragment implements
         firestoreController = new FirestoreController();
         firestoreController.getLeaderboard(this);
         showLoadingBar();
-        leaderboardRankListAdapter = new LeaderboardRankListAdapter(getContext(), new ArrayList<>());
+        leaderboardRankListAdapter = new LeaderboardRankListAdapter(new ArrayList<>(), this);
         binding.rankingList.setAdapter(leaderboardRankListAdapter);
     }
 
@@ -137,10 +138,7 @@ public class LeaderboardFragment extends Fragment implements
                 playerMaxQrRank, leaderboard.getByHighestScoringQr().size()));
 
         // update ranking list
-        ArrayList<LeaderboardPlayer> rankPlayers = leaderboardRankListAdapter.getPlayersList();
-        rankPlayers.clear();
-        rankPlayers.addAll(leaderboard.getByScore());
-        leaderboardRankListAdapter.notifyDataSetChanged();
+        leaderboardRankListAdapter.updateList(leaderboard.getByScore());
         hideLoadingBar();
     }
 
@@ -156,5 +154,9 @@ public class LeaderboardFragment extends Fragment implements
      */
     private void hideLoadingBar() {
         binding.progressBarLayout.progressBarBox.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void getIndex(int ind) {
     }
 }

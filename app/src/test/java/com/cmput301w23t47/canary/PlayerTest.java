@@ -16,7 +16,7 @@ import java.util.Date;
 public class PlayerTest {
 
     private Player mockPlayer(){
-        Player player = new Player("testy", "Offical", "Tester");
+        Player player = new Player("testy", "Offical", "Tester", "123");
         return player;
     }
     private PlayerQrCode mockQr(){
@@ -129,7 +129,4 @@ public class PlayerTest {
         Player player = mockPlayer();
         assertEquals("t",player.retrieveStringToDraw());
     }
-
-
-
 }

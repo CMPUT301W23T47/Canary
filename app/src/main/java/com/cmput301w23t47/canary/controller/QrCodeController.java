@@ -22,8 +22,11 @@ import java.util.Locale;
  * @author Meharpreet Singh Nanda
  */
 public class QrCodeController {
-    private static final String dateFormat = "dd MMM yyyy";
+    private static final String dateFormat = "MMM dd yyyy";
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.CANADA);
+
+    private static final String dateTimeFormat = "K:m, MMM dd yyyy";
+    private static final SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(dateTimeFormat, Locale.CANADA);
 
     /**
      * Gets the Hash for the QR
@@ -61,6 +64,15 @@ public class QrCodeController {
     }
 
     /**
+     * Gets the formatted Date time
+     * @param date the date to format
+     * @return the formatted str for date with time
+     */
+    public static String getFormattedDateTime(Date date) {
+        return simpleDateTimeFormat.format(date);
+    }
+
+    /**
      * Gets the title for the label on the map
      * @param qrCode the qrCode to parse
      * @return the string to display on map for QR
@@ -82,7 +94,7 @@ public class QrCodeController {
      */
     public static String getDisplayName(String qrName) {
         if (qrName.length() <= 16) {
-            return qrName;
+            return String.format(Locale.CANADA, "%-16s", qrName);
         }
         return String.format(Locale.CANADA, "%s...", qrName.substring(0, 13));
     }
@@ -103,32 +115,4 @@ public class QrCodeController {
         }
         return filterQrs;
     }
-    
-    // tried to add the geocoder here but it was not working because of the context
-//    public static ArrayList<QrCode> getQrsWithinCity(ArrayList<QrCode> qrCodes, String city) {
-//        // will need these variables as
-//        Geocoder geocoder = new Geocoder(this); // the geocoder will hold the Address of the qr code
-//        ArrayList<QrCode> filteredQrs = new ArrayList<>(); // this will show which ones you want to sort by
-//
-//        // have to loop through all the qr codes because they are all in a list with unique addresses
-//        for(QrCode qrind : qrCodes){
-//            try{
-//                // this will get the address of the qr code
-//                List<Address> addresses = geocoder.getFromLocation(qrind.getLocation().getLatitude(), qrind.getLocation().getLongitude(), 1);
-//                // this will get the city of the address of the qr code
-//                String addresscity = (String) addresses.get(0).getLocality().toLowerCase();
-//                // if the city of the qr code is the same as the city that the user entered then add it to the list
-//                if(addresscity.charAt(0) == city.charAt(0)  && addresscity.contains(city)){
-//                    // will check if the first letter of the city is the same as the first letter of the search city
-//                    // this will hopefully prevent situations where the user enters "Edm" and it shows qrs in "monEdm"
-//                    filteredQrs.add(qrind);
-//                }
-//            }catch( IOException e){
-//                String message = "Error: " + e.getMessage();
-//                Log.e("Error", message);
-//                e.printStackTrace();
-//            }
-//        }
-//        return filteredQrs;
-//    }
 }

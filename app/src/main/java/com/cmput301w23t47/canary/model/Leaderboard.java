@@ -38,6 +38,17 @@ public class Leaderboard {
      */
     public Leaderboard() {}
 
+    /**
+     * Constructor for testing purpose
+     */
+    public Leaderboard(String maxQrPlayer, long maxQr, String maxScorePlayer, long maxScore, ArrayList<LeaderboardPlayer> players, LeaderboardPlayer currentPlayer) {
+        this.maxQrPlayer = maxQrPlayer;
+        this.maxQr = maxQr;
+        this.maxScorePlayer = maxScorePlayer;
+        this.maxScore = maxScore;
+        this.players = players;
+        this.currentPlayer = currentPlayer;
+    }
 
     /**
      * Gets max qr player.

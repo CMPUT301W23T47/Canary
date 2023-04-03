@@ -4,14 +4,18 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.GetIndexCallback;
 import com.cmput301w23t47.canary.callback.GetPlayerCallback;
 import com.cmput301w23t47.canary.controller.FirestorePlayerController;
 import com.cmput301w23t47.canary.databinding.FragmentAnotherPlayerProfileBinding;
@@ -25,7 +29,7 @@ import java.util.ArrayList;
  * Another player Fragment
  */
 public class AnotherPlayerProfileFragment extends Fragment implements
-        GetPlayerCallback {
+        GetPlayerCallback, GetIndexCallback {
     public static final String TAG = "PlayerProfileFragment";
 
     private FragmentAnotherPlayerProfileBinding binding;
@@ -83,11 +87,33 @@ public class AnotherPlayerProfileFragment extends Fragment implements
     private void init(){
         showLoadingBar();
         makeFirestoreReqForPlayer();
-        qrCodeListAdapter = new QRCodeListAdapter(getContext(), new ArrayList<>());
+        qrCodeListAdapter = new QRCodeListAdapter(new ArrayList<>(), this);
+        initQrCodeList();
+        initClickHandlers();
+    }
+
+    /**
+     * Initializes the qr code list
+     */
+    private void initQrCodeList() {
         binding.qrsScannedList.setAdapter(qrCodeListAdapter);
-        binding.qrsScannedList.setOnItemClickListener((adapterView, view, i, l) -> {
-            PlayerQrCode playerQrCode = (PlayerQrCode) adapterView.getItemAtPosition(i);
-            navigateToSelectedQr(playerQrCode);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.qrsScannedList.getContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_shape));
+        binding.qrsScannedList.addItemDecoration(dividerItemDecoration);
+    }
+
+    /**
+     * Initializes the click listeners for layout elements
+     */
+    private void initClickHandlers() {
+        binding.highestQrLayout.setOnClickListener(view -> {
+            if (player == null) { return; }
+            navigateToSelectedQr(player.retrieveQrWithHighestScore());
+        });
+        binding.lowestQrLayout.setOnClickListener(view -> {
+            if (player == null) { return; }
+            navigateToSelectedQr(player.retrieveQrWithLowestScore());
         });
     }
 
@@ -143,8 +169,7 @@ public class AnotherPlayerProfileFragment extends Fragment implements
         binding.playerQrsScanned.setText(Integer.toString(player.getQrCodes().size()));
         binding.highestQrScore.setText(Long.toString(player.getHighestQr()));
         binding.lowestQrScore.setText(Long.toString(player.getLowestQr()));
-        qrCodeListAdapter.setQrList(this.player.getQrCodes());
-        qrCodeListAdapter.notifyDataSetChanged();
+        qrCodeListAdapter.updateList(this.player.getQrCodes());
         hideLoadingBar();
     }
 
@@ -177,8 +202,20 @@ public class AnotherPlayerProfileFragment extends Fragment implements
      * @param playerQrCode the selected qr code
      */
     private void navigateToSelectedQr(PlayerQrCode playerQrCode) {
+        if (playerQrCode == null) {
+            return;
+        }
         AnotherPlayerProfileFragmentDirections.ActionAnotherPlayerToQrPage action =
                 AnotherPlayerProfileFragmentDirections.actionAnotherPlayerToQrPage(playerQrCode.retrieveHash());
         Navigation.findNavController(getView()).navigate(action);
+    }
+
+    @Override
+    public void getIndex(int ind) {
+        PlayerQrCode qrCode = qrCodeListAdapter.getItemAt(ind);
+        if (qrCode == null) {
+            return;
+        }
+        navigateToSelectedQr(qrCode);
     }
 }
