@@ -8,15 +8,15 @@
     <activity
         android:id="@+id/scanQRCodeActivity"
         android:name="com.cmput301w23t47.canary.view.activity.ScanQRCodeActivity"
-        android:label="ScanQRCodeActivity" />
+        android:label="Scan Qr" />
     <activity
         android:id="@+id/captureSnapshotActivity"
         android:name="com.cmput301w23t47.canary.view.activity.CaptureSnapshotActivity"
-        android:label="CaptureSnapshotActivity" />
+        android:label="Capture Snapshot" />
     <fragment
         android:id="@+id/addNewQrFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.AddNewQrFragment"
-        android:label="AddNewQrFragment" >
+        android:label="Add new QR" >
         <action
             android:id="@+id/action_scanQrCode"
             app:destination="@id/scanQRCodeActivity" />
@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/qrCapturePreferenceFragment"
         android:name="com.cmput301w23t47.canary.view.fragment.QrCapturePreferenceFragment"
-        android:label="fragment_qr_capture_preference"
+        android:label="QR Preferences"
         tools:layout="@layout/fragment_qr_capture_preference" >
         <argument
             android:name="qrHash"
