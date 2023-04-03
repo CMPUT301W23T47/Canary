@@ -263,7 +263,7 @@ public class FirestoreController {
      * Gets the doc id for the current player
      * @return the doc if for player
      */
-    protected String identifyPlayer() {
+    public String identifyPlayer() {
         if(firstTimeTester) return firstTimeTestPlayer;
         if(testMode) return testPlayer;
         FirebaseInstallations firebaseInstallations = FirebaseInstallations.getInstance();
