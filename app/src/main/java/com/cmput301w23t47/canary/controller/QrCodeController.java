@@ -25,7 +25,7 @@ public class QrCodeController {
     private static final String dateFormat = "MMM dd yyyy";
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.CANADA);
 
-    private static final String dateTimeFormat = "K:m, MMM dd yyyy";
+    private static final String dateTimeFormat = "k:m, MMM dd yyyy";
     private static final SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(dateTimeFormat, Locale.CANADA);
 
     /**
