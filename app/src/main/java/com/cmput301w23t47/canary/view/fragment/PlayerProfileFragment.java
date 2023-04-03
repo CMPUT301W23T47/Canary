@@ -126,6 +126,9 @@ public class PlayerProfileFragment extends Fragment implements
             if (player == null) { return; }
             navigateToSelectedQr(player.retrieveQrWithLowestScore());
         });
+        binding.editPlayerProfileIcon.setOnClickListener(view -> {
+            navigateToEditPlayerProfile();
+        });
     }
 
     /**
@@ -220,6 +223,14 @@ public class PlayerProfileFragment extends Fragment implements
                 PlayerProfileFragmentDirections.actionQrCodeViewFromPlayerProfile(playerQrCode.retrieveHash());
         action.setOwner(true);
         Navigation.findNavController(getView()).navigate(action);
+    }
+
+    /**
+     * Navigates to Update Player Profile Fragment
+     */
+    private void navigateToEditPlayerProfile() {
+        Navigation.findNavController(getView()).navigate(PlayerProfileFragmentDirections.
+                actionPlayerProfileFragmentToUpdateProfileFragment());
     }
 
     @Override

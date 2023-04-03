@@ -104,7 +104,8 @@ public class CreateProfileFragment extends Fragment implements OperationStatusCa
                     String username = binding.usernameEditView.getText().toString();
                     String firstName = binding.firstNameEditView.getText().toString();
                     String lastName = binding.lastNameEditView.getText().toString();
-                    Player player = new Player(username, firstName, lastName);
+                    String contactInfo = binding.contactEditView.getText().toString();
+                    Player player = new Player(username, firstName, lastName, contactInfo);
                     firestorePlayerController.createPlayer(player, CreateProfileFragment.this);
                 }
                 else{

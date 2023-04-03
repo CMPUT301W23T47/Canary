@@ -76,6 +76,7 @@
                         android:typeface="sans" />
 
                     <ImageView
+                        android:id="@+id/editPlayerProfileIcon"
                         android:layout_width="40dp"
                         android:layout_height="60dp"
                         android:src="@drawable/edit_icon"

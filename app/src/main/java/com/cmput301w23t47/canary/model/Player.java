@@ -2,7 +2,14 @@ package com.cmput301w23t47.canary.model;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Class for Player
@@ -22,6 +29,7 @@ public class Player {
     // unique ID of the player, stored as the document name on firestore
     private String uniquePlayerId;
     private Bitmap playerImage;
+    private String contactInfo = "";
 
 
     /**
@@ -31,11 +39,12 @@ public class Player {
      * @param firstName the first name
      * @param lastName  the last name
      */
-    public Player(String username, String firstName, String lastName) {
+    public Player(String username, String firstName, String lastName, String contactInfo) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.qrCodes = new ArrayList<>();
+        this.contactInfo = contactInfo;
     }
 
     /**
@@ -170,6 +179,22 @@ public class Player {
     }
 
     /**
+     * Getter for contact Info
+     * @return the contact info
+     */
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    /**
+     * Setter for contact info
+     * @param contactInfo the contact info to set
+     */
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+
+    /**
      * Sets player image.
      *
      * @param playerImage the player image
@@ -243,5 +268,18 @@ public class Player {
                 lowest = qr;
         }
         return lowest;
+    }
+
+    /**
+     * Gets the map for Profile fields
+     * @return the map with profile fields
+     */
+    public HashMap<String, Object> retrieveProfileMap() {
+        HashMap<String, Object> profileMap = new HashMap<>();
+        profileMap.put("username", username);
+        profileMap.put("firstName", firstName);
+        profileMap.put("lastName", lastName);
+        profileMap.put("contactInfo", contactInfo);
+        return profileMap;
     }
 }

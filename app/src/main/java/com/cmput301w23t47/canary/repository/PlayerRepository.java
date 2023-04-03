@@ -33,7 +33,9 @@ public class PlayerRepository {
     // the number of qr codes that player has
     private long qrCodesSize;
     // the references to the scanned QR; for querying the scanned QRs among all players
-        private ArrayList<DocumentReference> qrCodeReferences;
+    private ArrayList<DocumentReference> qrCodeReferences;
+    // contact info for user
+    private String contactInfo = "";
 
 
     // Default Constructor
@@ -62,7 +64,7 @@ public class PlayerRepository {
      * @return the player
      */
     public Player retrieveParsedPlayer() {
-        Player player = new Player(username, firstName, lastName);
+        Player player = new Player(username, firstName, lastName, contactInfo);
         ArrayList<PlayerQrCode> playerQrCodes = new ArrayList<>();
         for (PlayerQrCodeRepository qrRepo : qrCodes) {
             playerQrCodes.add(qrRepo.retrieveParsedPlayerQrCode());
@@ -197,6 +199,22 @@ public class PlayerRepository {
      */
     public void setMaxScoreQr(long maxScoreQr) {
         this.maxScoreQr = maxScoreQr;
+    }
+
+    /**
+     * Getter for contact info
+     * @return the contact info
+     */
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    /**
+     * Setter for contact info
+     * @param contactInfo the contact info to set
+     */
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 
     /**

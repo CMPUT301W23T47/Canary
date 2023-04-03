@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_qrCodeViewFromPlayerProfile"
             app:destination="@id/QRCodeView" />
+        <action
+            android:id="@+id/action_playerProfileFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchNearbyQrMapFragment"
@@ -130,4 +133,9 @@
             android:name="qrHash"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/updateProfileFragment"
+        android:name="com.cmput301w23t47.canary.view.fragment.UpdateProfileFragment"
+        android:label="Update Profile"
+        tools:layout="@layout/fragment_update_profile" />
 </navigation>
