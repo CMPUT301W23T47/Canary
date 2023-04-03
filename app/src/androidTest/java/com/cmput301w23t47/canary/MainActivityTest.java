@@ -77,7 +77,7 @@ public class MainActivityTest {
             // skip the tests
             return;
         }
-        solo.assertCurrentActivity("Wrong Activity", HomeActivity.class);
+        assertTrue(solo.waitForText("Score", 1, 2000));
     }
 
     /**

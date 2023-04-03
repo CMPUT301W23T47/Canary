@@ -48,12 +48,12 @@ public class FirestoreController {
     private static String testPlayer = "dsvj1o1gQOe8mYWFe1U5To";
     public static boolean firstTimeTester = false;
     private static String firstTimeTestPlayer = "testPlayerFirst";
-    protected static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    protected static final CollectionReference players = db.collection(collectionPrefix + "Player");
-    protected final CollectionReference qrCodes = db.collection(collectionPrefix + "QRCode");
-    protected final CollectionReference leaderboard = db.collection(collectionPrefix + "Leaderboard");
-    protected final CollectionReference snapshot = db.collection(collectionPrefix + "Snapshot");
-    protected final String globalLeaderboardDocument = "Global";
+    protected static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    protected static CollectionReference players = db.collection(collectionPrefix + "Player");
+    protected static CollectionReference qrCodes = db.collection(collectionPrefix + "QRCode");
+    protected static CollectionReference leaderboard = db.collection(collectionPrefix + "Leaderboard");
+    protected static CollectionReference snapshot = db.collection(collectionPrefix + "Snapshot");
+    protected static String globalLeaderboardDocument = "Global";
 
     private static final String TAG = "Firestore Controller";
 
@@ -77,6 +77,10 @@ public class FirestoreController {
     public static void switchToTestMode() {
         testMode = true;
         collectionPrefix = "Test";
+        players = db.collection(collectionPrefix + "Player");
+        qrCodes = db.collection(collectionPrefix + "QRCode");
+        leaderboard = db.collection(collectionPrefix + "Leaderboard");
+        snapshot = db.collection(collectionPrefix + "Snapshot");
     }
 
     /**

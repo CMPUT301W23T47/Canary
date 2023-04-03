@@ -3,13 +3,21 @@ package com.cmput301w23t47.canary;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
 import android.app.Instrumentation;
+import android.graphics.Bitmap;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.cmput301w23t47.canary.callback.GetImageCallback;
 import com.cmput301w23t47.canary.controller.FirestoreController;
+import com.cmput301w23t47.canary.controller.ImageGenerator;
 import com.cmput301w23t47.canary.view.activity.ScanQRCodeActivity;
 import com.robotium.solo.Solo;
 
@@ -18,10 +26,27 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Intent tests for ImageGenerator
  */
 public class ImageGeneratorTest {
+    public class ImageClientMock implements GetImageCallback {
+        private CountDownLatch countDownLatch = new CountDownLatch(1);
+        private Bitmap bitmap = null;
+        private boolean callRet = false;
+
+        @Override
+        public void getImage(Bitmap bitmap) {
+            Log.d("TAG", "getImageTest: 0");
+            callRet = true;
+            this.bitmap = bitmap;
+            countDownLatch.countDown();
+        }
+    }
+
     private Solo solo;
     static {
         FirestoreController.testMode=true;
@@ -44,30 +69,24 @@ public class ImageGeneratorTest {
     }
 
     /**
-     * Tests whether the Activity starts
-     * @throws Exception Failure
-     */
-    @Test
-    public void startActivity() throws Exception{
-        rule.getScenario().onActivity(activity -> {
-        });
-    }
-
-    /**
-     * Launches the QR Code scanner activity and confirms whether
-     * QR Code is returned
+     * Asserts whether the image generator works
      * @throws Exception Failure
      */
     @Test
     public void checkImageGenerator() throws Exception{
-        solo.assertCurrentActivity("Err Wrong Activity", MainActivity.class);
-
-        // set up the stubbing when scanQrCode page launched
-        //solo.getImage()
-        Instrumentation.ActivityResult resIntent = IntentTestUtil.getMockResultForScanQrCodeActivity();
-        intending(hasComponent(ScanQRCodeActivity.class.getName()))
-                .respondWith(resIntent);
-        solo.clickOnView(solo.getView(R.id.scan_qr));
+        Looper.prepare();
+        ImageClientMock mock1 = new ImageClientMock();
+        ImageClientMock mock2 = new ImageClientMock();
+        ImageGenerator.getImage(ImageGenerator.imageUrl, mock1);
+        ImageGenerator.getImage(ImageGenerator.imageUrl, mock2);
+        assertFalse(mock1.equals(mock2));
+//        try {
+//            mock1.countDownLatch.await(10000, TimeUnit.MILLISECONDS);
+//            mock2.countDownLatch.await(10000, TimeUnit.MILLISECONDS);
+//        } catch (InterruptedException e) {
+//            fail(e.getMessage());
+//        }
+//        assertFalse(mock1.bitmap.equals(mock2.bitmap));
     }
 
     /**

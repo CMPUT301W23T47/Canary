@@ -5,19 +5,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.cmput301w23t47.canary.MainActivity;
 import com.cmput301w23t47.canary.controller.FirestoreController;
-import com.cmput301w23t47.canary.model.PlayerQrCode;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -26,10 +20,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
 @RunWith(AndroidJUnit4.class)
-public class CheckPreviousCommentTest {
+public class CommentsIntentTest {
     private Solo solo;
 
     static {
@@ -60,7 +52,6 @@ public class CheckPreviousCommentTest {
         solo.waitForText("msn", 1, 6000);
         RecyclerView qrCodeList = (RecyclerView) solo.getView(R.id.qrsScannedList);
         solo.clickOnView(qrCodeList.getChildAt(0));
-
         solo.waitForText("Comments", 1, 6000);
         RecyclerView commentsList = (RecyclerView) solo.getView(R.id.qr_comments_list);
         solo.sleep(2000);

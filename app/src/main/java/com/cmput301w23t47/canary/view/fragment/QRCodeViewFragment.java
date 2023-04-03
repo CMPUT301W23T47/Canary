@@ -112,6 +112,9 @@ public class QRCodeViewFragment extends Fragment implements GetPlayerQrCallback,
      * Updates the comments in the view
      */
     private void updateComments() {
+        if (playerQrCode.getQrCode().getComments() == null) {
+            return;
+        }
         commentListAdapter.updateList(playerQrCode.getQrCode().getComments());
         int commentsSize = playerQrCode.getQrCode().getComments().size();
         if (commentsSize == 0) {
