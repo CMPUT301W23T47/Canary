@@ -302,7 +302,7 @@ public class FirestorePlayerController extends FirestoreController{
      * @param playerDocId id of the player that is completed
      * @return The completed Player
      */
-    protected Player retrieveCompletePlayer(String playerDocId) {
+    public Player retrieveCompletePlayer(String playerDocId) {
         Task<DocumentSnapshot> playerTask = players.document(playerDocId).get();
         PlayerRepository playerRepository = waitForTask(playerTask, PlayerRepository.class);
         for (PlayerQrCodeRepository playerQrCodesRepo : playerRepository.getQrCodes()) {
