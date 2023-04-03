@@ -18,6 +18,9 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Tests for Image Generator
+ */
 public class ImageGeneratorTest {
     public class ImageClientMock implements GetImageCallback {
         private CountDownLatch countDownLatch = new CountDownLatch(1);

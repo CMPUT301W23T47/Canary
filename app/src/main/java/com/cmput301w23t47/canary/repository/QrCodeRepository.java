@@ -15,6 +15,9 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Class for persisting the Qr Code on Firestore
+ */
 public class QrCodeRepository {
     // Hash of QR
     private String hash;
@@ -203,10 +206,18 @@ public class QrCodeRepository {
         return String.format(Locale.CANADA, "%s", name);
     }
 
+    /**
+     * Getter for Comments
+     * @return the list of comments
+     */
     public ArrayList<Comment> getComments(){
         return comments;
     }
 
+    /**
+     * Setter for commetns
+     * @param comments the comment list to set
+     */
     public void setComments(ArrayList<Comment> comments){
         this.comments = comments;
     }

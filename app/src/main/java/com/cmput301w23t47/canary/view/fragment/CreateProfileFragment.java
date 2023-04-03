@@ -19,9 +19,7 @@ import com.cmput301w23t47.canary.databinding.FragmentCreateProfileBinding;
 import com.cmput301w23t47.canary.model.Player;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for Creating the profile for the player
  */
 public class CreateProfileFragment extends Fragment implements OperationStatusCallback {
 

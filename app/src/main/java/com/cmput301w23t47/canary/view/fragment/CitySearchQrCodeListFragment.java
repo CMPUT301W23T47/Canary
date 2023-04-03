@@ -1,34 +1,37 @@
 package com.cmput301w23t47.canary.view.fragment;
 		
-		import android.location.Address;
-		import android.location.Geocoder;
-		import android.os.Bundle;
-		import android.util.Log;
-		import android.view.LayoutInflater;
-		import android.view.View;
-		import android.view.ViewGroup;
-		
-		import androidx.annotation.NonNull;
-		import androidx.annotation.Nullable;
-		import androidx.core.content.ContextCompat;
-		import androidx.navigation.Navigation;
-		import androidx.recyclerview.widget.DividerItemDecoration;
-		
-		import com.cmput301w23t47.canary.MainActivity;
-		import com.cmput301w23t47.canary.R;
-		import com.cmput301w23t47.canary.callback.GetIndexCallback;
-		import com.cmput301w23t47.canary.callback.GetQrListCallback;
-		import com.cmput301w23t47.canary.controller.FirestoreQrController;
-		import com.cmput301w23t47.canary.databinding.FragmentCitySearchQrCodeListBinding;
-		import com.cmput301w23t47.canary.model.QrCode;
-		import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
-		import com.google.android.gms.location.LocationServices;
-		
-		import java.io.IOException;
-		import java.util.ArrayList;
-		import java.util.List;
-		import java.util.Locale;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+
+import com.cmput301w23t47.canary.MainActivity;
+import com.cmput301w23t47.canary.R;
+import com.cmput301w23t47.canary.callback.GetIndexCallback;
+import com.cmput301w23t47.canary.callback.GetQrListCallback;
+import com.cmput301w23t47.canary.controller.FirestoreQrController;
+import com.cmput301w23t47.canary.databinding.FragmentCitySearchQrCodeListBinding;
+import com.cmput301w23t47.canary.model.QrCode;
+import com.cmput301w23t47.canary.view.adapter.SearchNearbyQrListAdapter;
+import com.google.android.gms.location.LocationServices;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Fragment for searching the QR Codes based on the city name
+ */
 public class CitySearchQrCodeListFragment extends LocationBaseFragment implements GetQrListCallback,
 		GetIndexCallback {
 	

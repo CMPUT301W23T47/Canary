@@ -24,9 +24,15 @@ import com.cmput301w23t47.canary.view.adapter.PlayerSearchAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment for viewing & searching other players
+ */
 public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListCallback,
         GetIndexCallback{
 
+    /**
+     * Default Constructor
+     */
     public ViewOtherPlayersFragment() {
     }
 
@@ -51,7 +57,9 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
         return binding.getRoot();
     }
 
-
+    /**
+     * Initializes the UI
+     */
     private void init(){
         qrHash = QRCodeViewFragmentArgs.fromBundle(getArguments()).getQrHash();
         viewAdapter = new PlayerSearchAdapter(players, this);
@@ -66,11 +74,18 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
         showLoadingBar();
     }
 
+    /**
+     * Shows all the players on the list
+     */
     private void showAllOtherPlayers() {
         binding.searchResultHeading.setText("Players with Same QR");
         viewAdapter.updateList(players);
     }
 
+    /**
+     * navigates to the profile of the selected player
+     * @param player
+     */
     private void navigateToSelectedPlayer(Player player) {
         ViewOtherPlayersFragmentDirections.ActionViewOtherPlayersFragmentToAnotherPlayerProfileFragment action =
                 ViewOtherPlayersFragmentDirections.actionViewOtherPlayersFragmentToAnotherPlayerProfileFragment(player.getUniquePlayerId());
@@ -90,12 +105,19 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
         }
     }
 
+    /**
+     * Callback for getting the list of players
+     * @param players the list of players
+     */
     @Override
     public void getPlayerList(ArrayList<Player> players) {
         this.players = players;
         updateOtherPlayerList();
     }
 
+    /**
+     * Updates the info on the UI for the player list
+     */
     private void updateOtherPlayerList(){
         if (this.players == null){
             return;
@@ -104,14 +126,24 @@ public class ViewOtherPlayersFragment extends Fragment implements GetPlayerListC
         hideLoadingBar();
     }
 
+    /**
+     * Shows the loading bar
+     */
     private void showLoadingBar() {
         binding.progressBarBox.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hides the loading bar
+     */
     private void hideLoadingBar() {
         binding.progressBarBox.setVisibility(View.GONE);
     }
 
+    /**
+     * callback for determining which player card was clicked on the list
+     * @param ind the requested index
+     */
     @Override
     public void getIndex(int ind) {
         Player selPlayer = viewAdapter.getItemAt(ind);

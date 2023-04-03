@@ -12,6 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.cmput301w23t47.canary.R;
 
+/**
+ * Home Activity; Includes the main navigation between fragments
+ */
 public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;

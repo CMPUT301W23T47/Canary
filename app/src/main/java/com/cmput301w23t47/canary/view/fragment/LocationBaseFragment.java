@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
  * Base fragment for dealing with locations
+ * Follows the Template Class Design Pattern
  * Reference: https://developer.android.com/training/location/retrieve-current#java
  *      https://developer.android.com/training/location/permissions
  *      https://developer.android.com/training/location/permissions#upgrade-to-precise

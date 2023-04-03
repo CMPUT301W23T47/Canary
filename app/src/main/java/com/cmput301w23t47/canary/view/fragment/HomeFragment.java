@@ -22,9 +22,8 @@ import com.cmput301w23t47.canary.view.contract.AddNewQrContract;
 import java.util.Locale;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for the Home page
+ * Shows the summary of player profile along with the option to add QR
  */
 public class HomeFragment extends Fragment implements
         GetPlayerCallback {

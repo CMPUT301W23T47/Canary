@@ -7,6 +7,9 @@ import android.view.View;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Controller for compressing images
+ */
 public class ImageCompression {
     /**
      * Compress the image
@@ -27,6 +30,11 @@ public class ImageCompression {
         return bitmap;
     }
 
+    /**
+     * Gets the bitmap from the given view
+     * @param view the view to extract the image from
+     * @return the extracted Bitmap
+     */
     public static Bitmap getBitmapFromView(View view) {
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();

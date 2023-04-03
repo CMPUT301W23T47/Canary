@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import java.util.Date;
 
+/**
+ * The test for QR Code test
+ */
 public class QrCodeTest {
 
 

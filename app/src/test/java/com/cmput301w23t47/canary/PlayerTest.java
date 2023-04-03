@@ -13,6 +13,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The test for the Player Model
+ */
 public class PlayerTest {
 
     private Player mockPlayer(){

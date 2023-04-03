@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+/**
+ * The test for the QR Controller
+ */
 public class QrCodeControllerTest {
     @Test
     public void testGetHash() {
